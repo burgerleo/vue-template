@@ -15,23 +15,23 @@
                         v-list-item-icon
                             v-icon {{item.icon}}
                         v-list-item-content
-                            v-list-item-title {{item.title}} 
+                            v-list-item-title {{item.title}}
                     v-list-group(link v-if="item.children")
                         template(v-slot:activator)
                             v-list-item-icon
-                                v-icon {{item.icon}} 
+                                v-icon {{item.icon}}
                             v-list-item-content
-                                v-list-item-title {{item.title}} 
+                                v-list-item-title {{item.title}}
                         v-list-group(no-actions sub-group value="true" v-for="child in item.children")
                             template(v-slot:activator)
                                 v-list-item-content
                                     v-list-item-title {{child.title}}
-                            v-list-item(v-for="i in child.children" :key="i" link v-if="child.children")
+                            v-list-item(v-for="i in child.children" :key="i.id" link v-if="child.children")
                                 v-list-item-icon
                                     v-icon {{i.icon}}
                                 v-list-item-content
                                     v-list-item-title {{i.title}}
-                            
+
 
 
 </template>
@@ -62,8 +62,8 @@ export default {
                                     title: "setting",
                                     icon: "mdi-view-dashboard",
                                     children: [
-                                        { title: "111", icon: "mdi-image" },
-                                        { title: "222", icon: "mdi-help-box" }
+                                        { id:1, title: "111", icon: "mdi-image" },
+                                        { id:2,  title: "222", icon: "mdi-help-box" }
                                     ]
                                 },
                                 { title: "analyze", icon: "mdi-image" },
@@ -94,6 +94,13 @@ export default {
                                 { title: "account", icon: "mdi-image" },
                                 { title: "block list", icon: "mdi-help-box" }
                             ]
+                        },
+                        {
+                          title: "Content",
+                          icon: "mdi-account-circle",
+                          children: [
+                            { title: "Helper", icon: "mdi-image",router: "/dashboard" },
+                          ]
                         }
                     ]
                 },
@@ -122,9 +129,8 @@ export default {
     },
     watch: {
         tabId(value) {
-            console.log(value, "ww");
+            console.log(value)
             this.navigationControl();
-            console.log(this.tabItems);
         }
     },
     methods: {
