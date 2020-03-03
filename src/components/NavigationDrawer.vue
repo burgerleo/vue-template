@@ -95,7 +95,7 @@ export default {
                         //     { title: "Helper", icon: "mdi-image",router: "/dashboard" },
                         //   ]
                         // },
-                      { title: "Helper", icon: "mdi-help",router: "/helper" },
+                      { title: "Helper Manage", icon: "mdi-help",router: "/helper" },
                     ]
                 },
                 {

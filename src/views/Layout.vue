@@ -3,16 +3,13 @@
         NavigationDrawer(ref="drawer" :tabId="tabId")        
         v-app-bar(absolute :clipped-left="clipped" app color="primary" dark)
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
-            v-toolbar-title Portal Layout
+            v-toolbar-title Portal
             v-spacer
             v-btn(icon)
-                v-icon mdi-magnify
+                v-icon mdi-help-circle
             Setting
             v-btn(icon)
                 v-icon mdi-dots-vertical
-            template(v-slot:extension )
-                v-tabs(align-with-title v-model="selectedTabId" v-if="$refs.drawer.drawer == true" color="#ffffff")
-                    v-tab(v-for="tab in tabs" :key="tab.id" @click="navigationControl(tab.id)") {{tab.name}} 
         v-content
             router-view   
         v-footer(fixed :inset="inset" app color="primary")
