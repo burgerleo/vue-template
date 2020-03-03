@@ -4,7 +4,7 @@
             template(v-for="item in tabItems")
                 v-subheader(v-if="item.header") {{item.header}}
                 v-list-item-group(v-if="!item.header")
-                    v-list-item(link v-if="!item.children")
+                    v-list-item(link v-if="!item.children" :to="item.router")
                         v-list-item-icon
                             v-icon {{item.icon}}
                         v-list-item-content
@@ -15,7 +15,7 @@
                                 v-icon {{item.icon}}
                             v-list-item-content
                                 v-list-item-title {{item.title}}
-                        v-list-group(no-actions sub-group value="true" v-for="child in item.children")
+                        v-list-group(v-if="child.children" no-actions sub-group value="true" v-for="child in item.children")
                             template(v-slot:activator)
                                 v-list-item-content
                                     v-list-item-title {{child.title}}
@@ -88,13 +88,14 @@ export default {
                                 { title: "block list", icon: "mdi-help-box" }
                             ]
                         },
-                        {
-                          title: "Content",
-                          icon: "mdi-account-circle",
-                          children: [
-                            { title: "Helper", icon: "mdi-image",router: "/dashboard" },
-                          ]
-                        }
+                        // {
+                        //   title: "Content",
+                        //   icon: "mdi-account-circle",
+                        //   children: [
+                        //     { title: "Helper", icon: "mdi-image",router: "/dashboard" },
+                        //   ]
+                        // },
+                      { title: "Helper", icon: "mdi-help",router: "/helper" },
                     ]
                 },
                 {

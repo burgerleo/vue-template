@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Layout from "./views/Layout.vue";
+import Helper from "./views/admin/Helper.vue";
 
 Vue.use(Router);
 
@@ -32,6 +33,10 @@ export default new Router({
                         import(
                             /* webpackChunkName: "about" */ "./views/About.vue"
                         )
+                },
+                {
+                    path: "helper",
+                    component: Helper
                 }
             ]
         }
