@@ -1,13 +1,6 @@
 <template lang="pug">
     v-navigation-drawer(v-model="drawer" :clipped="clipped" fixed app :tabId="tabId")
         v-list(dense)
-            //- v-list-item
-            //-     v-list-item-avatar
-            //-         img(src="https://randomuser.me/api/portraits/men/81.jpg")
-            //-     v-list-item-content
-            //-         v-list-item-title James
-            //-         v-list-item-subtitle james.bong@hiero7.com
-            //- v-divider
             template(v-for="item in tabItems")
                 v-subheader(v-if="item.header") {{item.header}}
                 v-list-item-group(v-if="!item.header")
