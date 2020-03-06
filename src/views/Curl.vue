@@ -53,6 +53,21 @@
                                                     v-btn( color="primary" dark @click="deleteParameter(index)") X
                                         v-flex(row align-center xs12 sm12 md12 v-if="postInput=='Parameters'")
                                             v-btn(color="primary" dark @click="addParameter") Add Parameters
+
+                                v-flex.py-6(xs12 sm12 md12)
+                                    v-checkbox(v-model="headerOnly" label="Header only")
+                                v-flex(xs12)
+                                    v-btn(color="primary" block @click="getCurlInfo('nameForm')") SEND
+                                v-flex(xs12)
+                                    v-card-text
+                                        .subheading Response:
+                                    v-divider
+                                    v-card-text Header:
+                                        pre(v-highlightjs="headerData")
+                                            code.bash
+                                    v-card-text Body:
+                                        pre(v-highlightjs="bodyData")
+                                            code.bash
                     v-divider
 </template>
 <script>
@@ -166,5 +181,8 @@
 
 
 <style lang="sass" scoped>
-
+    .hljs
+        display: block
+        color: #abb2bf
+        background: #282c34
 </style>
