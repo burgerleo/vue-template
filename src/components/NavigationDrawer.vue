@@ -51,43 +51,32 @@ export default {
                             title: "Dashboard",
                             icon: "mdi-view-dashboard",
                             children: [
-                                {
-                                    title: "setting",
-                                    icon: "mdi-view-dashboard",
-                                    children: [
-                                        { id:1, title: "111", icon: "mdi-image" },
-                                        { id:2,  title: "222", icon: "mdi-help-box" }
-                                    ]
-                                },
-                                { title: "analyze", icon: "mdi-image" },
-                                { title: "data", icon: "mdi-help-box" }
                             ]
                         },
-                        { title: "Record", icon: "mdi-image" },
-                        { title: "Log", icon: "mdi-help-box" },
+                        { title: "Curl Tool", icon: "mdi-check",router: "/curl"  },
                         { header: "Administrator" },
-                        {
-                            title: "Users",
-                            icon: "mdi-account-circle",
-                            children: [
-                                {
-                                    title: "group",
-                                    icon: "mdi-view-dashboard",
-                                    children: [
-                                        {
-                                            title: "management",
-                                            icon: "mdi-image"
-                                        },
-                                        {
-                                            title: "setting",
-                                            icon: "mdi-help-box"
-                                        }
-                                    ]
-                                },
-                                { title: "account", icon: "mdi-image" },
-                                { title: "block list", icon: "mdi-help-box" }
-                            ]
-                        },
+                        // {
+                        //     title: "Users",
+                        //     icon: "mdi-account-circle",
+                        //     children: [
+                        //         {
+                        //             title: "group",
+                        //             icon: "mdi-view-dashboard",
+                        //             children: [
+                        //                 {
+                        //                     title: "management",
+                        //                     icon: "mdi-image"
+                        //                 },
+                        //                 {
+                        //                     title: "setting",
+                        //                     icon: "mdi-help-box"
+                        //                 }
+                        //             ]
+                        //         },
+                        //         { title: "account", icon: "mdi-image" },
+                        //         { title: "block list", icon: "mdi-help-box" }
+                        //     ]
+                        // },
                         // {
                         //   title: "Content",
                         //   icon: "mdi-account-circle",
@@ -98,22 +87,22 @@ export default {
                       { title: "Helper Manage", icon: "mdi-help",router: "/helper" },
                     ]
                 },
-                {
-                    id: 2,
-                    menu: [
-                        { header: "General" },
-                        { title: "Dashboard", icon: "mdi-view-dashboard" },
-                        { title: "Record", icon: "mdi-image" },
-                        { title: "Log", icon: "mdi-help-box" }
-                    ]
-                },
-                {
-                    id: 3,
-                    menu: [
-                        { header: "General" },
-                        { title: "Dashboard", icon: "mdi-view-dashboard" }
-                    ]
-                }
+                // {
+                //     id: 2,
+                //     menu: [
+                //         { header: "General" },
+                //         { title: "Dashboard", icon: "mdi-view-dashboard" },
+                //         { title: "Record", icon: "mdi-image" },
+                //         { title: "Log", icon: "mdi-help-box" }
+                //     ]
+                // },
+                // {
+                //     id: 3,
+                //     menu: [
+                //         { header: "General" },
+                //         { title: "Dashboard", icon: "mdi-view-dashboard" }
+                //     ]
+                // }
             ],
             admins: [
                 ["Management", "mdi-people-outline"],
@@ -122,14 +111,13 @@ export default {
         };
     },
     watch: {
-        tabId(value) {
-            console.log(value)
+        tabId() {
             this.navigationControl();
         }
     },
     methods: {
         navigationControl() {
-            this.items.forEach((o, i) => {
+            this.items.forEach((o) => {
                 if (o.id == this.tabId) {
                     this.tabItems = o.menu;
                 }

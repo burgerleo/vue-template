@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Layout from "./views/Layout.vue";
 import Helper from "./views/admin/Helper.vue";
+import Curl from "./views/Curl.vue";
 
 Vue.use(Router);
 
@@ -37,6 +38,10 @@ export default new Router({
                 {
                     path: "helper",
                     component: Helper
+                },
+                {
+                    path: "curl",
+                    component: Curl
                 }
             ]
         }
