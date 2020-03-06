@@ -102,12 +102,12 @@
       }
     },
     methods: {
-      getCurlInfo: function(formURL) {
+      getCurlInfo: function() {
         const method = (this.method == "GET" ? "get" : "post")
         const headerOnly = (this.headerOnly == true ? 1 : 0)
         const header = this.headers
         const parameters = this.parameters
-        if (this.$refs[formURL].validate()) {
+        if (this.$refs.form.validate()) {
           this.$store.dispatch("global/startLoading");
           this.$store
             .dispatch("curl/getCurlInfo", {
