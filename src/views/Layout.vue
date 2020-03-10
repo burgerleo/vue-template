@@ -1,5 +1,6 @@
 <template lang="pug">
     #layout
+        Loading
         NavigationDrawer(ref="drawer" :tabId="tabId")        
         v-app-bar(absolute :clipped-left="clipped" app color="primary" dark)
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
@@ -22,9 +23,13 @@
 <script>
 import NavigationDrawer from "../components/NavigationDrawer";
 import Setting from "../components/Setting";
-
+import Loading from "../components/Loading";
 export default {
-    components: { NavigationDrawer, Setting },
+    components: {
+      NavigationDrawer,
+      Setting,
+      Loading
+    },
     data() {
         return {
             drawer: true,

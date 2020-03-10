@@ -11,7 +11,7 @@ export default {
   },
   actions: {
     getCurlInfo: (context, data) => {
-      return axios.post("opstool/curl", data).then(function(response) {
+      return axios.post("curl", data).then(function(response) {
         return Promise.resolve(response.data);
       })
         .catch(function(error) {

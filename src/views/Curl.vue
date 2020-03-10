@@ -62,6 +62,9 @@
                                     v-card-text
                                         .subheading Response:
                                     v-divider
+                                    v-card-text CURL Command:
+                                    pre(v-highlightjs="commandData")
+                                        code.bash
                                     v-card-text Header:
                                         pre(v-highlightjs="headerData")
                                             code.bash
@@ -85,6 +88,7 @@
         redirect: 0,
         url:'',
         headerOnly:0,
+        commandData:'',
         headerData:'',
         bodyData:'',
         original:false,
@@ -129,6 +133,7 @@
               function(result) {
                 this.headerData = result.data.header;
                 this.bodyData = result.data.body;
+                this.commandData = result.data.command;
                 this.$store.dispatch("global/finishLoading");
               }.bind(this)
             )

@@ -2,7 +2,14 @@ export default {
     namespaced: true,
     // -----------------------------------------------------------------
     state: {
-        denseTable: true
+        denseTable: true,
+        snackbar: {
+            text: "",
+              color: "success",
+              status: false,
+              timeout: 6000
+        },
+        isLoading: false
     },
     // -----------------------------------------------------------------
     getters: {
@@ -13,6 +20,10 @@ export default {
     },
     // -----------------------------------------------------------------
     mutations: {
+        // stuff to set data locally
+        updateSnackbar: (state, snackbar) => {
+            state.snackbar = snackbar;
+        },
         // stuff to set data locally
         updateTableMode: (state, denseTable) => {
             state.denseTable = denseTable;
