@@ -9,8 +9,8 @@
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
                                 v-flex(xs12 sm12 md12)
-                                    v-radio-group(row v-model="edge")
-                                        v-radio(label="TW" :value="0")
+                                    v-radio-group(row v-model="edge" :mandatory="true")
+                                        //v-radio(label="TW" :value="0")
                                         v-radio(label="HK" :value="1")
                                 v-flex(xs12 sm6 md4)
                                     v-select(v-model="method" :items="selectMethod" label="HTTP Method" item-text="name" item-value="id" :rules="[rules.required]" @change="defaultParameters")
@@ -62,8 +62,16 @@
                                     v-card-text
                                         .subheading Response:
                                     v-divider
+                                    v-card-text
+                                        .subheading.text-right {{timestamp}}
                                     v-card-text CURL Command:
                                     pre(v-highlightjs="commandData")
+                                        code.bash
+                                    v-card-text Response Code:
+                                    pre(v-highlightjs="responseCode")
+                                        code.bash
+                                    v-card-text Download Time:
+                                    pre(v-highlightjs="timeTotal")
                                         code.bash
                                     v-card-text Header:
                                         pre(v-highlightjs="headerData")
@@ -89,6 +97,8 @@
         url:'',
         headerOnly:0,
         commandData:'',
+        timeTotal:'',
+        responseCode:'',
         headerData:'',
         bodyData:'',
         original:false,
@@ -97,7 +107,8 @@
         hostIp:'',
         parameters: [],
         headers: [],
-        edge:0
+        edge:0,
+        timestamp:''
       };
     },
     watch:{
@@ -111,7 +122,10 @@
         const headerOnly = (this.headerOnly == true ? 1 : 0)
         const header = this.headers
         const parameters = this.parameters
+        const time = new Date();
         if (this.$refs.form.validate()) {
+
+          this.timestamp = time;
           this.$store.dispatch("global/startLoading");
           this.$store
             .dispatch("curl/getCurlInfo", {
@@ -134,6 +148,8 @@
                 this.headerData = result.data.header;
                 this.bodyData = result.data.body;
                 this.commandData = result.data.command;
+                this.responseCode = result.data.responseCode;
+                this.timeTotal = result.data.timeTotal
                 this.$store.dispatch("global/finishLoading");
               }.bind(this)
             )
