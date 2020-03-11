@@ -73,12 +73,23 @@
                                     v-card-text Download Time:
                                     pre(v-highlightjs="timeTotal")
                                         code.bash
+
                                     v-card-text Header:
-                                        pre(v-highlightjs="headerData")
-                                            code.bash
+                                        v-expansion-panels
+                                            v-expansion-panel
+                                                v-expansion-panel-header
+                                                    v-expansion-panel-content
+                                                        pre(v-highlightjs="headerData")
+                                                            code.bash
+
                                     v-card-text Body:
-                                        pre(v-highlightjs="bodyData")
-                                            code.bash
+                                        v-expansion-panels
+                                            v-expansion-panel
+                                                v-expansion-panel-header
+                                                    v-expansion-panel-content
+                                                        pre(v-highlightjs="bodyData")
+                                                            code.bash
+
                     v-divider
 </template>
 <script>
