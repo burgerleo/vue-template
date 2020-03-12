@@ -1,8 +1,8 @@
 <template lang="pug">
     #layout
         Loading
-        NavigationDrawer(ref="drawer" :tabId="tabId")        
-        v-app-bar(absolute :clipped-left="clipped" app color="primary" dark)
+        NavigationDrawer(ref="drawer" :tabId="tabId")
+        v-app-bar(fixed :clipped-left="clipped" app color="primary" dark)
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
             v-toolbar-title Portal
             v-spacer
@@ -52,8 +52,7 @@ export default {
         };
     },
     watch: {
-        selectedTab: function(value) {
-            this.tabId = this.selectedTab;
+        selectedTab: function() {
             this.selectedTabId = this.selectedTab - 1;
         }
     },
