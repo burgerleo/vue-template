@@ -50,8 +50,8 @@
                                                     v-text-field(label="Value" v-model="parameter.value")
                                                 v-flex(xs12 sm3 md3)
                                                     v-btn( color="primary" dark @click="deleteParameter(index)") X
-                                        v-flex(row align-center xs12 sm12 md12 v-if="postInput=='Parameters'")
-                                            v-btn(color="primary" dark @click="addParameter") Add Parameters
+                                    v-flex(row align-center xs12 sm12 md12 v-if="postInput=='Parameters'")
+                                        v-btn(color="primary" dark @click="addParameter") Add Parameters
 
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     v-checkbox(v-model="headerOnly" label="Header only")
