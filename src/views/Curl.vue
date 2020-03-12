@@ -2,31 +2,30 @@
     v-container#sample-layout(grid-list-lg)
         v-layout(wrap)
             v-flex(xs12)
-                .title Curl Manage
+                .title Curl Tool
             v-flex(xs12)
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
-                                v-flex(xs12 sm12 md12)
-                                    v-radio-group(row v-model="edge" :mandatory="true")
-                                        //v-radio(label="TW" :value="0")
+                                v-flex.pt-0.pb-0(xs12 sm12 md12)
+                                    v-radio-group.pt-0.mt-1(row v-model="edge" :mandatory="true")
                                         v-radio(label="HK" :value="1")
-                                v-flex(xs12 sm6 md4)
+                                v-flex.pt-0.pb-0(xs12 sm6 md4)
                                     v-select(v-model="method" :items="selectMethod" label="HTTP Method" item-text="name" item-value="id" :rules="[rules.required]" @change="defaultParameters")
-                                v-flex(xs12 sm6 md4)
+                                v-flex.pt-0.pb-0(xs12 sm6 md4)
                                     v-select(v-model="redirect" :items="selectRedir" label="Max Num. of Redirects" item-text="name" item-value="id" )
-                                v-flex.py-6(xs12 sm6 md6)
+                                v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
                                     v-text-field(v-model="url" label="URL" type="" name="url" :rules="[rules.required, rules.url]")
-                                v-flex.py-6(xs12 sm6 md6)
+                                v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
                                     v-checkbox(v-model="original" label="Original" @change="clearOriginal")
-                                v-flex.py-6(xs12 sm6 md6 v-if="original==true")
+                                v-flex.py-6.pt-0.pb-0(xs12 sm6 md6 v-if="original==true")
                                     v-text-field(v-model="hostName" label="Host Name" type="" name="hostName")
-                                v-flex.py-6(xs12 sm3 md3 v-if="original==true")
+                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
                                     v-text-field(v-model="port" label="Port" type="" name="port")
-                                v-flex.py-6(xs12 sm3 md3 v-if="original==true")
+                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
                                     v-text-field(v-model="hostIp" label="Host IP" type="" name="hostIp")
-                                v-flex(xs12 pa-2)
+                                v-flex.pt-0.pb-0(xs12 pa-2)
                                     v-layout.px-2(row v-for="(header,index) in headers " :key="index")
                                         v-flex(xs12 sm3 md3)
                                             v-text-field(label="Key" v-model="header.key")
@@ -34,10 +33,10 @@
                                             v-text-field(label="Value" v-model="header.value")
                                         v-flex(xs12 sm3 md3)
                                             v-btn( color="primary" dark @click="deleteRow(index)") X
-                                v-flex(row align-center xs12 sm12 md12)
+                                v-flex.pt-0.pb-0(row align-center xs12 sm12 md12)
                                     v-btn( color="primary" dark @click="addRow") Add Headers
 
-                                v-layout.px-2(row v-if="method=='POST'")
+                                v-layout.px-2.pt-0.pb-0(row v-if="method=='POST'")
                                     v-flex(xs12 sm12 md12)
                                         v-flex(xs12 sm6 md3)
                                             v-select(v-model="postInput" :items="selectPostInput" label="Data Input Method" @change="defaultParameters")
@@ -54,27 +53,24 @@
                                         v-flex(row align-center xs12 sm12 md12 v-if="postInput=='Parameters'")
                                             v-btn(color="primary" dark @click="addParameter") Add Parameters
 
-                                v-flex.py-6(xs12 sm12 md12)
+                                v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     v-checkbox(v-model="headerOnly" label="Header only")
-                                v-flex(xs12)
+                                v-flex.pt-0.pb-0(xs12)
                                     v-btn(color="primary" block @click="getCurlInfo('nameForm')") SEND
-                                v-flex(xs12)
-                                    v-card-text
-                                        .subheading Response:
-                                    v-divider
-                                    v-card-text
+                                v-flex.pt-0.pb-0(xs12)
+
+                                    v-card-text.pb-0.pl-0
+                                        .subheading.font-weight-black Response:
                                         .subheading.text-right {{timestamp}}
-                                    v-card-text CURL Command:
+                                    v-divider
+                                    v-card-text.font-weight-bold.pb-0 CURL Command:
                                     pre(v-highlightjs="commandData")
                                         code.bash
-                                    v-card-text Response Code:
-                                    pre(v-highlightjs="responseCode")
-                                        code.bash
-                                    v-card-text Download Time:
-                                    pre(v-highlightjs="timeTotal")
-                                        code.bash
+                                    v-card-text.font-weight-bold.pb-0 Response Code & Download Time:
+                                    pre(v-highlightjs="responseCodeAndTimeTotal")
+                                        code.java.display-1.font-weight-black
 
-                                    v-card-text Header:
+                                    v-card-text.font-weight-bold Header:
                                         v-expansion-panels
                                             v-expansion-panel
                                                 v-expansion-panel-header
@@ -82,7 +78,7 @@
                                                         pre(v-highlightjs="headerData")
                                                             code.bash
 
-                                    v-card-text Body:
+                                    v-card-text.font-weight-bold.pt-0 Body:
                                         v-expansion-panels
                                             v-expansion-panel
                                                 v-expansion-panel-header
@@ -119,7 +115,8 @@
         parameters: [],
         headers: [],
         edge:0,
-        timestamp:''
+        timestamp:'',
+        responseCodeAndTimeTotal:''
       };
     },
     watch:{
@@ -161,6 +158,7 @@
                 this.commandData = result.data.command;
                 this.responseCode = result.data.responseCode;
                 this.timeTotal = result.data.timeTotal
+                this.responseCodeAndTimeTotal = result.data.responseCode+' '+result.data.timeTotal
                 this.$store.dispatch("global/finishLoading");
               }.bind(this)
             )
