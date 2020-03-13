@@ -17,7 +17,7 @@
                                         v-radio(v-for="(inLine,index) in lineList" :label="inLine" :value="index")
                                     
                                     v-text-field(v-model="packetCount" label="Count " type="number" min="1" max="100")
-                                    
+                                    v-text-field(v-model="interval" label="interval (0.2~) " type="number" min="0.2" step="0.1")
                                     v-btn(color="primary" block @click="getPingInfo()") SEND
                                 v-flex.pt-0.pb-0(xs12)
                                     v-card-text.font-weight-bold.pb-0 Body:
@@ -37,7 +37,8 @@ export default {
             dummy: dummy,
             originIP: null,
             pingBody: null,
-            packetCount:10,
+            packetCount: 10,
+            interval: 0.5,
 
             defaultIn: 'CU_New',
             defaultOut: 'CU_New',
@@ -77,7 +78,7 @@ export default {
                     .dispatch('ping/getPingInfo', {
                         origin: this.originIP,
                         interface: this.sourceIP,
-                        interval: 0.5,
+                        interval: this.interval,
                         count: this.packetCount
                     })
                     .then(
