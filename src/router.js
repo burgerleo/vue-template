@@ -4,7 +4,7 @@ import Home from "./views/Home.vue";
 import Layout from "./views/Layout.vue";
 import Helper from "./views/admin/Helper.vue";
 import Curl from "./views/Curl.vue";
-
+import Test from"./views/Test.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -25,7 +25,7 @@ export default new Router({
                     component: Home
                 },
                 {
-                    path: "/about",
+                    path: "about",
                     name: "about",
                     // route level code-splitting
                     // this generates a separate chunk (about.[hash].js) for this route
@@ -42,6 +42,10 @@ export default new Router({
                 {
                     path: "curl",
                     component: Curl
+                },
+                {
+                    path: "test-tool",
+                    component: Test
                 }
             ]
         }

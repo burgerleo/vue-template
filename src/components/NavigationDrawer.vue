@@ -54,6 +54,7 @@ export default {
                             ]
                         },
                         { title: "Curl Tool", icon: "mdi-check",router: "/curl"  },
+                        { title: "Test Tool", icon: "mdi-monitor",router: "/test-tool"  },
                         { header: "Administrator" },
                         // {
                         //     title: "Users",
