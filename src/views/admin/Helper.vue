@@ -25,19 +25,19 @@
       }
     },
     methods: {
-      onEditorBlur(quill) {
-        // console.log('editor blur!', quill)
-      },
-      onEditorFocus(quill) {
-        // console.log('editor focus!', quill)
-      },
-      onEditorReady(quill) {
-        // console.log('editor ready!', quill)
-      },
-      onEditorChange({ quill, html, text }) {
-        // console.log('editor change!', quill, html, text)
-        this.content = html
-      }
+      // onEditorBlur(quill) {
+      //   // console.log('editor blur!', quill)
+      // },
+      // onEditorFocus(quill) {
+      //   // console.log('editor focus!', quill)
+      // },
+      // onEditorReady(quill) {
+      //   // console.log('editor ready!', quill)
+      // },
+      // onEditorChange({ quill, html, text }) {
+      //   // console.log('editor change!', quill, html, text)
+      //   this.content = html
+      // }
     },
     computed: {
       editor() {
@@ -48,7 +48,7 @@
       // console.log('this is current quill instance object', this.editor)
     },
     created() {
-      console.log(this.$router.options.routes);
+      // console.log(this.$router.options.routes);
     }
   }
 </script>
