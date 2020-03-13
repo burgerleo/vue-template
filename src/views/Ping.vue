@@ -7,7 +7,7 @@
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
-                                    v-text-field(v-model="originIP" label="Origin IP" type="" name="ip" :rules="[rules.required, rules.ip]")
+                                    v-text-field(v-model="originIP" label="Destination IP" type="" name="ip" :rules="[rules.required, rules.ip]")
                                 v-flex.pt-0.pb-0(xs12 sm12 md12)
                                     p In
                                     v-radio-group(row v-model="defaultIn") 
