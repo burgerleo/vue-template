@@ -7,11 +7,17 @@ import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "@mdi/font/css/materialdesignicons.css";
 import VueHighlightJS from "vue-highlightjs";
 import 'highlight.js/styles/atom-one-dark.css'
+import VueQuillEditor from 'vue-quill-editor'
+
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
 
 Vue.use(VueHighlightJS);
 Vue.config.productionTip = false;
 import dataTable from "./components/DataTable.vue";
 Vue.component("h7-data-table", dataTable);
+Vue.use(VueQuillEditor, /* { default global options } */)
 
 new Vue({
     router,
