@@ -79,6 +79,10 @@ export default {
                     .then(
                         function(result) {
                             this.pingBody = result.data
+                            this.$store.dispatch(
+                                'global/showSnackbarSuccess',
+                                'Success!'
+                            )
                         }.bind(this)
                     )
                     .catch(
