@@ -15,6 +15,9 @@
                                     p Out
                                     v-radio-group(row v-model="defaultOut") 
                                         v-radio(v-for="(inLine,index) in lineList" :label="inLine" :value="index")
+                                    
+                                    v-text-field(v-model="packetCount" label="Count " type="number" min="1" max="100")
+                                    
                                     v-btn(color="primary" block @click="getPingInfo()") SEND
                                 v-flex.pt-0.pb-0(xs12)
                                     v-card-text.font-weight-bold.pb-0 Body:
@@ -34,6 +37,7 @@ export default {
             dummy: dummy,
             originIP: null,
             pingBody: null,
+            packetCount:10,
 
             defaultIn: 'CU_New',
             defaultOut: 'CU_New',
@@ -74,7 +78,7 @@ export default {
                         origin: this.originIP,
                         interface: this.sourceIP,
                         interval: 0.5,
-                        count: 10
+                        count: this.packetCount
                     })
                     .then(
                         function(result) {
