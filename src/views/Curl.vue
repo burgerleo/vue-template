@@ -20,7 +20,7 @@
                                 v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
                                     v-checkbox(v-model="original" label="Original" @change="clearOriginal")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm6 md6 v-if="original==true")
-                                    v-text-field(v-model="hostName" label="Host Name" type="" name="hostName")
+                                    v-text-field(v-model="hostName" label="Host Name" type="" name="hostName" readonly background-color="#ECEFF1")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
                                     v-text-field(v-model="port" label="Port" type="" name="port")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
@@ -85,7 +85,6 @@
                                                     v-expansion-panel-content
                                                         pre(v-highlightjs="bodyData")
                                                             code.bash
-
                     v-divider
 </template>
 <script>
@@ -99,7 +98,7 @@
         selectPostInput:['Parameters', 'Raw Body'],
         postInput:'Parameters',
         postBody:'',
-        method:'',
+        method:'GET',
         redirect: 0,
         url:'',
         headerOnly:0,
@@ -108,7 +107,7 @@
         responseCode:'',
         headerData:'',
         bodyData:'',
-        original:false,
+        original: true,
         hostName:'',
         port:'',
         hostIp:'',
@@ -132,7 +131,6 @@
         const parameters = this.parameters
         const time = new Date();
         if (this.$refs.form.validate()) {
-
           this.timestamp = time;
           this.$store.dispatch("global/startLoading");
           this.$store
