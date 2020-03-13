@@ -213,4 +213,5 @@
         display: block
         color: #abb2bf
         background: #282c34
+        word-break: break-all
 </style>
