@@ -18,6 +18,10 @@ export default {
         url: value => {
           const pattern = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.%]+$/gm;
           return pattern.test(value) || "Invalid url.";
+        },
+        ip: value => {
+          const pattern = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
+          return pattern.test(value) || "Invalid IP.";
         }
       }
     }

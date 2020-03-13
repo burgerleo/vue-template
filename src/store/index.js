@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import global from "./modules/global";
 import curl from './modules/curl'
 import helper from './modules/helper'
-import test from './modules/test'
+import ping from './modules/ping'
 Vue.use(Vuex);
 
 
@@ -12,6 +12,6 @@ export default new Vuex.Store({
         global,
         curl,
         helper,
-        test
+        ping
     }
 });
