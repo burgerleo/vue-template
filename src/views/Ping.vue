@@ -2,8 +2,6 @@
     v-container#sample-layout(grid-list-lg)
         v-layout(wrap)
             v-flex(xs12)
-                .title Ping Tool
-            v-flex(xs12)
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
@@ -17,12 +15,11 @@
                                     p Out
                                     v-radio-group(row v-model="defaultOut") 
                                         v-radio(v-for="(inLine,index) in lineList" :label="inLine" :value="index")
-                                v-flex.pt-0.pb-0(xs12)
                                     v-btn(color="primary" block @click="getPingInfo()") SEND
                                 v-flex.pt-0.pb-0(xs12)
-                                    v-card-text.font-weight-bold.pb-0 Ping Body:
+                                    v-card-text.font-weight-bold.pb-0 Body:
                                     pre(v-highlightjs="pingBody")
-                                        code.java.display-1.font-weight-black
+                                        code.java.display-0.font-weight-black
 </template>
 
 <script>
@@ -37,10 +34,10 @@ export default {
             dummy: dummy,
             originIP: null,
             pingBody: null,
-            
+
             defaultIn: 'CU_New',
             defaultOut: 'CU_New',
-            ip: null,
+            sourceIP: null,
 
             lineList: {
                 CU_New: 'CU_New',
@@ -57,18 +54,11 @@ export default {
         }
     },
     methods: {
-        init: function() {
-            // this.sourceIP = this.sourceIPList[1]
-        },
-
+        // init: function() {},
         getPingInfo: function() {
-            console.log(this.defaultIn)
-            console.log(this.defaultOut)
+            this.sourceIP = this.dummy[this.defaultIn][this.defaultOut]
 
-            this.ip = this.dummy[this.defaultIn][this.defaultOut]
-
-            if (this.ip == null) {
-                console.log(this.ip)
+            if (this.sourceIP == null) {
                 this.$store.dispatch(
                     'global/showSnackbarError',
                     'No Mapping Ip'
@@ -79,18 +69,16 @@ export default {
 
             if (this.validateForm()) {
                 this.$store.dispatch('global/startLoading')
-                this.$store.dispatch('global/finishLoading')
-
-                this.pingBody = 'AAA'
-
                 this.$store
                     .dispatch('ping/getPingInfo', {
-                        originIP: this.originIP,
-                        sourceIp: this.ip
+                        origin: this.originIP,
+                        interface: this.sourceIP,
+                        interval: 0.5,
+                        count: 10
                     })
                     .then(
                         function(result) {
-                            this.pingBody = result.data.body
+                            this.pingBody = result.data
                         }.bind(this)
                     )
                     .catch(
@@ -101,7 +89,6 @@ export default {
                             )
                         }.bind(this)
                     )
-
                 this.$store.dispatch('global/finishLoading')
             }
         },
@@ -110,7 +97,7 @@ export default {
         }
     },
     mounted() {
-        this.init()
+        // this.init()
     }
 }
 </script>
