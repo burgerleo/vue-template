@@ -83,6 +83,7 @@ export default {
                                 'global/showSnackbarSuccess',
                                 'Success!'
                             )
+                            this.$store.dispatch('global/finishLoading')
                         }.bind(this)
                     )
                     .catch(
@@ -91,9 +92,9 @@ export default {
                                 'global/showSnackbarError',
                                 error.message
                             )
+                            this.$store.dispatch('global/finishLoading')
                         }.bind(this)
                     )
-                this.$store.dispatch('global/finishLoading')
             }
         },
         validateForm: function() {
