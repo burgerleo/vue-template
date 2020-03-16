@@ -1,6 +1,6 @@
 <template lang="pug">
     #dataTable
-        v-data-table.elevation-1(:headers="headers" :items="items" :page.sync="page" :items-per-page="itemsPerPage" hide-default-footer @page-count="pageCount = $event" :dense="dense")
+        v-data-table.elevation-1(:headers="headers" :items="items" :page.sync="page" :items-per-page="itemsPerPage" :search="searchText" hide-default-footer @page-count="pageCount = $event" :dense="dense")
         v-row.align-center(v-if="hideFooter")
             v-col.pa-5(cols="12" sm="4")
                 v-text-field(:value="itemsPerPage" label="Items per page" type="number" min="-1" max="15" @input="itemsPerPage = parseInt($event, 10)")
@@ -24,6 +24,10 @@ export default {
         hideFooter: {
             type: Boolean,
             default: true
+        },
+        searchText: {
+            type: String,
+            default: ''
         }
     },
     data() {
@@ -31,10 +35,10 @@ export default {
             page: 1,
             pageCount: 0,
             itemsPerPage: 10
-        };
+        }
     },
     methods: {}
-};
+}
 </script>
 <style lang="sass" scoped>
 *

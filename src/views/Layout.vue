@@ -4,7 +4,7 @@
         NavigationDrawer(ref="drawer" :tabId="tabId")
         v-app-bar(fixed :clipped-left="clipped" app color="primary" dark)
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
-            v-toolbar-title Portal
+            v-toolbar-title H7 Operation Portal
             v-spacer
             v-btn(icon)
                 v-icon mdi-help-circle
@@ -12,7 +12,7 @@
             v-btn(icon)
                 v-icon mdi-dots-vertical
         v-snackbar(v-model="$store.state.global.snackbar.status" :color="$store.state.global.snackbar.color" :timeout="$store.state.global.snackbar.timeout" top ) {{$store.state.global.snackbar.text}}
-            v-btn(@click="$store.dispatch('global/closeSnackbar')") CLOSE
+            v-btn(dark text @click="$store.dispatch('global/closeSnackbar')") CLOSE
         v-content
             router-view   
         v-footer(fixed :inset="inset" app color="primary")
