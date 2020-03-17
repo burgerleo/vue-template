@@ -90,12 +90,6 @@ export default {
 
             this.sourceIP = this.dummy[this.site][inName][outName]
 
-            console.log(inName)
-            console.log(outName)
-            console.log(this.sourceIP)
-
-                return
-
             if (this.sourceIP == null) {
                 this.$store.dispatch(
                     'global/showSnackbarError',
