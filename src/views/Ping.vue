@@ -5,21 +5,23 @@
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-layout(wrap)
+                            v-layout.px-2
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     v-text-field(v-model="originIP" label="Destination IP" type="" name="ip" :rules="[rules.required, rules.ip]")
+                            v-layout.px-2
+                                v-flex(xs6 sm6 md6) In
+                                    p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{index}}
+                                        v-radio-group.mt-2(v-model="defaultIn" row)
+                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in site" :label="inLine" :value="index" :key="")
+                                v-flex(xs6 sm6 md6) Out
+                                    p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{index}}
+                                        v-radio-group.mt-2(v-model="defaultOut" row)
+                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in site" :label="inLine" :value="index" :key="")
+                            v-text-field(v-model="packetCount" label="Count" type="number" min="1" max="100")
+                            v-text-field(v-model="interval" label="Interval (0.2~) " type="number" min="0.2" step="0.1")
+                            v-btn(color="primary" block @click="getPingInfo()") SEND
+                            v-layout.px-2
                                 v-flex.pt-0.pb-0(xs12 sm12 md12)
-                                    p In
-                                    v-radio-group(row v-model="defaultIn") 
-                                        v-radio(v-for="(inLine,index) in lineList" :label="inLine" :value="index")
-                                    p Out
-                                    v-radio-group(row v-model="defaultOut") 
-                                        v-radio(v-for="(inLine,index) in lineList" :label="inLine" :value="index")
-                                    
-                                    v-text-field(v-model="packetCount" label="Count " type="number" min="1" max="100")
-                                    v-text-field(v-model="interval" label="interval (0.2~) " type="number" min="0.2" step="0.1")
-                                    v-btn(color="primary" block @click="getPingInfo()") SEND
-                                v-flex.pt-0.pb-0(xs12)
                                     v-card-text.font-weight-bold.pb-0 Body:
                                     pre(v-highlightjs="pingBody")
                                         code.java.display-0.font-weight-black
@@ -34,22 +36,37 @@ export default {
     mixins: [textFieldRules],
     data() {
         return {
+            selectMethod: ['HKR1', 'HKR2', 'TWR1', 'TWR2'],
+
             dummy: dummy,
             originIP: null,
             pingBody: null,
             packetCount: 10,
             interval: 0.5,
 
-            defaultIn: 'CU_New',
-            defaultOut: 'CU_New',
+            defaultIn: '0',
+            defaultOut: '0',
             sourceIP: null,
 
-            lineList: {
-                CU_New: 'CU_New',
-                CU: 'CU',
-                CM: 'CM',
-                SingTel_China: 'SingTel',
-                TWGate_China: 'TWGate'
+            site: '',
+            siteList: {
+                TW: {
+                    0: 'PCCW_China',
+                    1: 'TWGate_China',
+                    2: 'SingTel_Global',
+                    3: 'PCCW_Global',
+                    4: 'NTT_Global',
+                    5: 'Telstra_Global'
+                },
+                HK: {
+                    6: 'CM',
+                    7: 'SingTel_China',
+                    8: 'TWGate_China',
+                    9: 'TWGate_Global',
+                    10: 'SingTel_Global',
+                    11: 'PCCW_Global',
+                    12: 'CU'
+                }
             }
         }
     },
@@ -61,7 +78,17 @@ export default {
     methods: {
         // init: function() {},
         getPingInfo: function() {
-            this.sourceIP = this.dummy[this.defaultIn][this.defaultOut]
+            var inName = ''
+            var outName = ''
+            var outSite = ''
+
+            this.site = this.defaultIn < 6 ? 'TW' : 'HK'
+            outSite = this.defaultOut < 6 ? 'TW' : 'HK'
+
+            inName = this.siteList[this.site][this.defaultIn]
+            outName = this.siteList[outSite][this.defaultOut]
+
+            this.sourceIP = this.dummy[this.site][inName][outName]
 
             if (this.sourceIP == null) {
                 this.$store.dispatch(
@@ -76,6 +103,7 @@ export default {
                 this.$store.dispatch('global/startLoading')
                 this.$store
                     .dispatch('ping/getPingInfo', {
+                        site: this.site,
                         origin: this.originIP,
                         interface: this.sourceIP,
                         interval: this.interval,

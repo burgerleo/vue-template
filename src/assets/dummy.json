@@ -1,153 +1,125 @@
 {
-    "PCCW_China": {
-        "PCCW_China": "103.43.108.88",
-        "TWGate_China": "103.43.108.158",
-        "SingTel_Global": "103.43.108.110",
-        "PCCW_Global": "103.43.108.111",
-        "NTT_Global": "103.43.108.159",
-        "Telstra_Global": "103.43.108.201",
-        "PCCW_China_Old": "103.43.108.109"
+    "TW": {
+        "PCCW_China": {
+            "PCCW_China": "103.43.108.88",
+            "TWGate_China": "103.43.108.158",
+            "SingTel_Global": "103.43.108.110",
+            "PCCW_Global": "103.43.108.111",
+            "NTT_Global": "103.43.108.159",
+            "Telstra_Global": "103.43.108.201"
+        },
+        "TWGate_China": {
+            "TWGate_China": "146.88.158.88",
+            "PCCW_China": "146.88.158.108",
+            "SingTel_Global": "146.88.158.110",
+            "PCCW_Global": "146.88.158.111",
+            "NTT_Global": "146.88.158.159",
+            "Telstra_Global": "146.88.158.201"
+        },
+        "SingTel_Global": {
+            "SingTel_Global": "103.43.110.88",
+            "PCCW_Global": "103.43.110.111",
+            "NTT_Global": "103.43.110.159",
+            "Telstra_Global": "103.43.110.201",
+            "PCCW_China": "103.43.110.108",
+            "TWGate_China": "103.43.110.158"
+        },
+        "PCCW_Global": {
+            "PCCW_Global": "103.43.111.88",
+            "SingTel_Global": "103.43.111.110",
+            "NTT_Global": "103.43.111.159",
+            "Telstra_Global": "103.43.111.201",
+            "PCCW_China": "103.43.111.108",
+            "TWGate_China": "103.43.111.158"
+        },
+        "NTT_Global": {
+            "NTT_Global": "146.88.159.88",
+            "SingTel_Global": "146.88.159.110",
+            "PCCW_Global": "146.88.159.111",
+            "Telstra_Global": "146.88.159.201",
+            "PCCW_China": "146.88.159.108",
+            "TWGate_China": "146.88.159.158"
+        },
+        "Telstra_Global": {
+            "Telstra_Global": "159.117.201.88",
+            "SingTel_Global": "159.117.201.110",
+            "PCCW_Global": "159.117.201.111",
+            "NTT_Global": "159.117.201.159",
+            "PCCW_China": "159.117.201.108",
+            "TWGate_China": "159.117.201.158"
+        }
     },
-    "TWGate_China": {
-        "TWGate_China": "209.146.11.88",
-        "PCCW_China": "146.88.158.108",
-        "SingTel_Global": "209.146.11.10",
-        "PCCW_Global": "209.146.11.114",
-        "NTT_Global": "146.88.158.159",
-        "Telstra_Global": "146.88.158.201",
-        "PCCW_China_Old": "146.88.158.109",
-        "SingTel_China": "209.146.11.9",
-        "CU": "209.146.11.112",
-        "CM": "209.146.11.113",
-        "TWGate_Global": "209.146.11.8",
-        "Eqnunux_IX": "209.146.11.96",
-        "HK_IX": "209.146.11.100",
-        "CU_New": "209.146.11.51"
-    },
-    "SingTel_Global": {
-        "SingTel_Global": "209.146.10.88",
-        "PCCW_Global": "209.146.10.114",
-        "NTT_Global": "103.43.110.159",
-        "Telstra_Global": "103.43.110.201",
-        "PCCW_China": "103.43.110.108",
-        "TWGate_China": "103.43.110.158",
-        "PCCW_China_Old": "103.43.110.109",
-        "TWGate_Global": "209.146.10.8",
-        "Eqnunux_IX": "209.146.10.96",
-        "HK_IX": "209.146.10.100",
-        "SingTel_China": "209.146.10.9",
-        "TwGate_China": "209.146.10.11",
-        "CU": "209.146.10.112",
-        "CM": "209.146.10.113",
-        "CU_New": "209.146.10.51"
-    },
-    "PCCW_Global": {
-        "PCCW_Global": "149.71.114.88",
-        "SingTel_Global": "149.71.114.10",
-        "NTT_Global": "103.43.111.159",
-        "Telstra_Global": "103.43.111.201",
-        "PCCW_China": "103.43.111.108",
-        "TWGate_China": "103.43.111.158",
-        "PCCW_China_Old": "103.43.111.109",
-        "TWGATE_Global": "149.71.127.31",
-        "TwGate_Global": "149.71.114.8",
-        "Eqnunux_IX": "149.71.114.96",
-        "HK_IX": "149.71.114.100",
-        "SingTel_China": "149.71.114.9",
-        "TwGate_China": "149.71.114.11",
-        "Eqnunix_IX": "149.71.114.96",
-        "CU": "149.71.114.112",
-        "CM": "149.71.114.113",
-        "CU_New": "149.71.114.51"
-    },
-    "NTT_Global": {
-        "NTT_Global": "146.88.159.88",
-        "SingTel_Global": "146.88.159.110",
-        "PCCW_Global": "146.88.159.111",
-        "Telstra_Global": "146.88.159.201",
-        "PCCW_China": "146.88.159.108",
-        "TWGate_China": "146.88.159.158",
-        "PCCW_China_Old": "146.88.159.109"
-    },
-    "Telstra_Global": {
-        "Telstra_Global": "159.117.201.88",
-        "SingTel_Global": "159.117.201.110",
-        "PCCW_Global": "159.117.201.111",
-        "NTT_Global": "159.117.201.159",
-        "PCCW_China": "159.117.201.108",
-        "TWGate_China": "159.117.201.158",
-        "PCCW_China_Old": "159.117.201.109"
-    },
-    "PCCW_China_Old": {
-        "PCCW_China_Old": "103.43.109.88",
-        "PCCW_China": "103.43.109.108",
-        "SingTel_Global": "103.43.109.110",
-        "PCCW_Global": "103.43.109.111",
-        "TWGate_China": "103.43.109.158",
-        "NTT_Global": "103.43.109.159",
-        "Telstra_Global": "103.43.109.201"
-    },
-    "TWGATE_Global": {
-        "TWGATE_Global": "205.198.31.88",
-        "PCCW_Global": "205.198.31.127"
-    },
-    "CU": {
-        "CU": "149.71.112.88",
-        "TwGate_China": "149.71.112.11",
-        "SingTel_China": "149.71.112.9",
-        "CM": "149.71.112.113",
-        "TwGate_Global": "149.71.112.8",
-        "SingTel_Global": "149.71.112.10",
-        "Eqnunix_IX": "149.71.112.96",
-        "HK_IX": "149.71.112.100",
-        "PCCW_Global": "149.71.112.114"
-    },
-    "CM": {
-        "CM": "149.71.113.88",
-        "TwGate_China": "149.71.113.11",
-        "SingTel_China": "149.71.113.9",
-        "CU": "149.71.113.112",
-        "TwGate_Global": "149.71.113.8",
-        "SingTel_Global": "149.71.113.10",
-        "Eqnunix_IX": "149.71.113.96",
-        "HK_IX": "149.71.113.100",
-        "PCCW_Global": "149.71.113.114",
-        "CU_New": "149.71.113.51"
-    },
-    "SingTel_China": {
-        "SingTel_China": "209.146.9.88",
-        "TwGate_China": "209.146.9.11",
-        "CU": "209.146.9.112",
-        "CM": "209.146.9.113",
-        "TWGate_Global": "209.146.9.8",
-        "SingTel_Global": "209.146.9.10",
-        "Eqnunux_IX": "209.146.9.96",
-        "HK_IX": "209.146.9.100",
-        "PCCW_Global": "209.146.9.114",
-        "CU_New": "209.146.9.51"
-    },
-    "TWGate_Global": {
-        "TWGate_Global": "209.146.8.88",
-        "SingTel_Global": "209.146.8.10",
-        "Eqnunux_IX": "209.146.8.96",
-        "HK_IX": "209.146.8.100",
-        "PCCW_Global": "209.146.8.114",
-        "SingTel_China": "209.146.8.9",
-        "TwGate_China": "209.146.8.11",
-        "Eqnunix_IX": "209.146.8.96",
-        "CU": "209.146.8.112",
-        "CM": "209.146.8.113",
-        "CU_New": "209.146.8.51"
-    },
-    "CU_New": {
-        "CU_New": "74.114.51.88",
-        "TwGate_China": "74.114.51.11",
-        "SingTel_China": "74.114.51.9",
-        "CM": "74.114.51.113",
-        "TwGate_Global": "74.114.51.8",
-        "SingTel_Global": "74.114.51.10",
-        "Eqnunix_IX": "74.114.51.96",
-        "HK_IX": "74.114.51.100",
-        "PCCW_Global": "74.114.51.114"
+    "HK": {
+        "CM": {
+            "CM": "149.71.113.88",
+            "TwGate_China": "149.71.113.11",
+            "SingTel_China": "149.71.113.9",
+            "CU": "149.71.113.51"
+        },
+        "SingTel_China": {
+            "SingTel_China": "209.146.9.88",
+            "TwGate_China": "209.146.9.11",
+            "CM": "209.146.9.113",
+            "TWGate_Global": "209.146.9.8",
+            "SingTel_Global": "209.146.9.10",
+            "Eqnunux_IX": "209.146.9.96",
+            "HK_IX": "209.146.9.100",
+            "PCCW_Global": "209.146.9.114",
+            "CU": "209.146.9.51"
+        },
+        "TWGate_China": {
+            "TWGate_China": "209.146.11.88",
+            "SingTel_China": "209.146.11.9",
+            "CM": "209.146.11.113",
+            "TWGate_Global": "209.146.11.8",
+            "SingTel_Global": "209.146.11.10",
+            "Eqnunux_IX": "209.146.11.96",
+            "HK_IX": "209.146.11.100",
+            "PCCW_Global": "209.146.11.114",
+            "CU": "209.146.11.51"
+        },
+        "TWGate_Global": {
+            "TWGate_Global": "209.146.8.88",
+            "SingTel_Global": "209.146.8.10",
+            "Eqnunux_IX": "209.146.8.96",
+            "HK_IX": "209.146.8.100",
+            "PCCW_Global": "209.146.8.114",
+            "SingTel_China": "209.146.8.9",
+            "TwGate_China": "209.146.8.11",
+            "Eqnunix_IX": "209.146.8.96",
+            "CU": "209.146.8.51"
+        },
+        "SingTel_Global": {
+            "SingTel_Global": "209.146.10.88",
+            "TWGate_Global": "209.146.10.8",
+            "Eqnunux_IX": "209.146.10.96",
+            "HK_IX": "209.146.10.100",
+            "PCCW_Global": "209.146.10.114",
+            "SingTel_China": "209.146.10.9",
+            "TwGate_China": "209.146.10.11",
+            "CU": "209.146.10.51"
+        },
+        "PCCW_Global": {
+            "PCCW_Global": "149.71.114.88",
+            "TwGate_Global": "149.71.114.8",
+            "SingTel_Global": "149.71.114.10",
+            "Eqnunux_IX": "149.71.114.96",
+            "HK_IX": "149.71.114.100",
+            "SingTel_China": "149.71.114.9",
+            "TwGate_China": "149.71.114.11",
+            "Eqnunix_IX": "149.71.114.96",
+            "CU": "149.71.114.51"
+        },
+        "CU": {
+            "CU": "74.114.51.88",
+            "TwGate_China": "74.114.51.11",
+            "SingTel_China": "74.114.51.9",
+            "CM": "74.114.51.113",
+            "TwGate_Global": "74.114.51.8",
+            "SingTel_Global": "74.114.51.10",
+            "Eqnunix_IX": "74.114.51.96",
+            "HK_IX": "74.114.51.100",
+            "PCCW_Global": "74.114.51.114"
+        }
     }
 }
