@@ -44,8 +44,8 @@ export default {
             packetCount: 10,
             interval: 0.5,
 
-            defaultIn: '0',
-            defaultOut: '0',
+            defaultIn: '6',
+            defaultOut: '6',
             sourceIP: null,
 
             site: '',
@@ -59,13 +59,13 @@ export default {
                     5: 'Telstra_Global'
                 },
                 HK: {
-                    6: 'CM',
-                    7: 'SingTel_China',
-                    8: 'TWGate_China',
-                    9: 'TWGate_Global',
-                    10: 'SingTel_Global',
-                    11: 'PCCW_Global',
-                    12: 'CU'
+                    6: 'CU',
+                    7: 'CM',
+                    8: 'SingTel_China',
+                    9: 'TWGate_China',
+                    10: 'TWGate_Global',
+                    11: 'SingTel_Global',
+                    12: 'PCCW_Global'
                 }
             }
         }
@@ -89,6 +89,12 @@ export default {
             outName = this.siteList[outSite][this.defaultOut]
 
             this.sourceIP = this.dummy[this.site][inName][outName]
+
+            console.log(inName)
+            console.log(outName)
+            console.log(this.sourceIP)
+
+                return
 
             if (this.sourceIP == null) {
                 this.$store.dispatch(
