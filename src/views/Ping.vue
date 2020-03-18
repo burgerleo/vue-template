@@ -7,16 +7,17 @@
                         v-form(ref="form" onsubmit="return false;")
                             v-layout.px-2
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
-                                    v-text-field(v-model="originIP" label="Destination IP" type="" name="ip" :rules="[rules.required, rules.ip]")
+                                    v-text-field(v-model="originIP" label="Destination IP" type="ip" name="ip" :rules="[rules.required, rules.ip]")
+                                    v-text-field(v-model="sourceIP" label="Instance IP" type="ip" :rules="[rules.required, rules.ip]")
                             v-layout.px-2
                                 v-flex(xs6 sm6 md6) In
                                     p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{index}}
-                                        v-radio-group.mt-2(v-model="defaultIn" row)
+                                        v-radio-group.mt-2(v-model="defaultIn" row @change="getOriginIP()")
                                             v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in site" :label="inLine" :value="index" :key="")
                                 v-flex(xs6 sm6 md6) Out
                                     p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{index}}
-                                        v-radio-group.mt-2(v-model="defaultOut" row)
-                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in site" :label="inLine" :value="index" :key="")
+                                        v-radio-group.mt-2(v-model="defaultOut" row @change="getOriginIP()")
+                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in site" :label="inLine" :value="index" :key="" )
                             v-text-field(v-model="packetCount" label="Count" type="number" min="1" max="100")
                             v-text-field(v-model="interval" label="Interval (0.2~) " type="number" min="0.2" step="0.1")
                             v-btn(color="primary" block @click="getPingInfo()") SEND
@@ -79,7 +80,7 @@ export default {
     },
     methods: {
         // init: function() {},
-        getPingInfo: function() {
+        getOriginIP: function() {
             var inName = ''
             var outName = ''
             var outSite = ''
@@ -93,17 +94,20 @@ export default {
             if (this.dummy[this.site][inName]) {
                 // [site][in][out]
                 this.sourceIP = this.dummy[this.site][inName][outName]
+            } else {
+                this.sourceIP == null
             }
 
-            if (this.sourceIP == null) {
-                this.$store.dispatch(
-                    'global/showSnackbarError',
-                    'No Mapping Ip'
-                )
+            // if (this.sourceIP == null) {
+            //     this.$store.dispatch(
+            //         'global/showSnackbarError',
+            //         'No Mapping Ip'
+            //     )
 
-                return
-            }
-
+            //     return
+            // }
+        },
+        getPingInfo: function() {
             if (this.validateForm()) {
                 this.$store.dispatch('global/startLoading')
                 this.$store
@@ -141,6 +145,7 @@ export default {
     },
     mounted() {
         // this.init()
+        this.getOriginIP()
     }
 }
 </script>
