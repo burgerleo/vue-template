@@ -65,7 +65,9 @@ export default {
                     9: 'TWGate_China',
                     10: 'TWGate_Global',
                     11: 'SingTel_Global',
-                    12: 'PCCW_Global'
+                    12: 'PCCW_Global',
+                    13: 'Eqnunux_IX',
+                    14: 'HK_IX'
                 }
             }
         }
@@ -88,7 +90,10 @@ export default {
             inName = this.siteList[this.site][this.defaultIn]
             outName = this.siteList[outSite][this.defaultOut]
 
-            this.sourceIP = this.dummy[this.site][inName][outName]
+            if (this.dummy[this.site][inName]) {
+                // [site][in][out]
+                this.sourceIP = this.dummy[this.site][inName][outName]
+            }
 
             if (this.sourceIP == null) {
                 this.$store.dispatch(
