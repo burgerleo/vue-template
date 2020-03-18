@@ -17,6 +17,14 @@ export default {
         .catch(function(error) {
           return Promise.reject(error.response.data);
         });
+    },
+    getDomainList: () => {
+      return axios.get("curl/domain-list").then(function(response) {
+        return Promise.resolve(response.data.data);
+      })
+        .catch(function(error) {
+          return Promise.reject(error.response.data);
+        });
     }
   }
 }

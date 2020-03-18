@@ -18,7 +18,7 @@
                                 v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
                                     v-text-field(v-model="url" label="URL" type="" name="url" :rules="[rules.required, rules.url]")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
-                                    v-checkbox(v-model="original" label="Original" @change="clearOriginal")
+                                    v-checkbox(v-model="original" label="Origin" @change="clearOriginal")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm6 md6 v-if="original==true")
                                     v-text-field(v-model="hostName" label="Host Name" type="" name="hostName" readonly background-color="#ECEFF1")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
@@ -115,12 +115,15 @@
         headers: [],
         edge:0,
         timestamp:'',
-        responseCodeAndTimeTotal:''
+        responseCodeAndTimeTotal:'',
+        domainList:[],
+        multiHostIP:false
       };
     },
     watch:{
       url: function(value) {
         this.originalDataFormat(value)
+        this.mappingIp(value)
       }
     },
     methods: {
@@ -203,6 +206,35 @@
       deleteParameter: function (index) {
         this.parameters.splice(index, 1)
       },
+      mappingIp:function (value) {
+        var arr = []
+        let list = this.domainList.filter((item) => {
+          return item.domain == value
+        })
+
+        list.forEach((item, index, array) => {
+          arr.push(item.host)
+        })
+
+        if (list.length > 0){
+          this.hostIp = arr.join(' or ')
+        }
+
+      }
+    },
+    created() {
+      this.$store.dispatch("curl/getDomainList", {})
+        .then(
+          function(result) {
+            this.domainList = result.data.list;
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.$store.dispatch("global/showSnackbarError", error.message);
+            this.$store.dispatch("global/finishLoading");
+          }.bind(this)
+        );
     }
   };
 </script>
