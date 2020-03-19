@@ -80,16 +80,14 @@
 </template>
 
 <script>
-import DataTableAction from '../components/DataTableAction'
+// import DataTableAction from '../components/DataTableAction'
 import textFieldRules from '../utils/textFieldRules'
-import bpgList from '../assets/ispList.json'
+// import bpgList from '../assets/ispList.json'
 
 export default {
-    name: 'Isp',
+    name: 'BGP',
     mixins: [textFieldRules],
-    components: {
-        DataTableAction
-    },
+    components: {},
     data() {
         return {
             page: 1,
@@ -172,12 +170,34 @@ export default {
                     value: 'actions'
                 }
             ],
-            desserts: bpgList,
+            desserts: [],
             searchList: [],
             copyDesserts: null
         }
     },
     methods: {
+        init: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('bgp/getInfo')
+                .then(
+                    function(result) {
+                        this.desserts = result.data
+                        this.copyDesserts = result.data
+
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
         newDialog: function() {
             this.formTitle = 'Add BGP Peer'
             this.dialog.add = true
@@ -229,23 +249,63 @@ export default {
             // 組合 Form shortName
             var shortName
             var list = this.bgp
-            shortName =
-                list.isp + '-' + list.site + '-' + list.br + '-' + list.routes
+            shortName = list.isp + '-' + list.site + list.br + list.routes
             this.bgp.name = shortName
         },
         store: function() {
             // 新增 API
-            // do someting
-            Object.assign(this.desserts[this.editedIndex], this.bgp)
-            this.$store.dispatch('global/showSnackbarSuccess', 'Success!')
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('bgp/createBGP', this.bgp)
+                .then(
+                    function(result) {
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
+                        this.init()
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.init()
+                    }.bind(this)
+                )
+            // this.desserts.push(this.bgp)
+            // Object.assign(this.desserts[this.editedIndex], this.bgp)
         },
         update: function() {
             // Update API
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('bgp/updateBGP', this.bgp)
+                .then(
+                    function(result) {
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
+                        this.init()
 
-            // do someting
+                        // this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.init()
 
-            this.desserts.push(this.bgp)
-            this.$store.dispatch('global/showSnackbarSuccess', 'Success!')
+                        // this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+            // this.desserts.push(this.bgp)
         },
         save() {
             // 判斷是否執行哪一種 API
@@ -264,20 +324,42 @@ export default {
             }
 
             if (this.editedIndex > -1) {
-                this.store()
-            } else {
                 this.update()
+            } else {
+                this.store()
             }
 
             this.closeDialog()
         },
         destroy: function() {
             // 刪除 API
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('bgp/destroyBGP', this.bgp)
+                .then(
+                    function(result) {
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
+                        this.init()
 
-            // do someting
+                        // this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.init()
 
-            this.desserts.splice(this.editedIndex, 1)
-            this.$store.dispatch('global/showSnackbarSuccess', 'Success!')
+                        // this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+
+            // this.desserts.splice(this.editedIndex, 1)
             this.closeDialog()
         },
         rowIndex: function(index) {
@@ -308,7 +390,6 @@ export default {
 
             // 先將要收尋得文文字轉程大寫
             for (var searchKey in this.searchList) {
-                
                 var searchString = this.searchList[searchKey]
                     .toString()
                     .toLocaleUpperCase()
@@ -341,6 +422,9 @@ export default {
                 this.desserts = list
             }
         }
+    },
+    mounted() {
+        this.init()
     }
 }
 </script>
