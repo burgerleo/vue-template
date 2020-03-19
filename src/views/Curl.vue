@@ -1,8 +1,11 @@
 <template lang="pug">
     v-container#sample-layout(grid-list-lg)
-        v-layout(wrap)
+        v-layout(wrap column)
             v-flex(xs12)
-                .title Curl Tool
+                v-layout.ml-1.mt-1(row)
+                    .title Curl Tool
+                    v-btn(icon :to="'/helper/'+ pageName" )
+                        v-icon(small) mdi-help-circle
             v-flex(xs12)
                 v-card
                     v-card-text
@@ -117,7 +120,8 @@
         timestamp:'',
         responseCodeAndTimeTotal:'',
         domainList:[],
-        multiHostIP:false
+        multiHostIP:false,
+        pageName:''
       };
     },
     watch:{
@@ -212,7 +216,7 @@
           return item.domain == value
         })
 
-        list.forEach((item, index, array) => {
+        list.forEach((item) => {
           arr.push(item.host)
         })
 
@@ -235,6 +239,8 @@
             this.$store.dispatch("global/finishLoading");
           }.bind(this)
         );
+    },mounted() {
+      this.pageName = this.$router.currentRoute.name;
     }
   };
 </script>

@@ -36,10 +36,11 @@ export default new Router({
                         )
                 },
                 {
-                    path: "helper",
+                    path: "helper/:helper_id",
                     component: Helper
                 },
                 {
+                    name:"curl",
                     path: "curl",
                     component: Curl
                 },

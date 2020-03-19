@@ -84,8 +84,7 @@ export default {
                         //   children: [
                         //     { title: "Helper", icon: "mdi-image",router: "/dashboard" },
                         //   ]
-                        // },
-                      { title: "Helper Manage", icon: "mdi-help",router: "/helper" },
+                        // }
                     ]
                 },
                 // {

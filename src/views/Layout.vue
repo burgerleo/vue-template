@@ -6,7 +6,7 @@
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
             v-toolbar-title Portal
             v-spacer
-            v-btn(icon)
+            //v-btn(icon)
                 v-icon mdi-help-circle
             Setting
             v-btn(icon)

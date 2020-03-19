@@ -1,54 +1,42 @@
 <template lang="pug">
     v-container#sample-layout(grid-list-lg)
-        v-layout(wrap)
+        v-layout(wrap column)
             v-flex(xs12)
-                .title Helper Manage
+                v-layout.ml-1.mt-1(row)
+                    .title {{ title }} Online Helper
+                    v-spacer
+                    v-btn(color="primary" dark ) Edit
             v-flex(xs12)
-                quill-editor(ref="myQuillEditor" v-model="content" :options="editorOption" @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"  @ready="onEditorReady($event)")
-                    v-divider
+                v-card
+                    v-card-text
+
 </template>
 <script>
   import textFieldRules from "../../utils/textFieldRules";
-  import { quillEditor } from 'vue-quill-editor'
   export default {
     mixins: [textFieldRules],
-    components: {
-      quillEditor
-    },
-    data () {
+    data() {
       return {
-        page:'',
-        content: '',
-        editorOption: {
-          // Some Quill options...
-        }
-      }
+        title:''
+      };
+    },
+    watch:{
+
     },
     methods: {
-      // onEditorBlur(quill) {
-      //   // console.log('editor blur!', quill)
-      // },
-      // onEditorFocus(quill) {
-      //   // console.log('editor focus!', quill)
-      // },
-      // onEditorReady(quill) {
-      //   // console.log('editor ready!', quill)
-      // },
-      // onEditorChange({ quill, html, text }) {
-      //   // console.log('editor change!', quill, html, text)
-      //   this.content = html
-      // }
-    },
-    computed: {
-      editor() {
-        return this.$refs.myQuillEditor.quill
-      }
-    },
-    mounted() {
-      // console.log('this is current quill instance object', this.editor)
+      setTitle: function () {
+        this.title = this.$router.currentRoute.params.helper_id;
+      },
     },
     created() {
-      // console.log(this.$router.options.routes);
+
+    },
+    mounted() {
+      this.setTitle();
     }
-  }
+  };
 </script>
+<style lang="sass" scoped>
+    .title
+        text-transform: capitalize
+</style>
