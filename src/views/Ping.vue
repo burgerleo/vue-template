@@ -93,11 +93,17 @@ export default {
             outName = this.siteList[outSite][this.defaultOut]
 
             if (this.dummy[this.site][inName]) {
+                // console.log('exist')
                 // [site][in][out]
                 this.sourceIP = this.dummy[this.site][inName][outName]
             } else {
-                this.sourceIP == null
+                // console.log('not exist')
+                this.sourceIP = null
             }
+
+            // console.log(this.defaultIn,this.defaultOut)
+            // console.log(this.site,inName,outName)
+            // console.log(this.sourceIP)
 
             // if (this.sourceIP == null) {
             //     this.$store.dispatch(
