@@ -6,7 +6,7 @@ import Helper from "./views/admin/Helper.vue";
 import Curl from "./views/Curl.vue";
 import Ping from"./views/Ping.vue";
 import Dummy from"./views/Dummy.vue";
-import Isp from"./views/Isp.vue";
+import BGP from"./views/BGP.vue";
 
 Vue.use(Router);
 
@@ -51,8 +51,8 @@ export default new Router({
                     component: Ping
                 },
                 {
-                    path: "isp",
-                    component: Isp
+                    path: "bgp",
+                    component: BGP
                 },
                 {
                     path: "dummy-ip",

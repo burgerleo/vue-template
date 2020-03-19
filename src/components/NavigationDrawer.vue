@@ -47,12 +47,12 @@ export default {
                     id: 1,
                     menu: [
                         { header: "General" },
-                        {
-                            title: "Dashboard",
-                            icon: "mdi-view-dashboard",
-                            children: [
-                            ]
-                        },
+                        // {
+                        //     title: "Dashboard",
+                        //     icon: "mdi-view-dashboard",
+                        //     children: [
+                        //     ]
+                        // },
                         { title: "Curl Tool", icon: "mdi-check",router: "/curl"  },
                         { title: "Ping Tool", icon: "mdi-monitor",router: "/ping"  },
                         { header: "Administrator" },
@@ -86,6 +86,7 @@ export default {
                         //   ]
                         // },
                       { title: "Helper Manage", icon: "mdi-help",router: "/helper" },
+                      { title: "BGP Peer", icon: "mdi-call-made",router: "/bgp" },
                     ]
                 },
                 // {
