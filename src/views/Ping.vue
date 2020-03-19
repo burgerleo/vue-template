@@ -60,15 +60,16 @@ export default {
                     5: 'Telstra_Global'
                 },
                 HK: {
-                    6: 'CU',
-                    7: 'CM',
-                    8: 'SingTel_China',
-                    9: 'TWGate_China',
-                    10: 'TWGate_Global',
-                    11: 'SingTel_Global',
-                    12: 'PCCW_Global',
-                    13: 'Eqnunux_IX',
-                    14: 'HK_IX'
+                    6: 'CU_R1',
+                    7: 'CU_R2',
+                    8: 'CM',
+                    9: 'SingTel_China',
+                    10: 'TWGate_China',
+                    11: 'TWGate_Global',
+                    12: 'SingTel_Global',
+                    13: 'PCCW_Global',
+                    14: 'Equinix_IX',
+                    15: 'HK_IX'
                 }
             }
         }
