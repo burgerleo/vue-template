@@ -1,0 +1,584 @@
+[
+    {
+        "site": "TW",
+        "in": "PCCW_China",
+        "out": "PCCW_China",
+        "ip": "103.43.108.88"
+    },
+    {
+        "site": "TW",
+        "in": "TWGate_China",
+        "out": "TWGate_China",
+        "ip": "146.88.158.88"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_China",
+        "out": "TWGate_China",
+        "ip": "103.43.108.158"
+    },
+    {
+        "site": "TW",
+        "in": "TWGate_China",
+        "out": "PCCW_China",
+        "ip": "146.88.158.108"
+    },
+    {
+        "site": "TW",
+        "in": "SingTel_Global",
+        "out": "SingTel_Global",
+        "ip": "103.43.110.88"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_Global",
+        "out": "PCCW_Global",
+        "ip": "103.43.111.88"
+    },
+    {
+        "site": "TW",
+        "in": "NTT_Global",
+        "out": "NTT_Global",
+        "ip": "146.88.159.88"
+    },
+    {
+        "site": "TW",
+        "in": "Telstra_Global",
+        "out": "Telstra_Global",
+        "ip": "159.117.201.88"
+    },
+    {
+        "site": "TW",
+        "in": "SingTel_Global",
+        "out": "PCCW_Global",
+        "ip": "103.43.110.111"
+    },
+    {
+        "site": "TW",
+        "in": "SingTel_Global",
+        "out": "NTT_Global",
+        "ip": "103.43.110.159"
+    },
+    {
+        "site": "TW",
+        "in": "SingTel_Global",
+        "out": "Telstra_Global",
+        "ip": "103.43.110.201"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_Global",
+        "out": "SingTel_Global",
+        "ip": "103.43.111.110"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_Global",
+        "out": "NTT_Global",
+        "ip": "103.43.111.159"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_Global",
+        "out": "Telstra_Global",
+        "ip": "103.43.111.201"
+    },
+    {
+        "site": "TW",
+        "in": "NTT_Global",
+        "out": "SingTel_Global",
+        "ip": "146.88.159.110"
+    },
+    {
+        "site": "TW",
+        "in": "NTT_Global",
+        "out": "PCCW_Global",
+        "ip": "146.88.159.111"
+    },
+    {
+        "site": "TW",
+        "in": "NTT_Global",
+        "out": "Telstra_Global",
+        "ip": "146.88.159.201"
+    },
+    {
+        "site": "TW",
+        "in": "Telstra_Global",
+        "out": "SingTel_Global",
+        "ip": "159.117.201.110"
+    },
+    {
+        "site": "TW",
+        "in": "Telstra_Global",
+        "out": "PCCW_Global",
+        "ip": "159.117.201.111"
+    },
+    {
+        "site": "TW",
+        "in": "Telstra_Global",
+        "out": "NTT_Global",
+        "ip": "159.117.201.159"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_China",
+        "out": "SingTel_Global",
+        "ip": "103.43.108.110"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_China",
+        "out": "PCCW_Global",
+        "ip": "103.43.108.111"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_China",
+        "out": "NTT_Global",
+        "ip": "103.43.108.159"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_China",
+        "out": "Telstra_Global",
+        "ip": "103.43.108.201"
+    },
+    {
+        "site": "TW",
+        "in": "TWGate_China",
+        "out": "SingTel_Global",
+        "ip": "146.88.158.110"
+    },
+    {
+        "site": "TW",
+        "in": "TWGate_China",
+        "out": "PCCW_Global",
+        "ip": "146.88.158.111"
+    },
+    {
+        "site": "TW",
+        "in": "TWGate_China",
+        "out": "NTT_Global",
+        "ip": "146.88.158.159"
+    },
+    {
+        "site": "TW",
+        "in": "TWGate_China",
+        "out": "Telstra_Global",
+        "ip": "146.88.158.201"
+    },
+    {
+        "site": "TW",
+        "in": "SingTel_Global",
+        "out": "PCCW_China",
+        "ip": "103.43.110.108"
+    },
+    {
+        "site": "TW",
+        "in": "SingTel_Global",
+        "out": "TWGate_China",
+        "ip": "103.43.110.158"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_Global",
+        "out": "PCCW_China",
+        "ip": "103.43.111.108"
+    },
+    {
+        "site": "TW",
+        "in": "PCCW_Global",
+        "out": "TWGate_China",
+        "ip": "103.43.111.158"
+    },
+    {
+        "site": "TW",
+        "in": "NTT_Global",
+        "out": "PCCW_China",
+        "ip": "146.88.159.108"
+    },
+    {
+        "site": "TW",
+        "in": "NTT_Global",
+        "out": "TWGate_China",
+        "ip": "146.88.159.158"
+    },
+    {
+        "site": "TW",
+        "in": "Telstra_Global",
+        "out": "PCCW_China",
+        "ip": "159.117.201.108"
+    },
+    {
+        "site": "TW",
+        "in": "Telstra_Global",
+        "out": "TWGate_China",
+        "ip": "159.117.201.158"
+    },
+    {
+        "site": "HK",
+        "in": "CM",
+        "out": "CM",
+        "ip": "149.71.113.88"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_China",
+        "out": "SingTel_China",
+        "ip": "209.146.9.88"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_China",
+        "out": "TWGate_China",
+        "ip": "209.146.11.88"
+    },
+    {
+        "site": "HK",
+        "in": "CM",
+        "out": "TwGate_China",
+        "ip": "149.71.113.11"
+    },
+    {
+        "site": "HK",
+        "in": "CM",
+        "out": "SingTel_China",
+        "ip": "149.71.113.9"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_China",
+        "out": "TwGate_China",
+        "ip": "209.146.9.11"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_China",
+        "out": "CM",
+        "ip": "209.146.9.113"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_China",
+        "out": "SingTel_China",
+        "ip": "209.146.11.9"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_China",
+        "out": "CM",
+        "ip": "209.146.11.113"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "TWGate_Global",
+        "ip": "209.146.8.88"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "SingTel_Global",
+        "ip": "209.146.10.88"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "PCCW_Global",
+        "ip": "149.71.114.88"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "SingTel_Global",
+        "ip": "209.146.8.10"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "Eqnunux_IX",
+        "ip": "209.146.8.96"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "HK_IX",
+        "ip": "209.146.8.100"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "PCCW_Global",
+        "ip": "209.146.8.114"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "TwGate_Global",
+        "ip": "149.71.114.8"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "SingTel_Global",
+        "ip": "149.71.114.10"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "Eqnunux_IX",
+        "ip": "149.71.114.96"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "HK_IX",
+        "ip": "149.71.114.100"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "TWGate_Global",
+        "ip": "209.146.10.8"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "Eqnunux_IX",
+        "ip": "209.146.10.96"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "HK_IX",
+        "ip": "209.146.10.100"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "PCCW_Global",
+        "ip": "209.146.10.114"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_China",
+        "out": "TWGate_Global",
+        "ip": "209.146.9.8"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_China",
+        "out": "SingTel_Global",
+        "ip": "209.146.9.10"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_China",
+        "out": "Eqnunux_IX",
+        "ip": "209.146.9.96"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_China",
+        "out": "HK_IX",
+        "ip": "209.146.9.100"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_China",
+        "out": "PCCW_Global",
+        "ip": "209.146.9.114"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_China",
+        "out": "TWGate_Global",
+        "ip": "209.146.11.8"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_China",
+        "out": "SingTel_Global",
+        "ip": "209.146.11.10"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_China",
+        "out": "Eqnunux_IX",
+        "ip": "209.146.11.96"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_China",
+        "out": "HK_IX",
+        "ip": "209.146.11.100"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_China",
+        "out": "PCCW_Global",
+        "ip": "209.146.11.114"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "SingTel_China",
+        "ip": "209.146.10.9"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "TwGate_China",
+        "ip": "209.146.10.11"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "Eqnunux_IX",
+        "ip": "209.146.10.96"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "HK_IX",
+        "ip": "209.146.10.100"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "SingTel_China",
+        "ip": "209.146.8.9"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "TwGate_China",
+        "ip": "209.146.8.11"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "Eqnunix_IX",
+        "ip": "209.146.8.96"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "HK_IX",
+        "ip": "209.146.8.100"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "SingTel_China",
+        "ip": "149.71.114.9"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "TwGate_China",
+        "ip": "149.71.114.11"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "Eqnunix_IX",
+        "ip": "149.71.114.96"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "HK_IX",
+        "ip": "149.71.114.100"
+    },
+    {
+        "site": "HK",
+        "in": "CU",
+        "out": "CU",
+        "ip": "74.114.51.88"
+    },
+    {
+        "site": "HK",
+        "in": "CU",
+        "out": "TwGate_China",
+        "ip": "74.114.51.11"
+    },
+    {
+        "site": "HK",
+        "in": "CU",
+        "out": "SingTel_China",
+        "ip": "74.114.51.9"
+    },
+    {
+        "site": "HK",
+        "in": "CU",
+        "out": "CM",
+        "ip": "74.114.51.113"
+    },
+    {
+        "site": "HK",
+        "in": "CM",
+        "out": "CU",
+        "ip": "149.71.113.51"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_China",
+        "out": "CU",
+        "ip": "209.146.9.51"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_China",
+        "out": "CU",
+        "ip": "209.146.11.51"
+    },
+    {
+        "site": "HK",
+        "in": "CU",
+        "out": "TwGate_Global",
+        "ip": "74.114.51.8"
+    },
+    {
+        "site": "HK",
+        "in": "CU",
+        "out": "SingTel_Global",
+        "ip": "74.114.51.10"
+    },
+    {
+        "site": "HK",
+        "in": "CU",
+        "out": "Eqnunix_IX",
+        "ip": "74.114.51.96"
+    },
+    {
+        "site": "HK",
+        "in": "CU",
+        "out": "HK_IX",
+        "ip": "74.114.51.100"
+    },
+    {
+        "site": "HK",
+        "in": "CU",
+        "out": "PCCW_Global",
+        "ip": "74.114.51.114"
+    },
+    {
+        "site": "HK",
+        "in": "SingTel_Global",
+        "out": "CU",
+        "ip": "209.146.10.51"
+    },
+    {
+        "site": "HK",
+        "in": "TWGate_Global",
+        "out": "CU",
+        "ip": "209.146.8.51"
+    },
+    {
+        "site": "HK",
+        "in": "PCCW_Global",
+        "out": "CU",
+        "ip": "149.71.114.51"
+    }
+]

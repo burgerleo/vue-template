@@ -4,7 +4,10 @@ import Home from "./views/Home.vue";
 import Layout from "./views/Layout.vue";
 import Helper from "./views/admin/Helper.vue";
 import Curl from "./views/Curl.vue";
-import Test from"./views/Test.vue";
+import Ping from"./views/Ping.vue";
+import Dummy from"./views/Dummy.vue";
+import Isp from"./views/Isp.vue";
+
 Vue.use(Router);
 
 export default new Router({
@@ -17,7 +20,7 @@ export default new Router({
             children: [
                 {
                     path: "",
-                    redirect: "home"
+                    redirect: "curl"
                 },
                 {
                     path: "home",
@@ -45,8 +48,16 @@ export default new Router({
                     component: Curl
                 },
                 {
-                    path: "test-tool",
-                    component: Test
+                    path: "Ping",
+                    component: Ping
+                },
+                {
+                    path: "isp",
+                    component: Isp
+                },
+                {
+                    path: "dummy-ip",
+                    component: Dummy
                 }
             ]
         }

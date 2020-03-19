@@ -4,13 +4,15 @@
         NavigationDrawer(ref="drawer" :tabId="tabId")
         v-app-bar(fixed :clipped-left="clipped" app color="primary" dark)
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
-            v-toolbar-title Portal
+            v-toolbar-title H7 Operation Portal
             v-spacer
             //v-btn(icon)
                 v-icon mdi-help-circle
             Setting
             v-btn(icon)
                 v-icon mdi-dots-vertical
+        v-snackbar(v-model="$store.state.global.snackbar.status" :color="$store.state.global.snackbar.color" :timeout="$store.state.global.snackbar.timeout" top ) {{$store.state.global.snackbar.text}}
+            v-btn(dark text @click="$store.dispatch('global/closeSnackbar')") CLOSE
         v-content
             router-view   
         v-footer(fixed :inset="inset" app color="primary")
@@ -21,14 +23,14 @@
                      
 </template>
 <script>
-import NavigationDrawer from "../components/NavigationDrawer";
-import Setting from "../components/Setting";
-import Loading from "../components/Loading";
+import NavigationDrawer from '../components/NavigationDrawer'
+import Setting from '../components/Setting'
+import Loading from '../components/Loading'
 export default {
     components: {
-      NavigationDrawer,
-      Setting,
-      Loading
+        NavigationDrawer,
+        Setting,
+        Loading
     },
     data() {
         return {
@@ -39,9 +41,9 @@ export default {
             env: process.env.NODE_ENV,
             inset: false,
             tabs: [
-                { id: 1, name: "CST" },
-                { id: 2, name: "OPS" },
-                { id: 3, name: "RD" }
+                { id: 1, name: 'CST' },
+                { id: 2, name: 'OPS' },
+                { id: 3, name: 'RD' }
             ],
             selectedTabId: 1,
             selectedTab: 1,
@@ -49,25 +51,25 @@ export default {
             dialog: {
                 setting: false
             }
-        };
+        }
     },
     watch: {
         selectedTab: function() {
-            this.selectedTabId = this.selectedTab - 1;
+            this.selectedTabId = this.selectedTab - 1
         }
     },
     methods: {
         navigationControl(value) {
-            this.selectedTab = value;
-            this.selectedTabId = this.selectedTab - 1;
+            this.selectedTab = value
+            this.selectedTabId = this.selectedTab - 1
         }
     },
     mounted() {
-        var d = new Date();
-        this.year = d.getFullYear();
+        var d = new Date()
+        this.year = d.getFullYear()
         // console.log(this.year);
     }
-};
+}
 </script>
 <style>
 /* .version {
