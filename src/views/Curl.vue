@@ -26,8 +26,12 @@
                                     v-text-field(v-model="hostName" label="Host Name" type="" name="hostName" readonly background-color="#ECEFF1")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
                                     v-text-field(v-model="port" label="Port" type="" name="port")
-                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
+                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true && multiHostIp==false")
                                     v-text-field(v-model="hostIp" label="Host IP" type="" name="hostIp")
+                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-else="original==true && multiHostIp==true")
+                                    v-radio-group.pt-0.mt-1(row v-model="hostIp" :mandatory="true") Host IP
+                                        v-spacer.pl-3
+                                            v-radio(v-for="ip in hostIpList" :label="ip" :value="ip")
                                 v-flex.pt-0.pb-0(xs12 pa-2)
                                     v-layout.px-2(row v-for="(header,index) in headers " :key="index")
                                         v-flex(xs12 sm3 md3)
@@ -116,12 +120,13 @@
         hostIp:'',
         parameters: [],
         headers: [],
-        edge:0,
+        edge: 0,
         timestamp:'',
         responseCodeAndTimeTotal:'',
         domainList:[],
-        multiHostIP:false,
-        pageName:''
+        pageName:'',
+        hostIpList: [],
+        multiHostIp: false
       };
     },
     watch:{
@@ -211,6 +216,8 @@
         this.parameters.splice(index, 1)
       },
       mappingIp:function (value) {
+        this.multiHostIp = false
+        this.hostIp = ''
         var arr = []
         let list = this.domainList.filter((item) => {
           return item.domain == value
@@ -220,9 +227,16 @@
           arr.push(item.host)
         })
 
-        if (list.length > 0){
-          this.hostIp = arr.join(' or ')
+        if (list.length ==1) {
+          this.hostIp = arr[0]
+        }else if (list.length >1) {
+          this.multiHostIp = true
+          this.hostIpList = arr
         }
+
+        // if (list.length > 0){
+        //   this.hostIp = arr.join(' , ')
+        // }
 
       }
     },
