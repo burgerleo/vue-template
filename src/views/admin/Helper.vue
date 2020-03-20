@@ -18,8 +18,8 @@
                                     v-btn(dark text @click="saveHtml") Save
                             v-list(three-line subheader)
                                 v-layout(wrap)
-                                    v-subheader Edit Helper Content
-                                    v-flex.pa-5(xs12)
+                                    .title.ml-5.mt-2 Edit Helper Content
+                                    v-flex.pa-5.pt-1(xs12)
                                         quill-editor.fill-height(
                                             ref="myQuillEditor"
                                             :options="editorOption"
