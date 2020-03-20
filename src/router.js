@@ -43,7 +43,7 @@ export default new Router({
                     component: Helper
                 },
                 {
-                    name:"curl",
+                    name:"Origin Server Testing",
                     path: "curl",
                     component: Curl
                 },

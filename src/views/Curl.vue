@@ -3,8 +3,8 @@
         v-layout(wrap column)
             v-flex(xs12)
                 v-layout.ml-1.mt-1(row)
-                    .title Curl Tool
-                    v-btn(icon :to="'/helper/'+ pageName" )
+                    .title Origin Server Testing
+                    v-btn(icon :to="'/helper'+ path" )
                         v-icon(small) mdi-help-circle
             v-flex(xs12)
                 v-card
@@ -124,7 +124,7 @@
         timestamp:'',
         responseCodeAndTimeTotal:'',
         domainList:[],
-        pageName:'',
+        path:'',
         hostIpList: [],
         multiHostIp: false
       };
@@ -238,23 +238,26 @@
         //   this.hostIp = arr.join(' , ')
         // }
 
+      },
+      getDomainList:function () {
+        this.$store.dispatch("curl/getDomainList", {})
+          .then(
+            function(result) {
+              this.domainList = result.data.list;
+            }.bind(this)
+          )
+          .catch(
+            function(error) {
+              this.$store.dispatch("global/showSnackbarError", error.message);
+              this.$store.dispatch("global/finishLoading");
+            }.bind(this)
+          );
       }
     },
     created() {
-      this.$store.dispatch("curl/getDomainList", {})
-        .then(
-          function(result) {
-            this.domainList = result.data.list;
-          }.bind(this)
-        )
-        .catch(
-          function(error) {
-            this.$store.dispatch("global/showSnackbarError", error.message);
-            this.$store.dispatch("global/finishLoading");
-          }.bind(this)
-        );
+      this.getDomainList()
     },mounted() {
-      this.pageName = this.$router.currentRoute.name;
+      this.path = this.$router.currentRoute.path;
     }
   };
 </script>
