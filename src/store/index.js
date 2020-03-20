@@ -4,6 +4,9 @@ import global from "./modules/global";
 import curl from './modules/curl'
 import helper from './modules/helper'
 import ping from './modules/ping'
+import bgp from './modules/bgp'
+
+
 Vue.use(Vuex);
 
 
@@ -12,6 +15,7 @@ export default new Vuex.Store({
         global,
         curl,
         helper,
-        ping
+        ping,
+        bgp
     }
 });

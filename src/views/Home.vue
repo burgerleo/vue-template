@@ -1,11 +1,11 @@
 <template lang="pug">
   v-container(grid-list-lg)
     v-layout
-      v-flex(xs12 sm6 md6)
+      v-flex(xs12 sm12 md12)
         v-card
           v-card-title Table
           h7-data-table(:headers="headers" :items="desserts" :dense="$store.getters['global/tableMode']()" :hide-footer="true")
-      v-flex(xs12 sm6 md6)
+    //-   v-flex(xs12 sm6 md6)
         v-card
           v-card-title Table
           h7-data-table(:headers="headers2" :items="items" :dense="$store.getters['global/tableMode']()" :hide-footer="true")
