@@ -76,6 +76,7 @@ export default {
         this.year = d.getFullYear()
     },
     created() {
+        this.setPath()
     },
 }
 </script>
