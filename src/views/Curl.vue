@@ -2,11 +2,6 @@
     v-container#sample-layout(grid-list-lg)
         v-layout(wrap column)
             v-flex(xs12)
-                v-layout.ml-1.mt-1(row)
-                    .title Origin Server Testing
-                    v-btn(icon :to="'/helper'+ path" )
-                        v-icon(small) mdi-help-circle
-            v-flex(xs12)
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
@@ -124,7 +119,6 @@
         timestamp:'',
         responseCodeAndTimeTotal:'',
         domainList:[],
-        path:'',
         hostIpList: [],
         multiHostIp: false
       };
@@ -257,7 +251,6 @@
     created() {
       this.getDomainList()
     },mounted() {
-      this.path = this.$router.currentRoute.path;
     }
   };
 </script>

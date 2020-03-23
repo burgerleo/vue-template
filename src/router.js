@@ -48,6 +48,7 @@ export default new Router({
                     component: Curl
                 },
                 {
+                    name:"Ping Tool",
                     path: "Ping",
                     component: Ping
                 },

@@ -6,7 +6,7 @@
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
             v-toolbar-title H7 Operation Portal
             v-spacer
-            //v-btn(icon)
+            v-btn(icon :to="'/helper'+ path")
                 v-icon mdi-help-circle
             Setting
             v-btn(icon)
@@ -50,25 +50,33 @@ export default {
             tabId: 1,
             dialog: {
                 setting: false
-            }
+            },
+            path:''
         }
     },
     watch: {
         selectedTab: function() {
             this.selectedTabId = this.selectedTab - 1
+        },
+        $route (to, from) {
+            this.path = this.$router.currentRoute.path;
         }
     },
     methods: {
         navigationControl(value) {
             this.selectedTab = value
             this.selectedTabId = this.selectedTab - 1
+        },
+        setPath() {
+          this.path = this.$router.currentRoute.path;
         }
     },
     mounted() {
         var d = new Date()
         this.year = d.getFullYear()
-        // console.log(this.year);
-    }
+    },
+    created() {
+    },
 }
 </script>
 <style>
