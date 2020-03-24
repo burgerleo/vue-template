@@ -35,12 +35,11 @@
                                     td 
                                         v-text-field.mt-0.pt-0(v-model="searchList.site" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'site')")
                                     td 
-                                        v-text-field.mt-0.pt-0(v-model="searchList.in" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'in')")
+                                        v-text-field.mt-0.pt-0(v-model="searchList.inName" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'inName')")
                                     td 
-                                        v-text-field.mt-0.pt-0(v-model="searchList.out" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'out')")
+                                        v-text-field.mt-0.pt-0(v-model="searchList.outName" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'outName')")
                                     td 
-                                        v-text-field.mt-0.pt-0(v-model="searchList.ip" width="10px"  label="Search" single-line hide-details @input="filterOnlyColumn($event,'ip')")
-
+                                        v-text-field.mt-0.pt-0(v-model="searchList.source_ip" width="10px"  label="Search" single-line hide-details @input="filterOnlyColumn($event,'source_ip')")
                             template(v-slot:item="{item,index}")
                                 tr
                                     td {{rowIndex(index)}}
@@ -86,11 +85,6 @@
 
 <script>
 import textFieldRules from '../utils/textFieldRules'
-import dummy1 from '../assets/dummy.json'
-import dummy2 from '../assets/dummy2.json'
-import dummy3 from '../assets/dummy3.json'
-import dummyGet from '../assets/dummyGet.json'
-import bgp from '../assets/bgp.json'
 
 export default {
     name: 'Dummy',
@@ -164,9 +158,7 @@ export default {
                 table: true,
                 NXN: false
             },
-            dummyGet: dummyGet,
             lineList: [],
-            bgp: bgp,
             bgpList: {}
         }
     },
@@ -238,12 +230,10 @@ export default {
                 )
         },
         siteChange() {
-            console.log(this.dummy)
             this.dummy.in = null
             this.dummy.out = null
             delete this.dummy.in
             delete this.dummy.out
-            console.log(this.dummy)
         },
         getDummy() {
             this.$store.dispatch('global/startLoading')
@@ -254,6 +244,8 @@ export default {
                         var dummy = result.data
                         this.desserts = dummy.map(function(item, index) {
                             item.site = item.in_bgp.site
+                            item.inName = item.in_bgp.name
+                            item.outName = item.out_bgp.name
                             return item
                         })
 
@@ -376,7 +368,6 @@ export default {
         },
         transformNXN() {
             var desserts2 = []
-            var siteList = []
             var headerList = []
             var desserts3 = []
 
@@ -394,20 +385,18 @@ export default {
             }
 
             this.desserts.forEach(function(item, index, array) {
-                var site = item.site
-                var inLine = item.inName
-                var outLine = item.outName
+                var site = item.in_bgp.site
+                var inLine = item.in_bgp.name
+                var outLine = item.out_bgp.name
 
-                if (typeof desserts3[site] != 'object') {
+                if (!desserts3[site]) {
                     desserts3[site] = {}
                     desserts2[site] = []
                     headerList[site] = []
-                    siteList.push(site)
-
                     headerList[site].push(header1)
                 }
 
-                if (typeof desserts3[site][inLine] != 'object') {
+                if (!desserts3[site][inLine]) {
                     desserts3[site][inLine] = {}
                     headerList[site].push(header2)
                 }
@@ -423,7 +412,6 @@ export default {
                 desserts3[site][inLine][outLine] = item.source_ip
             })
 
-            this.siteList = siteList
             this.headers2 = headerList
             this.desserts2 = desserts2
             this.desserts3 = desserts3
@@ -445,15 +433,20 @@ export default {
 
             for (var searchKey in this.searchList) {
                 var searchString = this.searchList[searchKey]
-                    .toString()
-                    .toLocaleUpperCase()
+                if (typeof searchString != 'number') {
+                    searchString = searchString.toString().toLocaleUpperCase()
+                }
 
-                searchResult = this.desserts.filter(
-                    item =>
-                        item[searchKey]
-                            .toLocaleUpperCase()
-                            .indexOf(searchString) !== -1
-                )
+                searchResult = this.desserts.filter(function(item) {
+                    var searchData = item[searchKey]
+
+                    if (typeof item[searchKey] != 'number') {
+                        searchData = searchData.toLocaleUpperCase()
+                    }
+
+                    return searchData.indexOf(searchString) !== -1
+                })
+
                 this.desserts = searchResult
             }
         },

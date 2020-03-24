@@ -87,6 +87,7 @@ export default {
                         // },
                       { title: "Helper Manage", icon: "mdi-help",router: "/helper" },
                       { title: "BGP Peer", icon: "mdi-call-made",router: "/bgp" },
+                      { title: "Dummy IP", icon: "mdi-forward",router: "/dummy-ip" },
                     ]
                 },
                 // {
