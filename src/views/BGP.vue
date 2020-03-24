@@ -80,9 +80,7 @@
 </template>
 
 <script>
-// import DataTableAction from '../components/DataTableAction'
 import textFieldRules from '../utils/textFieldRules'
-// import bpgList from '../assets/ispList.json'
 
 export default {
     name: 'BGP',

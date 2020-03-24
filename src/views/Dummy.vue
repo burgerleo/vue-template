@@ -28,9 +28,7 @@
                                     v-divider.mx-4(inset vertical)
                                     v-spacer
                                     v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
-                                    v-dialog(v-model="dialog.add")
-                                        template(v-slot:activator="{ on }")
-                                            v-btn.mb-2(color="primary" dark @click="newDialog") New Dummy
+                                    v-btn.mb-2(color="primary" dark @click="newDialog") New Dummy
                             template(v-slot:header="{item,index}")
                                 tr
                                     td 
@@ -47,9 +45,9 @@
                                 tr
                                     td {{rowIndex(index)}}
                                     td {{item.site}}
-                                    td {{item.in}}
-                                    td {{item.out}}
-                                    td {{item.ip}}
+                                    td {{item.in_bgp.name}}
+                                    td {{item.out_bgp.name}}
+                                    td {{item.source_ip}}
                                     td 
                                         v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
                                         v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
@@ -67,14 +65,14 @@
                     v-card-title.title {{formTitle}}
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-text-field(v-model="dummy.site" label="Site" type="" name="name" :rules="[rules.required]")
-                            v-text-field(v-model="dummy.in" label="In" type="text" name="in" :rules="[rules.required]")
-                            v-text-field(v-model="dummy.out" label="Out" type="text" name="out" :rules="[rules.required]")
-                            v-text-field(v-model="dummy.ip" label="IP" type="text" name="ip" :rules="[rules.required,rules.ip]")
+                            v-select(v-model="dummy.site" :items="siteList" label="Site" @change="siteChange()")
+                            v-select(v-model="dummy.in" :items="bgpList[dummy.site]" label="In" item-text="name" item-value="id" :rules="[rules.required]")
+                            v-select(v-model="dummy.out" :items="bgpList[dummy.site]" label="Out" item-text="name" item-value="id" :rules="[rules.required]")
+                            v-text-field(v-model="dummy.source_ip" label="IP" type="text" name="ip" :rules="[rules.required, rules.ip]")
                     v-card-actions  
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
-                        v-btn(color="primary" @click="updateDummy") Save
+                        v-btn(color="primary" @click="save") Save
 
             v-dialog.delete-dialog(v-model="dialog.delete" max-width="460" persistent)
                 v-card
@@ -91,6 +89,8 @@ import textFieldRules from '../utils/textFieldRules'
 import dummy1 from '../assets/dummy.json'
 import dummy2 from '../assets/dummy2.json'
 import dummy3 from '../assets/dummy3.json'
+import dummyGet from '../assets/dummyGet.json'
+import bgp from '../assets/bgp.json'
 
 export default {
     name: 'Dummy',
@@ -111,10 +111,8 @@ export default {
                 add: false,
                 delete: false
             },
-            headers2: [
-            ],
-            desserts2: [
-            ],
+            headers2: [],
+            desserts2: [],
             siteList: [],
             desserts3: {},
             headers: [
@@ -157,15 +155,19 @@ export default {
                     value: 'actions'
                 }
             ],
-            desserts: dummy2,
+            desserts: [],
             searchList: {},
-            copyDesserts: dummy2,
+            copyDesserts: [],
             tab: null,
             tabs: [{ name: 'Table' }, { name: 'NxN' }],
             tabOn: {
                 table: true,
                 NXN: false
-            }
+            },
+            dummyGet: dummyGet,
+            lineList: [],
+            bgp: bgp,
+            bgpList: {}
         }
     },
     watch: {
@@ -185,6 +187,7 @@ export default {
             this.dialog.add = true
             this.dummy = {}
             this.dummy.id = -1
+            this.dummy.site = 'TW'
         },
         editDialog: function(item) {
             this.formTitle = 'Edit Dummy'
@@ -202,38 +205,162 @@ export default {
             this.dialog.delete = false
             this.dummy = {}
         },
+        getBGP: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('bgp/getInfo')
+                .then(
+                    function(result) {
+                        var bgpList = []
+                        var siteList = []
+                        this.bgp = result.data
+                        result.data.forEach(function(item, index) {
+                            if (!bgpList[item.site]) {
+                                bgpList[item.site] = []
+                                siteList.push(item.site)
+                            }
+                            bgpList[item.site].push(item)
+                        })
+
+                        this.bgpList = bgpList
+                        this.siteList = siteList
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        siteChange() {
+            console.log(this.dummy)
+            this.dummy.in = null
+            this.dummy.out = null
+            delete this.dummy.in
+            delete this.dummy.out
+            console.log(this.dummy)
+        },
+        getDummy() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('dummy/getInfo')
+                .then(
+                    function(result) {
+                        var dummy = result.data
+                        this.desserts = dummy.map(function(item, index) {
+                            item.site = item.in_bgp.site
+                            return item
+                        })
+
+                        this.copyDesserts = this.desserts
+
+                        this.transformNXN()
+
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
         addDummy: function() {
-            // do someting
-            this.save()
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('dummy/createDummy', this.dummy)
+                .then(
+                    function(result) {
+                        this.getDummy()
+                        this.$store.dispatch('global/finishLoading')
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
         },
         updateDummy: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('dummy/updateDummy', this.dummy)
+                .then(
+                    function(result) {
+                        this.getDummy()
+                        this.$store.dispatch('global/finishLoading')
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        deleteDummy: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('dummy/destroyDummy', this.dummy)
+                .then(
+                    function(result) {
+                        this.getDummy()
+                        this.$store.dispatch('global/finishLoading')
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+            this.closeDialog()
+        },
+        save() {
+            // 表單驗證
             if (!this.validateForm()) {
                 return
             }
 
-            if (this.editedIndex == -1) {
-                this.addDummy()
-            } else {
-                this.save()
-
-                // do someting
-            }
-
-            this.closeDialog()
-        },
-        deleteDummy: function() {
-            // do someting
-            this.desserts.splice(this.editedIndex, 1)
-            this.$store.dispatch('global/showSnackbarSuccess', 'Success!')
-            this.closeDialog()
-        },
-        save() {
+            // 判斷是否執行哪一種 API
+            // Create / Update
             if (this.editedIndex > -1) {
-                Object.assign(this.desserts[this.editedIndex], this.dummy)
+                this.updateDummy()
             } else {
-                this.desserts.push(this.dummy)
+                this.addDummy()
             }
-            this.fransNXN()
+            this.closeDialog()
         },
         rowIndex: function(index) {
             return (this.page - 1) * this.itemsPerPage + index + 1
@@ -247,7 +374,7 @@ export default {
             this.searchText = ''
             this.backupAndRcoverData()
         },
-        fransNXN() {
+        transformNXN() {
             var desserts2 = []
             var siteList = []
             var headerList = []
@@ -268,8 +395,8 @@ export default {
 
             this.desserts.forEach(function(item, index, array) {
                 var site = item.site
-                var inLine = item.in
-                var outLine = item.out
+                var inLine = item.inName
+                var outLine = item.outName
 
                 if (typeof desserts3[site] != 'object') {
                     desserts3[site] = {}
@@ -293,7 +420,7 @@ export default {
                     (item, index) => desserts2[site].indexOf(item) === index
                 )
 
-                desserts3[site][inLine][outLine] = item.ip
+                desserts3[site][inLine][outLine] = item.source_ip
             })
 
             this.siteList = siteList
@@ -343,8 +470,8 @@ export default {
         }
     },
     mounted() {
-        // this.init()
-        this.fransNXN()
+        this.getDummy()
+        this.getBGP()
     }
 }
 </script>
