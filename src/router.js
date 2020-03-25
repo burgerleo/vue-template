@@ -39,14 +39,16 @@ export default new Router({
                         )
                 },
                 {
-                    path: "helper",
+                    path: "helper/:helper_id",
                     component: Helper
                 },
                 {
+                    name:"Origin Server Testing",
                     path: "curl",
                     component: Curl
                 },
                 {
+                    name:"Ping Tool",
                     path: "Ping",
                     component: Ping
                 },

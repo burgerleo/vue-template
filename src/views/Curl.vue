@@ -1,8 +1,6 @@
 <template lang="pug">
     v-container#sample-layout(grid-list-lg)
-        v-layout(wrap)
-            v-flex(xs12)
-                .title Curl Tool
+        v-layout(wrap column)
             v-flex(xs12)
                 v-card
                     v-card-text
@@ -18,13 +16,17 @@
                                 v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
                                     v-text-field(v-model="url" label="URL" type="" name="url" :rules="[rules.required, rules.url]")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
-                                    v-checkbox(v-model="original" label="Original" @change="clearOriginal")
+                                    v-checkbox(v-model="original" label="Origin" @change="clearOriginal")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm6 md6 v-if="original==true")
                                     v-text-field(v-model="hostName" label="Host Name" type="" name="hostName" readonly background-color="#ECEFF1")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
                                     v-text-field(v-model="port" label="Port" type="" name="port")
-                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
+                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true && multiHostIp==false")
                                     v-text-field(v-model="hostIp" label="Host IP" type="" name="hostIp")
+                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-else="original==true && multiHostIp==true")
+                                    v-radio-group.pt-0.mt-1(row v-model="hostIp" :mandatory="true") Host IP
+                                        v-spacer.pl-3
+                                            v-radio(v-for="ip in hostIpList" :label="ip" :value="ip")
                                 v-flex.pt-0.pb-0(xs12 pa-2)
                                     v-layout.px-2(row v-for="(header,index) in headers " :key="index")
                                         v-flex(xs12 sm3 md3)
@@ -113,14 +115,18 @@
         hostIp:'',
         parameters: [],
         headers: [],
-        edge:0,
+        edge: 0,
         timestamp:'',
-        responseCodeAndTimeTotal:''
+        responseCodeAndTimeTotal:'',
+        domainList:[],
+        hostIpList: [],
+        multiHostIp: false
       };
     },
     watch:{
       url: function(value) {
         this.originalDataFormat(value)
+        this.mappingIp(value)
       }
     },
     methods: {
@@ -203,6 +209,48 @@
       deleteParameter: function (index) {
         this.parameters.splice(index, 1)
       },
+      mappingIp:function (value) {
+        this.multiHostIp = false
+        this.hostIp = ''
+        var arr = []
+        let list = this.domainList.filter((item) => {
+          return item.domain == value
+        })
+
+        list.forEach((item) => {
+          arr.push(item.host)
+        })
+
+        if (list.length ==1) {
+          this.hostIp = arr[0]
+        }else if (list.length >1) {
+          this.multiHostIp = true
+          this.hostIpList = arr
+        }
+
+        // if (list.length > 0){
+        //   this.hostIp = arr.join(' , ')
+        // }
+
+      },
+      getDomainList:function () {
+        this.$store.dispatch("curl/getDomainList", {})
+          .then(
+            function(result) {
+              this.domainList = result.data.list;
+            }.bind(this)
+          )
+          .catch(
+            function(error) {
+              this.$store.dispatch("global/showSnackbarError", error.message);
+              this.$store.dispatch("global/finishLoading");
+            }.bind(this)
+          );
+      }
+    },
+    created() {
+      this.getDomainList()
+    },mounted() {
     }
   };
 </script>
