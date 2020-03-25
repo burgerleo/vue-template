@@ -64,9 +64,9 @@
                     v-card-title.title {{formTitle}}
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-select(v-model="dummy.site" :items="siteList" label="Site" @change="siteChange()")
-                            v-select(v-model="dummy.in" :items="bgpList[dummy.site]" label="In" item-text="name" item-value="id" :rules="[rules.required]")
-                            v-select(v-model="dummy.out" :items="bgpList[dummy.site]" label="Out" item-text="name" item-value="id" :rules="[rules.required]")
+                            v-select(v-model="site" :items="siteList" label="Site" @change="siteChange")
+                            v-select(v-model="dummy.in" :items="bgpList[site]" label="In" item-text="name" item-value="id" :rules="[rules.required]")
+                            v-select(v-model="dummy.out" :items="bgpList[site]" label="Out" item-text="name" item-value="id" :rules="[rules.required]")
                             v-text-field(v-model="dummy.source_ip" label="IP" type="text" name="ip" :rules="[rules.required, rules.ip]")
                     v-card-actions  
                         v-spacer
@@ -108,6 +108,7 @@ export default {
             headers2: [],
             desserts2: [],
             siteList: [],
+            site: 'TW',
             desserts3: {},
             headers: [
                 {
@@ -171,7 +172,8 @@ export default {
                 this.tabOn.NXN = false
                 this.tabOn.table = true
             }
-        }
+        },
+        site() {}
     },
     methods: {
         newDialog: function() {
@@ -179,12 +181,15 @@ export default {
             this.dialog.add = true
             this.dummy = {}
             this.dummy.id = -1
-            this.dummy.site = 'TW'
+            // this.site = 'TW'
+            this.dummy.site = this.site
         },
         editDialog: function(item) {
             this.formTitle = 'Edit Dummy'
             this.dialog.add = true
             this.editedIndex = this.desserts.indexOf(item)
+            this.dummy = {}
+            this.site = item.site
             this.dummy = Object.assign({}, item)
         },
         deleteDialog: function(item) {
