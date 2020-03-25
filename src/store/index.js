@@ -6,8 +6,8 @@ import helper from './modules/helper'
 import ping from './modules/ping'
 import bgp from './modules/bgp'
 import dummy from './modules/dummy'
-
-
+import edge from './modules/edge'
+import customer from './modules/customer'
 
 Vue.use(Vuex);
 
@@ -19,6 +19,8 @@ export default new Vuex.Store({
         helper,
         ping,
         bgp,
-        dummy
+        dummy,
+        edge,
+        customer
     }
 });
