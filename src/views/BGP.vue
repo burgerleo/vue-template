@@ -80,9 +80,7 @@
 </template>
 
 <script>
-// import DataTableAction from '../components/DataTableAction'
 import textFieldRules from '../utils/textFieldRules'
-// import bpgList from '../assets/ispList.json'
 
 export default {
     name: 'BGP',
@@ -171,7 +169,7 @@ export default {
                 }
             ],
             desserts: [],
-            searchList: [],
+            searchList: {},
             copyDesserts: null
         }
     },
@@ -388,7 +386,7 @@ export default {
             // 備份 and 還原資料
             this.backupAndRcoverData()
 
-            // 先將要收尋得文文字轉程大寫
+            // 先將要搜尋的文字轉成大寫
             for (var searchKey in this.searchList) {
                 var searchString = this.searchList[searchKey]
                     .toString()
