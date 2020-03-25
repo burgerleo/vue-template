@@ -8,16 +8,16 @@
                             v-layout.px-2
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     v-text-field(v-model="originIP" label="Destination IP" type="ip" name="ip" :rules="[rules.required, rules.ip]")
-                                    v-text-field(v-model="sourceIP" label="Mapped Dummy IP" type="ip" :rules="[rules.required, rules.ip]")
+                                    v-text-field(v-model="sourceIP" label="Mapped Dummy IP" type="ip" readonly :rules="[rules.required, rules.ip]")
                             v-layout.px-2
                                 v-flex(xs6 sm6 md6) In
-                                    p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{index}}
+                                    p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{site}}
                                         v-radio-group.mt-2(v-model="defaultIn" row @change="getOriginIP()")
-                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in site" :label="inLine" :value="index" :key="")
+                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in bgpList[site]" :label="inLine.name" :value="inLine.id" :key="inLine.id")
                                 v-flex(xs6 sm6 md6) Out
-                                    p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{index}}
+                                    p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{site}}
                                         v-radio-group.mt-2(v-model="defaultOut" row @change="getOriginIP()")
-                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in site" :label="inLine" :value="index" :key="" )
+                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in bgpList[site]" :label="inLine.name" :value="inLine.id" :key="inLine.id")
                             v-text-field(v-model="packetCount" label="Count" type="number" min="1" max="100")
                             v-text-field(v-model="interval" label="Interval (0.2~) " type="number" min="0.2" step="0.1")
                             v-btn(color="primary" block @click="getPingInfo()") SEND
@@ -30,48 +30,26 @@
 
 <script>
 import textFieldRules from '../utils/textFieldRules'
-import dummy from '../assets/dummy.json'
 
 export default {
-    name: 'Test',
+    name: 'Ping',
     mixins: [textFieldRules],
     data() {
         return {
-            selectMethod: ['HKR1', 'HKR2', 'TWR1', 'TWR2'],
-
-            dummy: dummy,
+            site: '',
             originIP: null,
-            pingBody: null,
+            sourceIP: null,
             packetCount: 10,
             interval: 0.5,
+            pingBody: null,
 
-            defaultIn: '6',
-            defaultOut: '6',
-            sourceIP: null,
+            defaultIn: null,
+            defaultOut: null,
 
-            site: '',
-            siteList: {
-                TW: {
-                    0: 'PCCW_China',
-                    1: 'TWGate_China',
-                    2: 'SingTel_Global',
-                    3: 'PCCW_Global',
-                    4: 'NTT_Global',
-                    5: 'Telstra_Global'
-                },
-                HK: {
-                    6: 'CU_R1',
-                    7: 'CU_R2',
-                    8: 'CM',
-                    9: 'SingTel_China',
-                    10: 'TWGate_China',
-                    11: 'TWGate_Global',
-                    12: 'SingTel_Global',
-                    13: 'PCCW_Global',
-                    14: 'Equinix_IX',
-                    15: 'HK_IX'
-                }
-            }
+            siteList: {},
+            dummy: {},
+            originBGPList: {},
+            bgpList: {}
         }
     },
     watch: {
@@ -80,39 +58,95 @@ export default {
         }
     },
     methods: {
-        // init: function() {},
+        getBGP: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('bgp/getInfo')
+                .then(
+                    function(result) {
+                        var bgpList = []
+                        var siteList = []
+                        var originBGPList = {}
+
+                        result.data.forEach(function(item, index) {
+                            if (!bgpList[item.site]) {
+                                bgpList[item.site] = []
+                                siteList.push(item.site)
+                            }
+                            bgpList[item.site].push(item)
+
+                            originBGPList[item.id] = item
+                        })
+
+                        this.siteList = siteList
+                        this.bgpList = bgpList
+                        this.originBGPList = originBGPList
+
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        getDummy() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('dummy/getInfo')
+                .then(
+                    function(result) {
+                        var dummyList = {}
+
+                        result.data.map(function(item, index) {
+                            var site = item.in_bgp.site
+                            var inLine = item.in_bgp.id
+                            var outLine = item.out_bgp.id
+                            var ip = item.source_ip
+
+                            if (!dummyList[site]) {
+                                dummyList[site] = {}
+                            }
+
+                            if (!dummyList[site][inLine]) {
+                                dummyList[site][inLine] = {}
+                            }
+                            dummyList[site][inLine][outLine] = ip
+                        })
+
+                        this.dummy = dummyList
+
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
         getOriginIP: function() {
-            var inName = ''
-            var outName = ''
-            var outSite = ''
+            this.site = this.originBGPList[this.defaultIn].site
 
-            this.site = this.defaultIn < 6 ? 'TW' : 'HK'
-            outSite = this.defaultOut < 6 ? 'TW' : 'HK'
-
-            inName = this.siteList[this.site][this.defaultIn]
-            outName = this.siteList[outSite][this.defaultOut]
-
-            if (this.dummy[this.site][inName]) {
-                // console.log('exist')
+            if (this.dummy[this.site][this.defaultIn]) {
                 // [site][in][out]
-                this.sourceIP = this.dummy[this.site][inName][outName]
-            } else {
-                // console.log('not exist')
-                this.sourceIP = null
+                this.sourceIP = this.dummy[this.site][this.defaultIn][
+                    this.defaultOut
+                ]
             }
 
-            // console.log(this.defaultIn,this.defaultOut)
-            // console.log(this.site,inName,outName)
-            // console.log(this.sourceIP)
-
-            // if (this.sourceIP == null) {
-            //     this.$store.dispatch(
-            //         'global/showSnackbarError',
-            //         'No Mapping Ip'
-            //     )
-
-            //     return
-            // }
+            if (!this.sourceIP) {
+                this.sourceIP = 'No Mapping IP'
+            }
         },
         getPingInfo: function() {
             if (this.validateForm()) {
@@ -152,7 +186,8 @@ export default {
     },
     mounted() {
         // this.init()
-        this.getOriginIP()
+        this.getBGP()
+        this.getDummy()
     }
 }
 </script>
