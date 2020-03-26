@@ -18,8 +18,8 @@ export default {
           return Promise.reject(error.response.data);
         });
     },
-    getDomainList: () => {
-      return axios.get("curl/domain-list").then(function(response) {
+    getDomainList: (context, data) => {
+      return axios.post("curl/domain-list", data).then(function(response) {
         return Promise.resolve(response.data.data);
       })
         .catch(function(error) {

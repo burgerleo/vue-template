@@ -7,8 +7,17 @@
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
                                 v-flex.pt-0.pb-0(xs12 sm12 md12)
-                                    v-radio-group.pt-0.mt-1(row v-model="edge" :mandatory="true")
-                                        v-radio(label="HK" :value="1")
+                                    v-radio-group.pt-0.pb-0(v-model="area" :mondatory="true")
+                                        v-layout.px-2(row)
+                                            v-flex.pt-5.pb-0(xs12 sm3 md1)
+                                                v-radio(label="TW" :value="0")
+                                            v-flex.pt-0.pb-0(xs12 sm3 md3)
+                                                v-select(:disabled="area==1" v-model="edge" :items="twEdge" label="TW Edge" name="tw_edge" item-text="text" item-value="id")
+                                        v-layout.px-2(row)
+                                            v-flex.pt-5.pb-0(xs12 sm3 md1)
+                                                v-radio(label="HK" :value="1")
+                                            v-flex.pt-0.pb-0(xs12 sm3 md3)
+                                                v-select(:disabled="area==0" v-model="edge" :items="hkEdge" label="HK Edge" name="hk_edge" item-text="text" item-value="id")
                                 v-flex.pt-0.pb-0(xs12 sm6 md4)
                                     v-select(v-model="method" :items="selectMethod" label="HTTP Method" item-text="name" item-value="id" :rules="[rules.required]" @change="defaultParameters")
                                 v-flex.pt-0.pb-0(xs12 sm6 md4)
@@ -115,18 +124,28 @@
         hostIp:'',
         parameters: [],
         headers: [],
-        edge: 0,
+        area: 0,
         timestamp:'',
         responseCodeAndTimeTotal:'',
         domainList:[],
         hostIpList: [],
-        multiHostIp: false
+        multiHostIp: false,
+        customerList: [],
+        edgeList: [],
+        hkEdge:[],
+        twEdge:[],
+        edge:''
       };
     },
     watch:{
       url: function(value) {
         this.originalDataFormat(value)
-        this.mappingIp(value)
+        if (value !== '' && value.match(/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/)){
+          this.getDomainList(value)
+        }
+      },
+      area: function (value) {
+        console.log(value)
       }
     },
     methods: {
@@ -153,6 +172,7 @@
               "parameters": parameters,
               "postInput": this.postInput,
               "postBody": this.postBody,
+              "area": this.area,
               "edge": this.edge
             })
             .then(
@@ -213,8 +233,9 @@
         this.multiHostIp = false
         this.hostIp = ''
         var arr = []
-        let list = this.domainList.filter((item) => {
-          return item.domain == value
+        let list = this.domainList.filter((item, index, array) => {
+          // return item.domain.match(value)//模糊搜尋
+          return item.domain == value//完整搜尋
         })
 
         list.forEach((item) => {
@@ -227,17 +248,16 @@
           this.multiHostIp = true
           this.hostIpList = arr
         }
-
-        // if (list.length > 0){
-        //   this.hostIp = arr.join(' , ')
-        // }
-
       },
-      getDomainList:function () {
-        this.$store.dispatch("curl/getDomainList", {})
+      getDomainList:function (value) {
+        var data = {
+          domain : value
+        };
+        this.$store.dispatch("curl/getDomainList", data)
           .then(
             function(result) {
               this.domainList = result.data.list;
+              this.mappingIp(value)
             }.bind(this)
           )
           .catch(
@@ -246,10 +266,66 @@
               this.$store.dispatch("global/finishLoading");
             }.bind(this)
           );
-      }
+      },
+      getCustomerInfo: function () {
+        this.$store
+          .dispatch('edge/getCustomerInfo')
+          .then(
+            function(result) {
+              // console.log(result)
+              this.customerList = result.data
+            }.bind(this)
+          )
+          .catch(
+            function(error) {
+              this.$store.dispatch(
+                'global/showSnackbarError',
+                error.message
+              )
+            }.bind(this)
+          )
+      },
+      getEdgeInfo: function () {
+        this.$store
+          .dispatch('edge/getInfo')
+          .then(
+            function(result) {
+              // console.log(this.customerList)
+              var arr = []
+              this.customerList.forEach((item) => {
+                arr[item.id] = item.name
+              })
+
+              result.data.forEach((item) =>
+              {
+                item.customer = arr[item.customer_id]
+              })
+
+              result.data.forEach((item) => {
+                item.text = item.name + ' (' + item.edge + ') ' + item.customer
+                if (item.area=='HK'){
+                  this.hkEdge.push(item)
+                }else if(item.area=='TW'){
+                  this.twEdge.push(item)
+                }
+              })
+
+              this.edgeList = result.data
+            }.bind(this)
+          )
+          .catch(
+            function(error) {
+              this.$store.dispatch(
+                'global/showSnackbarError',
+                error.message
+              )
+            }.bind(this)
+          )
+      },
     },
     created() {
-      this.getDomainList()
+      this.getCustomerInfo();
+      this.getEdgeInfo();
     },mounted() {
     }
   };
