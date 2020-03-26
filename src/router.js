@@ -7,7 +7,8 @@ import Curl from "./views/Curl.vue";
 import Ping from"./views/Ping.vue";
 import Dummy from"./views/Dummy.vue";
 import BGP from"./views/BGP.vue";
-
+import Edge from"./views/Edge.vue";
+import Customer from"./views/Customer.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -53,13 +54,25 @@ export default new Router({
                     component: Ping
                 },
                 {
+                    name:"Bgp",
                     path: "bgp",
                     component: BGP
                 },
                 {
+                    name:"Dummy Ip",
                     path: "dummy-ip",
                     component: Dummy
-                }
+                },
+                {
+                    name:"Edge",
+                    path: "edge",
+                    component: Edge
+                },
+                {
+                    name:"Customer",
+                    path: "customer",
+                    component: Customer
+                },
             ]
         }
     ]
