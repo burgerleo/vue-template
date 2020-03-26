@@ -6,7 +6,7 @@
                     v-tab(v-for="tab in tabs" :key="tab.name") {{ tab.name }}
                 v-tabs-items(v-model="tab")
                     v-tab-item(v-for="tab in tabs" :key="tab.name")
-                        v-data-table.elevation-1(v-if="tabOn.NXN" v-for="(site) in siteList" :headers="headers2[site]" :items="desserts2[site]" :dense="true" hide-default-header hide-default-footer :items-per-page="1000" @page-count="1000")
+                        v-data-table.elevation-1(v-if="tabOn.NXN" v-for="(site) in siteList" :headers="headers2[site]" :items="desserts2[site]" dense hide-default-header hide-default-footer :items-per-page="1000" @page-count="1000")
                             template(v-slot:top)
                                     v-toolbar(flat white)
                                         v-toolbar-title {{site}}
@@ -44,20 +44,21 @@
                                 tr
                                     td {{rowIndex(index)}}
                                     td {{item.site}}
-                                    td {{item.in_bgp.name}}
-                                    td {{item.out_bgp.name}}
+                                    td {{item.inName}}
+                                    td {{item.outName}}
                                     td {{item.source_ip}}
                                     td 
                                         v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
                                         v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
-
-                        v-row.align-center(v-if="tabOn.table")
-                            v-col.pa-5.pd-0(cols="12" sm="4")
-                                v-select(:value="itemsPerPage" :items="itemsPerPageList" label="Items per page"  @change="itemsPerPage = parseInt($event, 10)")
-                            v-col.pa-5.pd-0(cols="12" sm="3")
-                            v-col.pa-5.pd-0(cols="12" sm="4")
-                                v-pagination(v-model="page" :length="pageCount")
-                            v-col.pa-5.pd-0(cols="12" sm="1")
+                            template(v-slot:footer) 
+                                v-footer
+                                    v-col.text-right.pt-0.pl-0.pb-0(cols="12" sm="2")
+                                        div Items per page
+                                    v-col.text-center.pt-0.pl-0.pb-0(cols="12" sm="2")
+                                        v-select.mt-0.pt-0(:value="itemsPerPage" :items="itemsPerPageList" menu-props="auto" label="Items per page" hide-details single-line  @change="itemsPerPage = parseInt($event, 10)")
+                                    v-col.text-right.pt-0.pl-0.pb-0 {{getFooterText()}}
+                                    v-col.text-right.pt-0.pl-0.pb-0 
+                                        v-pagination(v-model="page" :length="pageCount")
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
@@ -128,13 +129,13 @@ export default {
                     text: 'In',
                     align: 'left',
                     sortable: true,
-                    value: 'in'
+                    value: 'inName'
                 },
                 {
                     text: 'Out',
                     align: 'left',
                     sortable: true,
-                    value: 'out'
+                    value: 'outName'
                 },
                 {
                     text: 'IP',
@@ -201,6 +202,24 @@ export default {
             this.dialog.add = false
             this.dialog.delete = false
             this.dummy = {}
+        },
+        getFooterText() {
+            var max = this.desserts.length
+            var maxStr = this.itemsPerPage * this.page
+
+            if (maxStr > max) {
+                maxStr = max
+            }
+
+            return (
+                'Displaying item ' +
+                (this.itemsPerPage * (this.page - 1) + 1) +
+                '-' +
+                maxStr +
+                ' from ' +
+                max +
+                ' items.'
+            )
         },
         getBGP: function() {
             this.$store.dispatch('global/startLoading')
