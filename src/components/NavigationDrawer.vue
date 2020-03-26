@@ -53,7 +53,7 @@ export default {
                         //     children: [
                         //     ]
                         // },
-                        { title: "Curl Tool", icon: "mdi-check",router: "/curl"  },
+                        { title: "Origin Server Testing", icon: "mdi-check",router: "/curl"  },
                         { title: "Ping Tool", icon: "mdi-monitor",router: "/ping"  },
                         { header: "Administrator" },
                         // {
