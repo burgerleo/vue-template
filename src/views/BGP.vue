@@ -3,7 +3,7 @@
         v-layout
             v-flex(xs12 sm12 md12)
                 v-card
-                    v-data-table.elevation-1(:headers="headers" :items="desserts" :search="searchText" :dense="true" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event")
+                    v-data-table.elevation-1(:headers="headers" :items="desserts" :search="searchText" dense :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event" hide-default-footer)
                         template(v-slot:top)
                             v-toolbar(flat white)
                                 v-toolbar-title BGP Peer
@@ -44,13 +44,15 @@
                                 td 
                                     v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
                                     v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
-                    v-row.align-center
-                        v-col.pa-5.pd-0(cols="12" sm="4")
-                            v-select(:value="itemsPerPage" :items="itemsPerPageList" label="Items per page"  @change="itemsPerPage = parseInt($event, 10)")
-                        v-col.pa-5.pd-0(cols="12" sm="3")
-                        v-col.pa-5.pd-0(cols="12" sm="4")
-                            v-pagination(v-model="page" :length="pageCount")
-                        v-col.pa-5.pd-0(cols="12" sm="1")
+                        template(v-slot:footer) 
+                            v-footer
+                                v-col.text-right.pt-0.pl-0.pb-0(cols="12" sm="2")
+                                    div Items per page
+                                v-col.text-center.pt-0.pl-0.pb-0(cols="12" sm="2")
+                                    v-select.mt-0.pt-0(:value="itemsPerPage" :items="itemsPerPageList" menu-props="auto" label="Items per page" hide-details single-line  @change="itemsPerPage = parseInt($event, 10)")
+                                v-col.text-right.pt-0.pl-0.pb-0 {{getFooterText()}}
+                                v-col.text-right.pt-0.pl-0.pb-0 
+                                    v-pagination(v-model="page" :length="pageCount")
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
@@ -91,7 +93,7 @@ export default {
             page: 1,
             pageCount: 0,
             itemsPerPage: 50,
-            itemsPerPageList: [10, 25, 50, 100],
+            itemsPerPageList: [15, 25, 50, 100],
             searchText: '',
             formTitle: '',
             bgp: {},
@@ -228,6 +230,24 @@ export default {
             this.dialog.delete = false
             this.bgp = {}
             this.editedIndex = -1
+        },
+        getFooterText() {
+            var max = this.desserts.length
+            var maxStr = this.itemsPerPage * this.page
+
+            if (maxStr > max) {
+                maxStr = max
+            }
+
+            return (
+                'Displaying item ' +
+                (this.itemsPerPage * (this.page - 1) + 1) +
+                '-' +
+                maxStr +
+                ' from ' +
+                max +
+                ' items.'
+            )
         },
         getWAN: function(index) {
             //取得 完整 WAN Link ip/mask

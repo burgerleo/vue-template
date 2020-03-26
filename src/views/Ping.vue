@@ -22,8 +22,8 @@
                             v-text-field(v-model="interval" label="Interval (0.2~) " type="number" min="0.2" step="0.1")
                             v-btn(color="primary" block @click="getPingInfo()") SEND
                             v-layout.px-2
-                                v-flex.pt-0.pb-0(xs12 sm12 md12)
-                                    v-card-text.font-weight-bold.pb-0 Body:
+                                v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
+                                    v-card-text.font-weight-bold.pb-0.pl-1 Body:
                                     pre(v-highlightjs="pingBody")
                                         code.java.display-0.font-weight-black
 </template>
