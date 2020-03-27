@@ -6,7 +6,7 @@
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
             v-toolbar-title H7 Operation Portal
             v-spacer
-            v-btn(icon :to="'/helper'+ path" v-if="!displayHelper()")
+            v-btn(icon :to="'/helper'+ path" v-if="!displayHelper()" target="_blank")
                 v-icon mdi-help-circle
             Setting
             v-btn(icon)
