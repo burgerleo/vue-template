@@ -9,6 +9,10 @@ import Dummy from"./views/Dummy.vue";
 import BGP from"./views/BGP.vue";
 import Edge from"./views/Edge.vue";
 import Customer from"./views/Customer.vue";
+import JkbPacketLoss from"./views/JkbPacketLoss.vue";
+
+
+
 Vue.use(Router);
 
 export default new Router({
@@ -72,6 +76,11 @@ export default new Router({
                     name:"Customer",
                     path: "customer",
                     component: Customer
+                },
+                {
+                    name:"JKB-PacketLoss",
+                    path: "jkb-packetloss",
+                    component: JkbPacketLoss
                 },
             ]
         }
