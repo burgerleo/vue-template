@@ -55,6 +55,7 @@ export default {
                         // },
                         { title: "Origin Server Testing", icon: "mdi-check",router: "/curl"  },
                         { title: "Ping Tool", icon: "mdi-monitor",router: "/ping"  },
+                        { title: "DNS Records", icon: "mdi-chart-histogram",router: "/dns-records"  },
                         { header: "Administrator" },
                         // {
                         //     title: "Users",

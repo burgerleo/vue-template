@@ -9,6 +9,7 @@ import Dummy from"./views/Dummy.vue";
 import BGP from"./views/BGP.vue";
 import Edge from"./views/Edge.vue";
 import Customer from"./views/Customer.vue";
+import DnsRecord from"./views/DnsRecord.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -52,6 +53,11 @@ export default new Router({
                     name:"Ping Tool",
                     path: "Ping",
                     component: Ping
+                },
+                {
+                    name:"DNS Records",
+                    path: "dns-records",
+                    component: DnsRecord
                 },
                 {
                     name:"Bgp",

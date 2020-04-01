@@ -8,6 +8,7 @@ import bgp from './modules/bgp'
 import dummy from './modules/dummy'
 import edge from './modules/edge'
 import customer from './modules/customer'
+import dnsRecord from './modules/dnsRecord'
 
 Vue.use(Vuex);
 
@@ -21,6 +22,7 @@ export default new Vuex.Store({
         bgp,
         dummy,
         edge,
-        customer
+        customer,
+        dnsRecord
     }
 });
