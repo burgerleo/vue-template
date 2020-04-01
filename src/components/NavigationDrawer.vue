@@ -63,17 +63,16 @@ export default {
                             icon: 'mdi-monitor',
                             router: '/ping'
                         },
-                        {
-                            title: 'JKB Packet Loss',
-                            icon: 'mdi-lumx',
-                            router: '/jkb-packetloss'
-                        },
-                        {
-                            title: 'JKB Latency',
-                            icon: 'mdi-looks',
-                            router: '/jkb-packetloss'
-
-                        },
+                        // {
+                        //     title: 'JKB Packet Loss',
+                        //     icon: 'mdi-lumx',
+                        //     router: '/jkb-packetloss'
+                        // },
+                        // {
+                        //     title: 'JKB Latency',
+                        //     icon: 'mdi-looks',
+                        //     router: '/jkb-packetloss'
+                        // },
                         { header: 'Administrator' },
                         // {
                         //     title: "Users",
