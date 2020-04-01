@@ -1,0 +1,87 @@
+{
+    "message": "Success",
+    "errorCode": null,
+    "data": {
+        "bgpIoMapping": [
+            {
+                "id": 25,
+                "in": 11,
+                "out": 11,
+                "source_ip": "74.114.51.88",
+                "jkb_task_id": 1807601,
+                "inBgpName": "CUG-HKR1C",
+                "outBgpName": "CUG-HKR1C",
+                "avail_rate_avg": 100,
+                "resp_time_avg": 68.35
+            },
+            {
+                "id": 26,
+                "in": 13,
+                "out": 13,
+                "source_ip": "149.71.112.88",
+                "jkb_task_id": 1607626,
+                "inBgpName": "CUG-HKR2C",
+                "outBgpName": "CUG-HKR2C",
+                "avail_rate_avg": 99.81,
+                "resp_time_avg": 65.44
+            },
+            {
+                "id": 27,
+                "in": 17,
+                "out": 17,
+                "source_ip": "209.146.11.88",
+                "jkb_task_id": 1624367,
+                "inBgpName": "TWG-HKR1C",
+                "outBgpName": "TWG-HKR1C",
+                "avail_rate_avg": 100,
+                "resp_time_avg": 77.62
+            },
+            {
+                "id": 28,
+                "in": 16,
+                "out": 16,
+                "source_ip": "149.71.113.88",
+                "jkb_task_id": 1602844,
+                "inBgpName": "CMI-HKR2C",
+                "outBgpName": "CMI-HKR2C",
+                "avail_rate_avg": 100,
+                "resp_time_avg": 54.5
+            },
+            {
+                "id": 29,
+                "in": 19,
+                "out": 19,
+                "source_ip": "209.146.9.88",
+                "jkb_task_id": 1645681,
+                "inBgpName": "SING-HKR2C",
+                "outBgpName": "SING-HKR2C",
+                "avail_rate_avg": 99.32,
+                "resp_time_avg": 69.49
+            },
+            {
+                "id": 30,
+                "in": 11,
+                "out": 13,
+                "source_ip": "74.114.51.112",
+                "jkb_task_id": 1809119,
+                "inBgpName": "CUG-HKR1C",
+                "outBgpName": "CUG-HKR2C",
+                "avail_rate_avg": 100,
+                "resp_time_avg": 64.16
+            },
+            {
+                "id": 31,
+                "in": 11,
+                "out": 17,
+                "source_ip": "74.114.51.11",
+                "jkb_task_id": 1809123,
+                "inBgpName": "CUG-HKR1C",
+                "outBgpName": "TWG-HKR1C",
+                "avail_rate_avg": 99.92,
+                "resp_time_avg": 83.48
+            }
+        ],
+        "end": "2020-03-31 18:19",
+        "start": "2020-03-31 18:19"
+    }
+}
