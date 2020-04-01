@@ -28,7 +28,9 @@
                                     v-divider.mx-4(inset vertical)
                                     v-spacer
                                     v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
-                                    v-btn.mb-2(color="primary" dark @click="newDialog") New Dummy
+                                    v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") New Dummy
+                                    v-btn.mb-2.mr-2(color="primary" dark @click="getDummy")
+                                        v-icon mdi-refresh
                             template(v-slot:header="{item,index}")
                                 tr
                                     td 
@@ -321,6 +323,8 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
+                        this.getDummy()
+
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
@@ -345,6 +349,8 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
+                        this.getDummy()
+
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
@@ -369,6 +375,7 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
+                        this.getDummy()
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )

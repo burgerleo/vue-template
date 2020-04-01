@@ -12,10 +12,9 @@
                                 v-divider.mx-4(inset vertical)
                                 v-spacer
                                 v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
-
-                                v-dialog(v-model="dialog.add")
-                                    template(v-slot:activator="{ on }")
-                                        v-btn.mb-2(color="primary" dark @click="newDialog") New BGP
+                                v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") New BGP
+                                v-btn.mb-2.mr-2(color="primary" dark @click="init")
+                                    v-icon mdi-refresh
                         template(v-slot:header="{item,index}")
                             tr
                                 td 
