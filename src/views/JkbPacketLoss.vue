@@ -6,38 +6,45 @@
                     template(v-slot:top)
                         v-toolbar(flat white)
                             v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "≥"}}
-                            v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.1).toFixed(10)) + "~" + parseFloat((getMaxAndMin()['min'] + 0.1).toFixed(10))}}
+                            v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10))}}
                             v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']}}
                             v-divider.mx-1(inset vertical)
                             v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
                             v-divider.mx-1(inset vertical)
 
                             v-spacer
-                            v-toolbar-title.mb-2.mr-2 Countdown Refresh Time: {{totalTime}}
+                            v-toolbar-title.mb-2.mr-2 Countdown Refresh Time: {{totalTime}} s
                             v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
                             v-btn.mb-2.mr-2(color="primary" dark @click="getAllPacketLoss")
                                 v-icon mdi-refresh
                     
                     template(v-slot:header="{item,index}")
                         tr
-                            th.pr-2.pl-2 {{"In/Out"}}
-                            th.pr-2.pl-2(v-for="(outLine, value) in bgpList") {{outLine}}
+                            th.pr-2.pl-2
+                                v-avatar(tile width="100%" height="85" color="transparent" dark ) 
+                                    h2 {{"In/Out"}}
+                            th.pr-2.pl-2(v-for="(outLine, value) in bgpList") 
+                                v-avatar(tile width="100%" height="85" color="transparent" dark ) 
+                                    h2 {{outLine}}
+                            
                     template(v-slot:item="{item,index}")
                         tr
-                            th.pr-2.pl-2 {{bgpList[index]}}
+                            th.pr-2.pl-2
+                                v-avatar(tile width="100%" height="85" color="transparent" dark )
+                                    h2 {{bgpList[index]}}
                             td.pr-1.pl-1.text-center(v-for="(outLine, value) in bgpList") 
                                 div.text-center(:class="getColor(getSource(item, outLine, typeList[0]))")
                                     v-tooltip(top)
                                         template(v-slot:activator="{on}")
-                                            v-avatar(tile width="100%" height="54" color="transparent" dark v-on="on")
+                                            v-avatar(tile width="100%" height="85" color="transparent" dark v-on="on")
                                                 v-avatar(size="54" color="black")
                                                     v-tooltip(top)
                                                         template(v-slot:activator="{ on }")
                                                             v-avatar(size="50" :color="getColor(getSource(item, outLine, typeList[1]))" dark v-on="on")
-                                                                v-avatar(size="34" color="black")
+                                                                v-avatar(size="24" color="black")
                                                                     v-tooltip(top)
                                                                         template(v-slot:activator="{ on }")
-                                                                            v-avatar(size="30" :color="getColor(getSource(item, outLine, typeList[2]))" dark v-on="on")
+                                                                            v-avatar(size="20" :color="getColor(getSource(item, outLine, typeList[2]))" dark v-on="on")
                                                                         span {{getSource(item, outLine, typeList[2]) + "%" }}       
                                                         span {{getSource(item, outLine, typeList[1]) + "%"}}
                                         span {{getSource(item, outLine, typeList[0]) + "%"}}
@@ -45,11 +52,12 @@
                 v-card
                     v-card-title.title Setting
                     v-card-text.pt-4 Color Range
-                        v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" step='0.1')
-                        v-text-field(v-model="dataTimeInterval.outside" label="Outside (latest Minutes)" type="number" name="minute")
-                        v-text-field(v-model="dataTimeInterval.intermediate" label="Intermediate (latest Hours)" type="number" name="minute")
-                        v-text-field(v-model="dataTimeInterval.inside" label="iInside (latest Days)" type="number" name="minute")
-                        v-text-field(v-model="countdownMinute" label="Count Down Mintes" type="number" name="minute")
+                        v-form(ref="form" onsubmit="return false;")
+                            v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" step='0.01')
+                            v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max=60 min=1)
+                            v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Hours)" type="number" name="hour" max=24 min=1)
+                            v-text-field(v-model="configs.timeinterval.inside" label="iInside (latest Days)" type="number" name="day" max=30 min=1)
+                            v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute")
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -71,78 +79,53 @@ export default {
             tableData: {},
             min: 95,
             max: 100,
-            slider: 40,
             range: [97, 99.5],
-            copyRange: [],
             dialog: false,
             pageName: 'packet-loss',
             typeList: ['outside', 'intermediate', 'inside'],
-            dataTimeInterval: {
-                outside: 5,
-                intermediate: 60,
-                inside: 0
-            },
             colorList: [
                 'green lighten-1',
                 'yellow lighten-1',
                 'red lighten-1',
                 'grey lighten-1'
             ],
-            attributes: ['rankbar', 'timeinterval'],
             timer: null,
-            countdownMinute: 1,
-            totalTime: 0,
-
-            outsidehover:false,
-            config: {
+            totalTime: 60,
+            configs: {
                 rankbar: {
-                    max: 99.8,
-                    min: 99.3
+                    max: 99.5,
+                    min: 97
                 },
                 timeinterval: {
                     inside: 1,
                     outside: 5,
                     intermediate: 1
+                },
+                countdownMinute: {
+                    countdownMinute: 1
                 }
             },
-            dd:0,
+            copyConfigs: {},
+
             picker: new Date().toISOString().substr(0, 10)
         }
     },
     watch: {
-        // tableData() {}
     },
     methods: {
-        editDialog() {
-            this.dialog = true
-            this.copyRange = [...this.range]
-        },
-        closeDialog() {
-            this.dialog = false
-            this.range = [...this.copyRange]
-            this.copyRange = []
-        },
         getConfig() {
             this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('jkb/getConfig', { page: this.pageName })
                 .then(
                     function(result) {
-                        for (var configs of result.data) {
-                            if (configs.attributes == this.attributes[0]) {
-                                var range = []
-                                range = [
-                                    configs.actions.min,
-                                    configs.actions.max
-                                ]
-                                this.range =
-                                    range.length > 0 ? range : this.range
-                            } else if (
-                                configs.attributes == this.attributes[1]
-                            ) {
-                                this.dataTimeInterval = configs.actions
+                        for (var config of result.data) {
+                            if (config.attributes) {
+                                this.configs[config.attributes] = config.actions
                             }
                         }
+                        this.setMaxAndMin()
+
                         this.getAllPacketLoss()
 
                         this.$store.dispatch('global/finishLoading')
@@ -158,41 +141,58 @@ export default {
                     }.bind(this)
                 )
         },
-        save() {
-            var data
-            for (var attribute of this.attributes) {
-                switch (attribute) {
-                    case this.attributes[0]:
-                        data = {
-                            page: this.pageName,
-                            attributes: attribute,
-                            actions: this.getMaxAndMin()
-                        }
-                        break
-                    case this.attributes[1]:
-                        data = {
-                            page: this.pageName,
-                            attributes: attribute,
-                            actions: this.dataTimeInterval
-                        }
-                        break
-                    default:
-                        return
-                        break
-                }
-                this.saveConfig(data)
-            }
+        editDialog() {
+            this.dialog = true
 
-            this.copyRange = [...this.range]
+            this.copyConfigs = {}
+
+            // Deep copy
+            this.copyConfigs = JSON.parse(JSON.stringify(this.configs))
+        },
+        closeDialog() {
+            this.configs = Object.assign({}, this.copyConfigs)
+
+            this.copyConfigs = {}
+
+            this.setMaxAndMin()
+
+            this.dialog = false
+        },
+        save() {
+            this.setConfigByRankbar()
+
+            this.saveBatchSetConfig()
+
+            this.copyConfigs = Object.assign({}, this.configs)
+
             this.closeDialog()
         },
-        saveConfig(data) {
-            this.$store.dispatch('global/startLoading')
+        saveBatchSetConfig() {
+            var configs = {}
+            var data = {}
 
+            configs = this.configs
+
+            const configList = Object.keys(configs)
+
+            data = configList.map(function(item) {
+                return {
+                    attributes: item,
+                    actions: configs[item]
+                }
+            })
+
+            data.page = this.pageName
+
+            this.$store.dispatch('global/startLoading')
             this.$store
-                .dispatch('jkb/setConfig', data)
+                .dispatch('jkb/batchSetConfig', data)
                 .then(
-                    function(result) {
+                    function() {
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
@@ -206,31 +206,52 @@ export default {
                     }.bind(this)
                 )
         },
+        setMaxAndMin() {
+            var rankbar = this.configs.rankbar
+
+            this.range = []
+
+            this.range[0] = rankbar.min
+            this.range[1] = rankbar.max
+        },
+        setConfigByRankbar() {
+            var rankbar = this.getMaxAndMin()
+            this.configs.rankbar = rankbar
+        },
         getMaxAndMin() {
             var range = this.range
 
             const max = range[0] >= range[1] ? range[0] : range[1]
             const min = range[0] <= range[1] ? range[0] : range[1]
+
             return {
                 max: max,
                 min: min
-            };
+            }
         },
         getAllPacketLoss() {
+            this.$store.dispatch('global/startLoading')
+
             for (var type of this.typeList) {
                 this.getPacketLoss(type)
             }
-            this.resetTimer();
-            this.startTimer()
-            console.log("Test")
-            this.dd ++
-            console.log(this.dd)
+
+            if (this.checkIsRightPath()) {
+                this.resetTimer()
+
+                this.startTimer()
+            } else {
+                this.stopTimer()
+            }
+        },
+        checkIsRightPath() {
+            const path = this.$route
+
+            return path.name === 'JKB-PacketLoss'
         },
 
         getPacketLoss(type) {
-            this.$store.dispatch('global/startLoading')
-
-            var minute = this.dataTimeInterval[type]
+            var minute = this.configs.timeinterval[type]
 
             switch (type) {
                 case this.typeList[1]:
@@ -318,16 +339,11 @@ export default {
                 }
             })
 
-            // console.log(bgpList)
-            // console.log(headerList)
-            // console.log(tableData)
             this.tableData = tableData
             this.bgpList = bgpList
             this.headers = headerList
         },
         getSource(inLine, outLine, type) {
-            // console.log(inLine, outLine, type)
-
             if (!this.tableData[inLine][outLine]) {
                 return null
             }
@@ -340,7 +356,7 @@ export default {
         getColor(packetloss) {
             const range = this.getMaxAndMin()
 
-            if (packetloss == null) {
+            if (packetloss == null || packetloss == '-') {
                 return this.colorList[3]
             } else if (packetloss >= range['max']) {
                 return this.colorList[0]
@@ -363,7 +379,7 @@ export default {
             }
         },
         resetTimer() {
-            this.totalTime = this.countdownMinute * 60
+            this.totalTime = this.configs.countdownMinute.countdownMinute * 60
         },
         stopTimer() {
             clearInterval(this.timer)
