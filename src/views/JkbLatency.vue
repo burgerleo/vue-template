@@ -17,7 +17,7 @@
                             v-btn.mb-2.mr-2(v-if="timer" color="red darken-1" dark @click="stopTimer") Stop
                             v-btn.mb-2.mr-2(v-if="!timer" color="primary" dark @click="getAllLatency") Start
                             v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
-                            v-btn.mb-2.mr-2(color="primary" dark @click="getAllLatency")
+                            v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
                                 v-icon mdi-refresh
                     
                     template(v-slot:header="{item,index}")
@@ -53,13 +53,13 @@
             v-dialog(v-model="dialog" max-width="600" scrollable persistent)
                 v-card
                     v-card-title.title Setting
-                    v-card-text.pt-4 Color Range
+                    v-card-text.pt-6 Color Range
                         v-form(ref="form" onsubmit="return false;")
-                            v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" step='1')
+                            v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='1')
                             v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
                             v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Hours)" type="number" name="hour" max="24" min="1" :rules="[rules.required, rules.hours]")
                             v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Days)" type="number" name="day" max="30" min="1" :rules="[rules.required, rules.days]")
-                            v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute")
+                            v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -116,6 +116,7 @@ export default {
     watch: {},
     methods: {
         getConfig() {
+            this.resetTimer()
             this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('jkb/getConfig', { page: this.pageName })
