@@ -10,8 +10,7 @@ import BGP from"./views/BGP.vue";
 import Edge from"./views/Edge.vue";
 import Customer from"./views/Customer.vue";
 import JkbPacketLoss from"./views/JkbPacketLoss.vue";
-
-
+import JkbLatency from"./views/JkbLatency.vue";
 
 Vue.use(Router);
 
@@ -82,6 +81,12 @@ export default new Router({
                     path: "jkb-packetloss",
                     component: JkbPacketLoss
                 },
+                {
+                    name:"JKB-Latency",
+                    path: "jkb-Latency",
+                    component: JkbLatency
+                },
+                
             ]
         }
     ]

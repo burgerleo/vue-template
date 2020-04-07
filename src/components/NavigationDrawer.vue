@@ -68,11 +68,11 @@ export default {
                             icon: 'mdi-lumx',
                             router: '/jkb-packetloss'
                         },
-                        // {
-                        //     title: 'JKB Latency',
-                        //     icon: 'mdi-looks',
-                        //     router: '/jkb-packetloss'
-                        // },
+                        {
+                            title: 'JKB Latency',
+                            icon: 'mdi-looks',
+                            router: '/jkb-Latency'
+                        },
                         { header: 'Administrator' },
                         // {
                         //     title: "Users",
