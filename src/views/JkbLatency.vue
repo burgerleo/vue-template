@@ -240,18 +240,16 @@ export default {
             }
         },
         getAllLatency() {
-            this.$store.dispatch('global/startLoading')
-
-            for (var type of this.typeList) {
-                this.getLatency(type)
-            }
-
             if (this.checkIsRightPath()) {
                 this.resetTimer()
-
                 this.startTimer()
             } else {
                 this.stopTimer()
+                return
+            }
+
+            for (var type of this.typeList) {
+                this.getLatency(type)
             }
         },
         checkIsRightPath() {
@@ -261,7 +259,6 @@ export default {
         },
         getLatency(type) {
             var minute = this.configs.timeinterval[type]
-
             switch (type) {
                 case this.typeList[1]:
                     minute = minute * 60
@@ -271,7 +268,7 @@ export default {
                     break
             }
             this.loading = true
-
+            this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('jkb/getPacketLoss', {
                     minutes: minute
@@ -376,10 +373,13 @@ export default {
             return this.colorList[2]
         },
         startTimer() {
+            // 計時器開始
             this.stopTimer()
             this.timer = setInterval(() => this.countdown(), 1000)
         },
         countdown() {
+            // 計時器觸發的 function
+            // 每次觸發會檢查 totaltime
             if (this.totalTime >= 1) {
                 this.totalTime--
             } else {

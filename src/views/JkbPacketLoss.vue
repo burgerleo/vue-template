@@ -241,18 +241,15 @@ export default {
             }
         },
         getAllPacketLoss() {
-            this.$store.dispatch('global/startLoading')
-
-            for (var type of this.typeList) {
-                this.getPacketLoss(type)
-            }
-
             if (this.checkIsRightPath()) {
                 this.resetTimer()
-
                 this.startTimer()
             } else {
                 this.stopTimer()
+            }
+
+            for (var type of this.typeList) {
+                this.getPacketLoss(type)
             }
         },
         checkIsRightPath() {
@@ -273,6 +270,7 @@ export default {
                     break
             }
             this.loading = true
+            this.$store.dispatch('global/startLoading')
 
             this.$store
                 .dispatch('jkb/getPacketLoss', {
@@ -378,10 +376,13 @@ export default {
             return this.colorList[2]
         },
         startTimer() {
+            // 計時器開始
             this.stopTimer()
             this.timer = setInterval(() => this.countdown(), 1000)
         },
         countdown() {
+            // 計時器觸發的 function
+            // 每次觸發會檢查 totaltime
             if (this.totalTime >= 1) {
                 this.totalTime--
             } else {
@@ -398,7 +399,6 @@ export default {
             this.timer = false
             this.resetTimer()
         },
-
         setPageName() {
             const path = this.$route
             this.pageName = path.name
