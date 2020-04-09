@@ -62,6 +62,7 @@ export default {
             originBGPList: {},
             bgpList: {},
 
+            ws_uri: "ws://172.31.251.103:8888/octopus-ping", // process.env.WS_URL,
             websock: null,
 
             isBtnDisabled: false
@@ -214,8 +215,8 @@ export default {
 
         // WebSocket ++
         initWebSocket(){ //初始化 websocket
-            const wsuri = process.env.WS_URL;
-            this.websock = new WebSocket(wsuri);
+            // console.log(this.ws_uri);
+            this.websock = new WebSocket(this.ws_uri);
             this.websock.onmessage = this.websocketonmessage;
             this.websock.onerror = this.websocketonerror;
             this.websock.onclose = this.websocketclose;
