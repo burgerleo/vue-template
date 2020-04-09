@@ -59,9 +59,14 @@ export default {
                             router: '/curl'
                         },
                         {
-                            title: 'Ping Tool',
-                            icon: 'mdi-monitor',
+                            title: 'Ping',
+                            icon: 'mdi-pin',
                             router: '/ping'
+                        },
+                        {
+                            title: 'Ping Realtime',
+                            icon: 'mdi-lan-pending',
+                            router: '/ping-realtime'
                         },
                         {
                             title: 'JKB Packet Loss',
@@ -73,9 +78,10 @@ export default {
                             icon: 'mdi-looks',
                             router: '/jkb-Latency'
                         },
-                        { title: "DNS Records",
-                          icon: "mdi-chart-histogram",
-                          router: "/dns-records"
+                        {
+                            title: "DNS Records",
+                            icon: "mdi-chart-histogram",
+                            router: "/dns-records"
                         },
                         { header: 'Administrator' },
 
