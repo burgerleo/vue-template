@@ -59,9 +59,14 @@ export default {
                             router: '/curl'
                         },
                         {
-                            title: 'Ping Tool',
-                            icon: 'mdi-monitor',
+                            title: 'Ping',
+                            icon: 'mdi-pin',
                             router: '/ping'
+                        },
+                        {
+                            title: 'Ping Realtime',
+                            icon: 'mdi-lan-pending',
+                            router: '/ping-realtime'
                         },
                         // {
                         //     title: 'JKB Packet Loss',

@@ -5,6 +5,7 @@ import Layout from "./views/Layout.vue";
 import Helper from "./views/admin/Helper.vue";
 import Curl from "./views/Curl.vue";
 import Ping from"./views/Ping.vue";
+import PingRealtime from"./views/PingRealtime.vue";
 import Dummy from"./views/Dummy.vue";
 import BGP from"./views/BGP.vue";
 import Edge from"./views/Edge.vue";
@@ -53,9 +54,14 @@ export default new Router({
                     component: Curl
                 },
                 {
-                    name:"Ping Tool",
-                    path: "Ping",
+                    name:"Ping",
+                    path: "ping",
                     component: Ping
+                },
+                {
+                    name:"Ping Realtime",
+                    path: "ping-realtime",
+                    component: PingRealtime
                 },
                 {
                     name:"Bgp",
