@@ -46,17 +46,39 @@ export default {
                 {
                     id: 1,
                     menu: [
-                        { header: "General" },
+                        { header: 'General' },
                         // {
                         //     title: "Dashboard",
                         //     icon: "mdi-view-dashboard",
                         //     children: [
                         //     ]
                         // },
-                        { title: "Origin Server Testing", icon: "mdi-check",router: "/curl"  },
-                        { title: "Ping Tool", icon: "mdi-monitor",router: "/ping"  },
-                        { title: "DNS Records", icon: "mdi-chart-histogram",router: "/dns-records"  },
-                        { header: "Administrator" },
+                        {
+                            title: 'Origin Server Testing',
+                            icon: 'mdi-check',
+                            router: '/curl'
+                        },
+                        {
+                            title: 'Ping Tool',
+                            icon: 'mdi-monitor',
+                            router: '/ping'
+                        },
+                        {
+                            title: 'JKB Packet Loss',
+                            icon: 'mdi-lumx',
+                            router: '/jkb-packetloss'
+                        },
+                        {
+                            title: 'JKB Latency',
+                            icon: 'mdi-looks',
+                            router: '/jkb-Latency'
+                        },
+                        { title: "DNS Records",
+                          icon: "mdi-chart-histogram",
+                          router: "/dns-records"
+                        },
+                        { header: 'Administrator' },
+
                         // {
                         //     title: "Users",
                         //     icon: "mdi-account-circle",
@@ -86,12 +108,28 @@ export default {
                         //     { title: "Helper", icon: "mdi-image",router: "/dashboard" },
                         //   ]
                         // },
-                      { title: "BGP Peer", icon: "mdi-call-made",router: "/bgp" },
-                      { title: "Dummy IP", icon: "mdi-forward",router: "/dummy-ip" },
-                      { title: "Edge", icon: "mdi-comment-check",router: "/edge" },
-                      { title: "Customer", icon: "mdi-human-male-female",router: "/customer" },
+                        {
+                            title: 'BGP Peer',
+                            icon: 'mdi-call-made',
+                            router: '/bgp'
+                        },
+                        {
+                            title: 'Dummy IP',
+                            icon: 'mdi-forward',
+                            router: '/dummy-ip'
+                        },
+                        {
+                            title: 'Edge',
+                            icon: 'mdi-comment-check',
+                            router: '/edge'
+                        },
+                        {
+                            title: 'Customer',
+                            icon: 'mdi-human-male-female',
+                            router: '/customer'
+                        }
                     ]
-                },
+                }
                 // {
                 //     id: 2,
                 //     menu: [
@@ -110,28 +148,28 @@ export default {
                 // }
             ],
             admins: [
-                ["Management", "mdi-people-outline"],
-                ["Settings", "mdi-settings"]
+                ['Management', 'mdi-people-outline'],
+                ['Settings', 'mdi-settings']
             ]
-        };
+        }
     },
     watch: {
         tabId() {
-            this.navigationControl();
+            this.navigationControl()
         }
     },
     methods: {
         navigationControl() {
-            this.items.forEach((o) => {
+            this.items.forEach(o => {
                 if (o.id == this.tabId) {
-                    this.tabItems = o.menu;
+                    this.tabItems = o.menu
                 }
-            });
+            })
         }
     },
     created() {
-        this.navigationControl();
+        this.navigationControl()
     }
-};
+}
 </script>
 

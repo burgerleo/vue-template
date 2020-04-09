@@ -28,7 +28,9 @@
                                     v-divider.mx-4(inset vertical)
                                     v-spacer
                                     v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
-                                    v-btn.mb-2(color="primary" dark @click="newDialog") New Dummy
+                                    v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") New Dummy
+                                    v-btn.mb-2.mr-2(color="primary" dark @click="getDummy")
+                                        v-icon mdi-refresh
                             template(v-slot:header="{item,index}")
                                 tr
                                     td 
@@ -40,6 +42,8 @@
                                         v-text-field.mt-0.pt-0(v-model="searchList.outName" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'outName')")
                                     td 
                                         v-text-field.mt-0.pt-0(v-model="searchList.source_ip" width="10px"  label="Search" single-line hide-details @input="filterOnlyColumn($event,'source_ip')")
+                                    td 
+                                        v-text-field.mt-0.pt-0(v-model="searchList.jkb_task_id" width="10px"  label="Search" single-line hide-details @input="filterOnlyColumn($event,'jkb_task_id')")
                             template(v-slot:item="{item,index}")
                                 tr
                                     td {{rowIndex(index)}}
@@ -47,6 +51,8 @@
                                     td {{item.inName}}
                                     td {{item.outName}}
                                     td {{item.source_ip}}
+                                    td 
+                                        a(:href="jkbLink(item.jkb_task_id)" target="_blank") {{item.jkb_task_id}}
                                     td 
                                         v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
                                         v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
@@ -69,6 +75,7 @@
                             v-select(v-model="dummy.in" :items="bgpList[site]" label="In" item-text="name" item-value="id" :rules="[rules.required]")
                             v-select(v-model="dummy.out" :items="bgpList[site]" label="Out" item-text="name" item-value="id" :rules="[rules.required]")
                             v-text-field(v-model="dummy.source_ip" label="IP" type="text" name="ip" :rules="[rules.required, rules.ip]")
+                            v-text-field(v-model="dummy.jkb_task_id" label="JKB Task Id" type="number" name="task_id")
                     v-card-actions  
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -142,6 +149,12 @@ export default {
                     align: 'left',
                     sortable: true,
                     value: 'ip'
+                },
+                {
+                    text: 'Task ID',
+                    align: 'left',
+                    sortable: true,
+                    value: 'jkb_task_id'
                 },
                 {
                     text: 'Actions',
@@ -310,6 +323,8 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
+                        this.getDummy()
+
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
@@ -334,6 +349,8 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
+                        this.getDummy()
+
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
@@ -358,6 +375,7 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
+                        this.getDummy()
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
@@ -377,6 +395,11 @@ export default {
                 this.addDummy()
             }
             this.closeDialog()
+        },
+        jkbLink(id) {
+            let jkb =
+                'https://monitoring.cloudwise.com/monitoring/#/taskdata/overview/base?task_id='
+            return jkb + id
         },
         rowIndex: function(index) {
             return (this.page - 1) * this.itemsPerPage + index + 1
@@ -452,23 +475,33 @@ export default {
         filterOnlyColumn(value, column) {
             var searchResult
 
+            var searchResult
+
+            if (!value) {
+                delete this.searchList[column]
+            }
+
             // 備份 and 還原資料
             this.backupAndRcoverData()
 
             for (var searchKey in this.searchList) {
                 var searchString = this.searchList[searchKey]
-                if (typeof searchString != 'number') {
-                    searchString = searchString.toString().toLocaleUpperCase()
-                }
+
+                searchString = searchString.toString().toLocaleUpperCase()
 
                 searchResult = this.desserts.filter(function(item) {
                     var searchData = item[searchKey]
 
-                    if (typeof item[searchKey] != 'number') {
-                        searchData = searchData.toLocaleUpperCase()
+                    if (searchData === null) {
+                        return false
                     }
 
-                    return searchData.indexOf(searchString) !== -1
+                    return (
+                        searchData
+                            .toString()
+                            .toLocaleUpperCase()
+                            .indexOf(searchString) !== -1
+                    )
                 })
 
                 this.desserts = searchResult

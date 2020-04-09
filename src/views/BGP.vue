@@ -12,10 +12,9 @@
                                 v-divider.mx-4(inset vertical)
                                 v-spacer
                                 v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
-
-                                v-dialog(v-model="dialog.add")
-                                    template(v-slot:activator="{ on }")
-                                        v-btn.mb-2(color="primary" dark @click="newDialog") New BGP
+                                v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") New BGP
+                                v-btn.mb-2.mr-2(color="primary" dark @click="init")
+                                    v-icon mdi-refresh
                         template(v-slot:header="{item,index}")
                             tr
                                 td 
@@ -174,6 +173,9 @@ export default {
             searchList: {},
             copyDesserts: null
         }
+    },
+    watch:{
+
     },
     methods: {
         init: function() {
@@ -346,7 +348,7 @@ export default {
             } else {
                 this.store()
             }
-
+            this.filterOnlyColumn()
             this.closeDialog()
         },
         destroy: function() {
@@ -378,6 +380,7 @@ export default {
                 )
 
             // this.desserts.splice(this.editedIndex, 1)
+            this.filterOnlyColumn()
             this.closeDialog()
         },
         rowIndex: function(index) {
@@ -409,18 +412,22 @@ export default {
             // 先將要搜尋的文字轉成大寫
             for (var searchKey in this.searchList) {
                 var searchString = this.searchList[searchKey]
-                    .toString()
-                    .toLocaleUpperCase()
+
+                searchString = searchString.toString().toLocaleUpperCase()
 
                 searchResult = this.desserts.filter(function(item) {
-                    if (item[searchKey]) {
-                        return (
-                            item[searchKey]
-                                .toLocaleUpperCase()
-                                .indexOf(searchString) !== -1
-                        )
+                    var searchData = item[searchKey]
+
+                    if (searchData === null) {
+                        return false
                     }
-                    return false
+
+                    return (
+                        searchData
+                            .toString()
+                            .toLocaleUpperCase()
+                            .indexOf(searchString) !== -1
+                    )
                 })
 
                 this.desserts = searchResult

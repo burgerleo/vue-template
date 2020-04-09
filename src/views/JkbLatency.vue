@@ -1,0 +1,419 @@
+<template lang="pug">
+    v-layout
+        v-flex(xs12 sm12 md12)
+            v-card
+                v-data-table.elevation-1(:headers="headers" :items="bgpList" dense hide-default-header hide-default-footer :items-per-page="1000" @page-count="1000" :loading="loading")
+                    template(v-slot:top)
+                        v-toolbar(flat white)
+                            v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['min'] + "≤"}}
+                            v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMin()['max'] - 1).toFixed(10))}}
+                            v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMin()['max']}}
+                            v-divider.mx-1(inset vertical)
+                            v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
+                            v-divider.mx-1(inset vertical)
+
+                            v-spacer
+                            v-toolbar-title.mb-2.mr-2 Countdown Refresh Time: {{totalTime}} s
+                            v-btn.mb-2.mr-2(v-if="timer" color="red darken-1" dark @click="stopTimer") Stop
+                            v-btn.mb-2.mr-2(v-if="!timer" color="primary" dark @click="getAllLatency") Start
+                            v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
+                            v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
+                                v-icon mdi-refresh
+                    
+                    template(v-slot:header="{item,index}")
+                        tr
+                            th.pr-2.pl-2
+                                v-avatar(tile width="100%" height="85" color="transparent" dark ) 
+                                    h1 {{"In/Out"}}
+                            th.pr-2.pl-2(v-for="(outLine, value) in bgpList") 
+                                v-avatar(tile width="100%" height="85" color="transparent" dark ) 
+                                    h1 {{outLine}}
+                            
+                    template(v-slot:item="{item,index}")
+                        tr
+                            th.pr-2.pl-2
+                                v-avatar(tile width="100%" height="85" color="transparent" dark )
+                                    h1 {{bgpList[index]}}
+                            td.pr-1.pl-1.text-center(v-for="(outLine, value) in bgpList") 
+                                div.text-center(:class="getColor(getSource(item, outLine, typeList[0]))")
+                                    v-tooltip(top)
+                                        template(v-slot:activator="{on}")
+                                            v-avatar(tile width="100%" height="85" color="transparent" dark v-on="on")
+                                                v-avatar(size="54" color="black")
+                                                    v-tooltip(top)
+                                                        template(v-slot:activator="{ on }")
+                                                            v-avatar(size="50" :color="getColor(getSource(item, outLine, typeList[1]))" dark v-on="on")
+                                                                v-avatar(size="24" color="black")
+                                                                    v-tooltip(top)
+                                                                        template(v-slot:activator="{ on }")
+                                                                            v-avatar(size="20" :color="getColor(getSource(item, outLine, typeList[2]))" dark v-on="on")
+                                                                        span {{getSource(item, outLine, typeList[2])}}       
+                                                        span {{getSource(item, outLine, typeList[1])}}
+                                        span {{getSource(item, outLine, typeList[0])}}
+            v-dialog(v-model="dialog" max-width="600" scrollable persistent)
+                v-card
+                    v-card-title.title Setting
+                    v-card-text.pt-6 Color Range
+                        v-form(ref="form" onsubmit="return false;")
+                            v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='1')
+                            v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
+                            v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Hours)" type="number" name="hour" max="24" min="1" :rules="[rules.required, rules.hours]")
+                            v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Days)" type="number" name="day" max="30" min="1" :rules="[rules.required, rules.days]")
+                            v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
+                    v-card-actions
+                        v-spacer
+                        v-btn(color="grey" @click="closeDialog") Cancel
+                        v-btn(color="primary" @click="save") Save
+</template>
+
+<script>
+import textFieldRules from '../utils/textFieldRules'
+
+export default {
+    name: 'JKB-Packet-Loss',
+    mixins: [textFieldRules],
+
+    components: {},
+    data() {
+        return {
+            headers: [],
+            bgpList: [],
+            tableData: {},
+            loading: true,
+            min: 0,
+            max: 300,
+            range: [150, 200],
+            dialog: false,
+            pageName: 'latency',
+            typeList: ['outside', 'intermediate', 'inside'],
+            colorList: [
+                'green lighten-1',
+                'yellow lighten-1',
+                'red lighten-1',
+                'grey lighten-1'
+            ],
+            timer: false,
+            totalTime: 60,
+            configs: {
+                rankbar: {
+                    max: 150,
+                    min: 200
+                },
+                timeinterval: {
+                    inside: 1,
+                    outside: 5,
+                    intermediate: 1
+                },
+                countdownMinute: {
+                    countdownMinute: 1
+                }
+            },
+            copyConfigs: {},
+
+            picker: new Date().toISOString().substr(0, 10)
+        }
+    },
+    watch: {},
+    methods: {
+        getConfig() {
+            this.resetTimer()
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('jkb/getConfig', { page: this.pageName })
+                .then(
+                    function(result) {
+                        for (var config of result.data) {
+                            if (config.attributes) {
+                                this.configs[config.attributes] = config.actions
+                            }
+                        }
+                        this.setMaxAndMin()
+
+                        this.getAllLatency()
+
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        editDialog() {
+            this.dialog = true
+
+            this.copyConfigs = {}
+
+            // Deep copy
+            this.copyConfigs = JSON.parse(JSON.stringify(this.configs))
+        },
+        closeDialog() {
+            this.configs = Object.assign({}, this.copyConfigs)
+
+            this.copyConfigs = {}
+
+            this.setMaxAndMin()
+
+            this.dialog = false
+        },
+        validateForm: function() {
+            // 驗證表單資料
+            return this.$refs.form.validate()
+        },
+        save() {
+            if (!this.validateForm()) {
+                return
+            }
+            this.setConfigByRankbar()
+
+            this.saveBatchSetConfig()
+
+            this.copyConfigs = Object.assign({}, this.configs)
+
+            this.closeDialog()
+        },
+        saveBatchSetConfig() {
+            var configs = {}
+            var data = {}
+
+            configs = this.configs
+
+            const configList = Object.keys(configs)
+
+            data = configList.map(function(item) {
+                return {
+                    attributes: item,
+                    actions: configs[item]
+                }
+            })
+
+            data.page = this.pageName
+
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('jkb/batchSetConfig', data)
+                .then(
+                    function() {
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        setMaxAndMin() {
+            var rankbar = this.configs.rankbar
+
+            this.range = []
+
+            this.range[0] = rankbar.min
+            this.range[1] = rankbar.max
+        },
+        setConfigByRankbar() {
+            var rankbar = this.getMaxAndMin()
+            this.configs.rankbar = rankbar
+        },
+        getMaxAndMin() {
+            var range = this.range
+
+            const max = range[0] >= range[1] ? range[0] : range[1]
+            const min = range[0] <= range[1] ? range[0] : range[1]
+
+            return {
+                max: max,
+                min: min
+            }
+        },
+        getAllLatency() {
+            if (this.checkIsRightPath()) {
+                this.resetTimer()
+                this.startTimer()
+            } else {
+                this.stopTimer()
+                return
+            }
+
+            for (var type of this.typeList) {
+                this.getLatency(type)
+            }
+        },
+        checkIsRightPath() {
+            const path = this.$route
+
+            return path.name === this.pageName
+        },
+        getLatency(type) {
+            var minute = this.configs.timeinterval[type]
+            switch (type) {
+                case this.typeList[1]:
+                    minute = minute * 60
+                    break
+                case this.typeList[2]:
+                    minute = minute * 60 * 24
+                    break
+            }
+            this.loading = true
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('jkb/getPacketLoss', {
+                    minutes: minute
+                })
+                .then(
+                    function(result) {
+                        this.transforToTableData(
+                            this.typeList.indexOf(type),
+                            result.data.bgpIoMapping
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        transforToTableData(typeId, data) {
+            var latency = data.length > 0 ? data : []
+
+            var type = this.typeList[typeId]
+
+            var bgpList = [...this.bgpList]
+            var headerList = [...this.headers]
+            var tableData = Object.assign({}, this.tableData)
+
+            var header1 = {
+                text: 'in/out',
+                width: '30px',
+                sortable: false,
+                align: 'center'
+            }
+
+            var header2 = {
+                width: '30px',
+                sortable: false,
+                align: 'center'
+            }
+
+            if (headerList.length <= 0) {
+                headerList.push(header1)
+            }
+
+            latency.forEach(function(item) {
+                var inLine = item.inBgpName
+                var outLine = item.outBgpName
+
+                if (!tableData[inLine]) {
+                    tableData[inLine] = {}
+                    headerList.push(header2)
+                }
+
+                bgpList.push(inLine)
+                bgpList.push(outLine)
+
+                // 移除重複 Line Name
+                bgpList = bgpList.filter(
+                    (line, index) => bgpList.indexOf(line) === index
+                )
+
+                if (!tableData[inLine][outLine]) {
+                    tableData[inLine][outLine] = {}
+                }
+
+                tableData[inLine][outLine][type] = {
+                    avail_rate_avg: item.avail_rate_avg,
+                    resp_time_avg: item.resp_time_avg
+                }
+            })
+
+            this.tableData = tableData
+            this.bgpList = bgpList
+            this.headers = headerList
+            this.loading = false
+        },
+        getSource(inLine, outLine, type) {
+            if (!this.tableData[inLine][outLine]) {
+                return null
+            }
+            if (this.tableData[inLine][outLine][type]) {
+                return this.tableData[inLine][outLine][type]['resp_time_avg']
+            }
+
+            return null
+        },
+        getColor(Latency) {
+            const range = this.getMaxAndMin()
+
+            if (Latency == null || Latency == '-') {
+                return this.colorList[3]
+            } else if (Latency <= range['min']) {
+                return this.colorList[0]
+            } else if (Latency < range['max']) {
+                return this.colorList[1]
+            }
+            return this.colorList[2]
+        },
+        startTimer() {
+            // 計時器開始
+            this.stopTimer()
+            this.timer = setInterval(() => this.countdown(), 1000)
+        },
+        countdown() {
+            // 計時器觸發的 function
+            // 每次觸發會檢查 totaltime
+            if (this.totalTime >= 1) {
+                this.totalTime--
+            } else {
+                this.totalTime = 0
+                this.resetTimer()
+                this.getAllLatency()
+            }
+        },
+        resetTimer() {
+            this.totalTime = this.configs.countdownMinute.countdownMinute * 60
+        },
+        stopTimer() {
+            clearInterval(this.timer)
+            this.timer = false
+            this.resetTimer()
+        },
+        setPageName() {
+            const path = this.$route
+            this.pageName = path.name
+        }
+    },
+    created() {},
+    mounted() {
+        this.setPageName()
+        this.getConfig()
+    }
+}
+</script>
+
+
+<style lang="scss" scoped>
+.v-data-table {
+    th {
+        user-select: auto;
+    }
+}
+</style>
