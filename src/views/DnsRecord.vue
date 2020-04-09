@@ -128,7 +128,6 @@
           .dispatch("dnsRecord/getDNSRecord",)
           .then(
             function(result) {
-              console.log(result.data)
               var data = this.formatData(
                 result.data
               );
