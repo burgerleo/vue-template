@@ -19,3 +19,6 @@ npm run build
 ```
 npm run lint
 ```
+
+### Portal 資料夾路徑: 上傳 dist/*
+/var/www/html/frontends/portal/html
