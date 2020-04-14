@@ -217,6 +217,7 @@
       this.getRecordsListFromServer();
     },
     mounted() {
+      document.title = 'DNS Records';
     }
   }
 </script>

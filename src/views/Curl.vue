@@ -333,6 +333,7 @@
       this.getCustomerInfo();
       this.getEdgeInfo();
     },mounted() {
+      document.title = 'Curl';
     }
   };
 </script>
