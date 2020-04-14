@@ -145,7 +145,11 @@
         }
       },
       area: function (value) {
-        console.log(value)
+        if (value==0){
+          this.edge = this.twEdge[0].id
+        }else{
+          this.edge = this.hkEdge[0].id
+        }
       }
     },
     methods: {
@@ -196,8 +200,8 @@
       },
       clearOriginal: function() {
         if(this.original == false){
-          this.hostName = ''
-          this.port = ''
+          this.hostName = '';
+          this.port = '';
           this.hostIp = ''
         }else{
           this.originalDataFormat(this.url)
@@ -230,9 +234,9 @@
         this.parameters.splice(index, 1)
       },
       mappingIp:function (value) {
-        this.multiHostIp = false
-        this.hostIp = ''
-        var arr = []
+        this.multiHostIp = false;
+        this.hostIp = '';
+        var arr = [];
         let list = this.domainList.filter((item, index, array) => {
           // return item.domain.match(value)//模糊搜尋
           return item.domain == value//完整搜尋
@@ -241,12 +245,13 @@
         list.forEach((item) => {
           arr.push(item.host)
         })
-
         if (list.length ==1) {
           this.hostIp = arr[0]
         }else if (list.length >1) {
           this.multiHostIp = true
           this.hostIpList = arr
+        }else{
+          this.hostIp = "FQDN Not Found"
         }
       },
       getDomainList:function (value) {
@@ -301,10 +306,11 @@
                 item.customer = arr[item.customer_id]
               })
 
-              result.data.forEach((item) => {
-                item.text = item.name + ' (' + item.edge + ') ' + item.customer
+              result.data.forEach((item) => {item.customer
+                item.text = item.name + ' (' + item.edge + ') '
                 if (item.area=='HK'){
                   this.hkEdge.push(item)
+                  this.edge = this.twEdge[0].id
                 }else if(item.area=='TW'){
                   this.twEdge.push(item)
                 }

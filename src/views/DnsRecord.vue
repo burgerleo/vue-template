@@ -11,8 +11,7 @@
                                 v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details)
                                 v-divider.mx-4(inset vertical)
                                 v-spacer
-                                v-card-text.pb-0.pl-0
-                                    .subheading.text-right {{ time }}
+                                text-right(style="width:200px") {{ time }}
                                 v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
                         template(v-slot:header="{item,index}")
                             tr
