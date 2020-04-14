@@ -185,6 +185,7 @@ export default {
         }
     },
     mounted() {
+        document.title = 'Ping';
         // this.init()
         this.getBGP()
         this.getDummy()

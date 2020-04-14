@@ -28,10 +28,12 @@
                                 v-flex(xs4 sm4 md4)
                                     v-text-field(v-model="siteComputed" label="From" readonly)
                             v-layout.px-2
-                                v-flex(xs6 sm6 md6)
+                                v-flex(xs4 sm4 md4)
                                     v-btn(color="light-blue" block @click="websocketsend()" :disabled="isBtnDisabled") SEND
-                                v-flex(xs6 sm6 md6)
-                                    v-btn(color="grey lighten-1" block @click="websocketstop()") STOP
+                                v-flex(xs4 sm4 md4)
+                                    v-btn(color="red lighten-1" block @click="websocketstop()") STOP
+                                v-flex(xs4 sm4 md4)
+                                    v-btn(color="grey lighten-1" block @click="clearTerminal()") Clear
                             v-layout.px-2
                                 v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12 fill-height)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Terminal:
@@ -279,12 +281,26 @@ export default {
         },
         getFormattedDate() {
             let date = new Date();
-            let str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            // let str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            let str = date.getFullYear() + "-" +
+            this.padLeft((date.getMonth() + 1), 2) + "-" +
+            this.padLeft(date.getDate(), 2) + " " +
+            this.padLeft(date.getHours(), 2) + ":" +
+            this.padLeft(date.getMinutes(), 2) + ":" +
+            this.padLeft(date.getSeconds(), 2);
 
             return str;
         },
+        padLeft(str, len) {
+            str = '' + str;
+            return str.length >= len ? str : new Array(len - str.length + 1).join("0") + str;
+        },
+        clearTerminal() {
+            this.pingBody = this.pingBody.slice(0, 1);
+        },
     },
     mounted() {
+        document.title = 'Ping Realtime';
         // this.init()
         this.getBGP()
         this.getDummy()

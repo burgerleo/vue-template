@@ -520,6 +520,7 @@ export default {
         }
     },
     mounted() {
+        document.title = 'Dummy';
         this.getDummy()
         this.getBGP()
     }
