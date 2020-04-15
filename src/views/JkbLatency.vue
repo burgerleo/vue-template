@@ -240,13 +240,7 @@ export default {
             }
         },
         getAllLatency() {
-            if (this.checkIsRightPath()) {
-                this.resetTimer()
-                this.startTimer()
-            } else {
-                this.stopTimer()
-                return
-            }
+            this.stopTimer()
 
             for (var type of this.typeList) {
                 this.getLatency(type)
@@ -269,9 +263,16 @@ export default {
             }
             this.loading = true
             this.$store.dispatch('global/startLoading')
+
+            var endTime = new Date()
+            var startTime = new Date()
+
+            startTime.setMinutes(startTime.getMinutes() - minute)
+
             this.$store
-                .dispatch('jkb/getPacketLoss', {
-                    minutes: minute
+                .dispatch('traffic/getTrafficFlow', {
+                    start_time: this.dateFormat(startTime),
+                    end_time: this.dateFormat(endTime)
                 })
                 .then(
                     function(result) {
@@ -340,8 +341,8 @@ export default {
                 }
 
                 tableData[inLine][outLine][type] = {
-                    avail_rate_avg: item.avail_rate_avg,
-                    resp_time_avg: item.resp_time_avg
+                    packet_loss: item.packet_loss,
+                    latency: item.latency
                 }
             })
 
@@ -354,8 +355,9 @@ export default {
             if (!this.tableData[inLine][outLine]) {
                 return null
             }
+
             if (this.tableData[inLine][outLine][type]) {
-                return this.tableData[inLine][outLine][type]['resp_time_avg']
+                return this.tableData[inLine][outLine][type]['latency']
             }
 
             return null
@@ -363,13 +365,14 @@ export default {
         getColor(Latency) {
             const range = this.getMaxAndMin()
 
-            if (Latency == null || Latency == '-') {
+            if (Latency == null || Latency == 0) {
                 return this.colorList[3]
             } else if (Latency <= range['min']) {
                 return this.colorList[0]
             } else if (Latency < range['max']) {
                 return this.colorList[1]
             }
+
             return this.colorList[2]
         },
         startTimer() {
@@ -378,6 +381,11 @@ export default {
             this.timer = setInterval(() => this.countdown(), 1000)
         },
         countdown() {
+            // 檢查 網址路徑是否正確
+            if (!this.checkIsRightPath()) {
+                this.stopTimer()
+                return
+            }
             // 計時器觸發的 function
             // 每次觸發會檢查 totaltime
             if (this.totalTime >= 1) {
@@ -399,6 +407,31 @@ export default {
         setPageName() {
             const path = this.$route
             this.pageName = path.name
+        },
+        dateFormat(date) {
+            var year = date.getFullYear()
+            /*
+             *  在日期格式中，月份是從 0 開始的，因此要加 0
+             *  使用三元表達式在小於 10 的前面加 0，以達到格式統一 如 09:11:05
+             */
+            var month =
+                date.getMonth() + 1 < 10
+                    ? '0' + (date.getMonth() + 1)
+                    : date.getMonth() + 1
+            var day =
+                date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+            var hours =
+                date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+            var minutes =
+                date.getMinutes() < 10
+                    ? '0' + date.getMinutes()
+                    : date.getMinutes()
+            var seconds =
+                date.getSeconds() < 10
+                    ? '0' + date.getSeconds()
+                    : date.getSeconds()
+            // 拼接
+            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes
         }
     },
     created() {},
