@@ -79,7 +79,7 @@ export default {
                             router: '/jkb-Latency'
                         },
                         {
-                            title: "DNS Records",
+                            title: "Package IP Mapping",
                             icon: "mdi-chart-histogram",
                             router: "/dns-records"
                         },

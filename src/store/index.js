@@ -10,9 +10,9 @@ import edge from './modules/edge'
 import customer from './modules/customer'
 import dnsRecord from './modules/dnsRecord'
 import jkb from './modules/jkb'
+import traffic from './modules/traffic'
 
 Vue.use(Vuex);
-
 
 export default new Vuex.Store({
     modules: {
@@ -25,6 +25,7 @@ export default new Vuex.Store({
         edge,
         customer,
         dnsRecord,
-        jkb
+        jkb,
+        traffic
     }
 });

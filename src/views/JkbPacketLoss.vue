@@ -5,9 +5,9 @@
                 v-data-table.elevation-1(:headers="headers" :items="bgpList" dense hide-default-header hide-default-footer :items-per-page="1000" @page-count="1000" :loading="loading")
                     template(v-slot:top)
                         v-toolbar(flat white)
-                            v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "≥"}}
-                            v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10))}}
-                            v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']}}
+                            v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "%≥"}}
+                            v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "%~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10)) + "%"}}
+                            v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']+"%"}}
                             v-divider.mx-1(inset vertical)
                             v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
                             v-divider.mx-1(inset vertical)
@@ -241,12 +241,8 @@ export default {
             }
         },
         getAllPacketLoss() {
-            if (this.checkIsRightPath()) {
-                this.resetTimer()
-                this.startTimer()
-            } else {
-                this.stopTimer()
-            }
+            this.resetTimer()
+            this.startTimer()
 
             for (var type of this.typeList) {
                 this.getPacketLoss(type)
@@ -271,10 +267,15 @@ export default {
             }
             this.loading = true
             this.$store.dispatch('global/startLoading')
+            var endTime = new Date()
+            var startTime = new Date()
+
+            startTime.setMinutes(startTime.getMinutes() - minute)
 
             this.$store
-                .dispatch('jkb/getPacketLoss', {
-                    minutes: minute
+                .dispatch('traffic/getTrafficFlow', {
+                    start_time: this.dateFormat(startTime),
+                    end_time: this.dateFormat(endTime)
                 })
                 .then(
                     function(result) {
@@ -343,8 +344,8 @@ export default {
                 }
 
                 tableData[inLine][outLine][type] = {
-                    avail_rate_avg: item.avail_rate_avg,
-                    resp_time_avg: item.resp_time_avg
+                    packet_loss: item.packet_loss,
+                    latency: item.latency
                 }
             })
 
@@ -357,16 +358,16 @@ export default {
             if (!this.tableData[inLine][outLine]) {
                 return null
             }
+
             if (this.tableData[inLine][outLine][type]) {
-                return this.tableData[inLine][outLine][type]['avail_rate_avg']
+                return this.tableData[inLine][outLine][type]['packet_loss']
             }
 
             return null
         },
         getColor(packetloss) {
             const range = this.getMaxAndMin()
-
-            if (packetloss == null || packetloss == '-') {
+            if (packetloss == null || packetloss == 0) {
                 return this.colorList[3]
             } else if (packetloss >= range['max']) {
                 return this.colorList[0]
@@ -381,6 +382,11 @@ export default {
             this.timer = setInterval(() => this.countdown(), 1000)
         },
         countdown() {
+            if (!this.checkIsRightPath()) {
+                this.stopTimer()
+                return
+            }
+
             // 計時器觸發的 function
             // 每次觸發會檢查 totaltime
             if (this.totalTime >= 1) {
@@ -402,6 +408,31 @@ export default {
         setPageName() {
             const path = this.$route
             this.pageName = path.name
+        },
+        dateFormat(date) {
+            var year = date.getFullYear()
+            /*
+             *  在日期格式中，月份是從 0 開始的，因此要加 0
+             *  使用三元表達式在小於 10 的前面加 0，以達到格式統一 如 09:11:05
+             */
+            var month =
+                date.getMonth() + 1 < 10
+                    ? '0' + (date.getMonth() + 1)
+                    : date.getMonth() + 1
+            var day =
+                date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+            var hours =
+                date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+            var minutes =
+                date.getMinutes() < 10
+                    ? '0' + date.getMinutes()
+                    : date.getMinutes()
+            var seconds =
+                date.getSeconds() < 10
+                    ? '0' + date.getSeconds()
+                    : date.getSeconds()
+            // 拼接
+            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes
         }
     },
     created() {},
