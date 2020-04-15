@@ -386,6 +386,7 @@
       }
     },
     mounted() {
+      document.title = 'Edge';
       this.init()
     },
     created() {

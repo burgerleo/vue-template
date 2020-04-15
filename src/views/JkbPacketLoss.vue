@@ -437,6 +437,7 @@ export default {
     },
     created() {},
     mounted() {
+        document.title = 'JKB Packet Loss';
         this.setPageName()
         this.getConfig()
     }

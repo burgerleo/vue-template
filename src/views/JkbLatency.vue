@@ -436,6 +436,7 @@ export default {
     },
     created() {},
     mounted() {
+        document.title = 'JKB Latency';
         this.setPageName()
         this.getConfig()
     }

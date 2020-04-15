@@ -449,6 +449,7 @@ export default {
         }
     },
     mounted() {
+        document.title = 'BGP';
         this.init()
     }
 }

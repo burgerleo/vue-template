@@ -11,6 +11,8 @@
                                 v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details)
                                 v-divider.mx-4(inset vertical)
                                 v-spacer
+                                v-card-text.pb-0.pl-0
+                                    .subheading.text-right {{ time }}
                                 v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
                         template(v-slot:header="{item,index}")
                             tr
@@ -116,7 +118,8 @@
         ],
         desserts: [],
         searchList: {},
-        copyDesserts: null
+        copyDesserts: null,
+        time:''
       }
     },
     watch: {
@@ -129,8 +132,9 @@
           .then(
             function(result) {
               var data = this.formatData(
-                result.data
+                result.data['data']
               );
+              this.time = result.data['time']
               this.desserts = data
               this.copyDesserts = data
               this.$store.dispatch("global/finishLoading");
@@ -214,6 +218,7 @@
       this.getRecordsListFromServer();
     },
     mounted() {
+      document.title = 'DNS Records';
     }
   }
 </script>
