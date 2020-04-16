@@ -241,6 +241,7 @@ export default {
         },
         getAllLatency() {
             this.stopTimer()
+            this.startTimer()
 
             for (var type of this.typeList) {
                 this.getLatency(type)
@@ -386,6 +387,7 @@ export default {
                 this.stopTimer()
                 return
             }
+
             // 計時器觸發的 function
             // 每次觸發會檢查 totaltime
             if (this.totalTime >= 1) {
@@ -436,7 +438,7 @@ export default {
     },
     created() {},
     mounted() {
-        document.title = 'JKB Latency';
+        document.title = 'JKB Latency'
         this.setPageName()
         this.getConfig()
     }
