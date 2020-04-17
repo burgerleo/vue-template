@@ -186,7 +186,7 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Ping';
+        document.title = 'Traceroute';
         // this.init()
         this.getBGP()
         this.getDummy()
