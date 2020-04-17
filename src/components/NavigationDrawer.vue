@@ -69,6 +69,11 @@ export default {
                             router: '/ping-realtime'
                         },
                         {
+                            title: 'Traceroute',
+                            icon: 'mdi-file-tree',
+                            router: '/traceroute'
+                        },
+                        {
                             title: 'JKB Packet Loss',
                             icon: 'mdi-lumx',
                             router: '/jkb-packetloss'
