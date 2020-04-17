@@ -8,7 +8,7 @@
                             v-layout.px-2
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     v-text-field(v-model="destinationIP" label="Destination IP" type="ip" name="ip" :rules="[rules.required, rules.ip]")
-                                    v-text-field(v-model="interfaceIP" label="Mapped Dummy IP" type="ip" readonly :rules="[rules.required, rules.ip]")
+                                    v-text-field(v-model="interfaceIP" label="Select Source IP as Below" type="ip" readonly :rules="[rules.required, rules.ip]")
                             v-layout.px-2
                                 v-flex(xs6 sm6 md6) In
                                     p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{site}}

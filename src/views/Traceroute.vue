@@ -18,9 +18,10 @@
                                     p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{site}}
                                         v-radio-group.mt-2(v-model="defaultOut" row @change="getOriginIP()")
                                             v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in bgpList[site]" :label="inLine.name" :value="inLine.id" :key="inLine.id")
-                            v-text-field(v-model="packetCount" label="Count" type="number" min="1" max="100")
-                            v-text-field(v-model="interval" label="Interval (0.2~) " type="number" min="0.2" step="0.1")
-                            v-btn(color="primary" block @click="getPingInfo()") SEND
+                            v-layout
+                                v-checkbox.mx-6(v-model='I' label='-I: Use ICMP.')
+                                v-checkbox.mx-6(v-model='n' label='-n: Print hop addresses numerically.')
+                            v-btn(color="primary" block @click="getTracerouteInfo()") SEND
                             v-layout.px-2
                                 v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Body:
@@ -32,15 +33,15 @@
 import textFieldRules from '../utils/textFieldRules'
 
 export default {
-    name: 'Ping',
+    name: 'Traceroute',
     mixins: [textFieldRules],
     data() {
         return {
             site: '',
             originIP: null,
             sourceIP: null,
-            packetCount: 10,
-            interval: 0.5,
+            I: true,
+            n: true,
             pingBody: null,
 
             defaultIn: null,
@@ -148,20 +149,20 @@ export default {
                 this.sourceIP = 'No Mapping IP'
             }
         },
-        getPingInfo: function() {
+        getTracerouteInfo: function() {
             if (this.validateForm()) {
                 this.$store.dispatch('global/startLoading')
                 this.$store
-                    .dispatch('ping/getPingInfo', {
+                    .dispatch('traceroute/getTracerouteInfo', {
                         site: this.site,
-                        origin: this.originIP,
-                        interface: this.sourceIP,
-                        interval: this.interval,
-                        count: this.packetCount
+                        destination_ip: this.originIP,
+                        s: this.sourceIP,
+                        n: this.n == true ? 1 : 0,
+                        I: this.I == true ? 1 : 0
                     })
                     .then(
                         function(result) {
-                            this.pingBody = result.data
+                            this.pingBody = result.data.result
                             this.$store.dispatch(
                                 'global/showSnackbarSuccess',
                                 'Success!'
