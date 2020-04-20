@@ -83,6 +83,11 @@ export default {
                             icon: "mdi-chart-histogram",
                             router: "/dns-records"
                         },
+                        {
+                            title: "Cert Management",
+                            icon: "mdi-format-align-justify",
+                            router: "/crt-key"
+                        },
                         { header: 'Administrator' },
 
                         // {

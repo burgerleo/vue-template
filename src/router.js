@@ -13,7 +13,7 @@ import Customer from"./views/Customer.vue";
 import DnsRecord from"./views/DnsRecord.vue";
 import JkbPacketLoss from"./views/JkbPacketLoss.vue";
 import JkbLatency from"./views/JkbLatency.vue";
-
+import CrtKey from"./views/CrtKey.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -62,6 +62,11 @@ export default new Router({
                     name:"Ping Realtime",
                     path: "ping-realtime",
                     component: PingRealtime
+                },
+                {
+                    name:"SSL File",
+                    path: "crt-key",
+                    component: CrtKey
                 },
                 {
                     name:"DNS Records",
