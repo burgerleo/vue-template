@@ -38,7 +38,7 @@ export default {
     data() {
         return {
             kkk: 0,
-            drawer: false,
+            drawer: true,
             mini: false,
             clipped: true,
             tabItems: [],
