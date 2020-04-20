@@ -6,6 +6,7 @@ import Helper from "./views/admin/Helper.vue";
 import Curl from "./views/Curl.vue";
 import Ping from"./views/Ping.vue";
 import PingRealtime from"./views/PingRealtime.vue";
+import Traceroute from"./views/Traceroute.vue";
 import Dummy from"./views/Dummy.vue";
 import BGP from"./views/BGP.vue";
 import Edge from"./views/Edge.vue";
@@ -67,6 +68,11 @@ export default new Router({
                     name:"SSL File",
                     path: "crt-key",
                     component: CrtKey
+                },
+                {
+                    name:"Traceroute",
+                    path: "traceroute",
+                    component: Traceroute
                 },
                 {
                     name:"DNS Records",

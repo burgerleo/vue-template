@@ -9,8 +9,8 @@ export default {
     mutations: {
     },
     actions: {
-        getPingInfo: (context, data) => {
-            return axios.post("dummy/ping", data).then(function (response) {
+        getTracerouteInfo: (context, data) => {
+            return axios.get("dummy/traceroute", {params: data}).then(function (response) {
                 return Promise.resolve(response.data);
             })
                 .catch(function (error) {
