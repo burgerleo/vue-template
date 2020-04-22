@@ -6,7 +6,7 @@
                     v-data-table.elevation-1(:headers="headers" :items="desserts" :search="searchText" :dense="true" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event")
                         template(v-slot:top)
                             v-toolbar(flat white)
-                                v-toolbar-title DNS Records
+                                v-toolbar-title Package IP Mapping
                                 v-divider.mx-4(inset vertical)
                                 v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details)
                                 v-divider.mx-4(inset vertical)
