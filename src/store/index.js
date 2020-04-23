@@ -13,7 +13,7 @@ import dnsRecord from './modules/dnsRecord'
 import jkb from './modules/jkb'
 import cert from './modules/cert'
 import traffic from './modules/traffic'
-
+import periodicalCurl from './modules/periodicalCurl'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -30,6 +30,7 @@ export default new Vuex.Store({
         dnsRecord,
         jkb,
         cert,
-        traffic
+        traffic,
+        periodicalCurl
     }
 });

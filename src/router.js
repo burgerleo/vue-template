@@ -4,6 +4,7 @@ import Home from "./views/Home.vue";
 import Layout from "./views/Layout.vue";
 import Helper from "./views/admin/Helper.vue";
 import Curl from "./views/Curl.vue";
+import PeriodicalCurl from "./views/PeriodicalCurl.vue";
 import Ping from"./views/Ping.vue";
 import PingRealtime from"./views/PingRealtime.vue";
 import Traceroute from"./views/Traceroute.vue";
@@ -25,10 +26,10 @@ export default new Router({
             path: "/",
             component: Layout,
             children: [
-                {
-                    path: "",
-                    redirect: "curl"
-                },
+                // {
+                //     path: "",
+                //     redirect: "curl"
+                // },
                 {
                     path: "home",
                     name: "home",
@@ -53,6 +54,11 @@ export default new Router({
                     name:"Origin Server Testing",
                     path: "curl",
                     component: Curl
+                },
+                {
+                    name: "Origin Server Periodical Testing",
+                    path: "periodical-curl",
+                    component: PeriodicalCurl
                 },
                 {
                     name:"Ping",
