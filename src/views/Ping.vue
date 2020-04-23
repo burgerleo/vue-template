@@ -30,137 +30,137 @@
                                         v-col.d-flex(md='2' style='padding-left:7%;')
                                             | R2
                                     //- /* HK China */
-                                    v-row.flex-child(dense style='margin-bottom: -1.2%; margin-top: -0.5%;')
+                                    v-row.flex-child(dense style='margin-bottom: -1.3%; margin-top: -0.5%;')
                                         //- /* HK IN R1 China */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in hkr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* HK IN R2 China */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in hkr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* HK OUT R1 China */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in hkr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* HK OUT R2 China */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in hkr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                     //- /* HK */
                                     v-row.flex-child(dense)
                                         v-col(cols='1' md='1')
                                             v-sheet.d-flex(style='padding-left: 35%;') HK
                                     //- /* HK Global */
-                                    v-row.flex-child(dense style='margin-top: -1.2%;')
+                                    v-row.flex-child(dense style='margin-top: -1.3%;')
                                         //- /* HK IN R1 Global */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in hkr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* HK IN R2 Global */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in hkr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* HK OUT R1 Global */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in hkr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* HK OUT R2 Global */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in hkr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         v-col(cols='1' md='1' dense)
                                     //- /* HK divider */
                                     v-divider(dark)
                                     //- /* TW China */
-                                    v-row.flex-child(dense style='margin-bottom: -1.2%;')
+                                    v-row.flex-child(dense style='margin-bottom: -1.3%;')
                                         //- /* TW IN R1 China */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in twr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* TW IN R2 China */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in twr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* TW OUT R1 China */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in twr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* TW OUT R2 China */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in twr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                     //- /* TW */
                                     v-row.flex-child(dense)
                                         v-col(cols='1' md='1')
                                             v-sheet.d-flex(style='padding-left: 35%;') TW
                                     //- /* TW Global */
-                                    v-row.flex-child(dense style='margin-top: -1.2%;')
+                                    v-row.flex-child(dense style='margin-top: -1.3%;')
                                         //- /* TW IN R1 Global
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in twr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* TW IN R2 Global */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in twr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* TW OUT R1 Global */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in twr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* TW OUT R2 Global */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in twr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                     //- /* TW divider */
                                     v-divider(dark)
                                     //- /* PH China */
-                                    v-row.flex-child(dense style='margin-bottom: -1.2%;')
+                                    v-row.flex-child(dense style='margin-bottom: -1.3%;')
                                         //- /* PH IN R1 China */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in phr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* PH IN R2 China */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in phr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         v-col(cols='1' md='1' dense)
                                         //- /* PH OUT R1 China */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in phr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* PH OUT R2 China */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='red lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='red lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in phr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         v-col(cols='1' md='1' dense)
                                     //- /* PH */
@@ -168,34 +168,34 @@
                                         v-col(cols='1' md='1')
                                             v-sheet.d-flex(style='padding-left: 35%;') PH
                                     //- /* PH Global */
-                                    v-row.flex-child(dense style='margin-top: -1.2%;')
+                                    v-row.flex-child(dense style='margin-top: -1.3%;')
                                         //- /* PH IN R1 Global */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in phr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* PH IN R2 Global */
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='inboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='inboundID' row)
                                                     v-radio(v-for="bgp in phr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* PH OUT R1 Global */
                                         v-col(cols='1' md='1' dense)
                                         v-col(cols='2' md='2')
-                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
-                                                v-radio-group(v-model='outboundID' row)
+                                            v-sheet.d-flex(color='blue lighten-3')
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in phr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                                         //- /* PH OUT R2 Global */
                                         v-col(cols='2' md='2')
                                             v-sheet.d-flex(color='blue lighten-3')
-                                                v-radio-group(v-model='outboundID' row)
+                                                v-radio-group.mt-0.mb-0(v-model='outboundID' row)
                                                     v-radio(v-for="bgp in phr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                             v-text-field(v-model="count" label="Count" type="number" min="1" max="100")
                             v-text-field(v-model="interval" label="Interval (0.2+) " type="number" min="0.2" step="0.1")
                             v-btn(color="primary" block @click="getPingInfo()" style='margin-top: -1%;') SEND
                             v-layout.px-2(style='margin-top: -1%; margin-bottom: -0.5%;')
-                                v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
+                                v-flex(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Terminal:
                                     pre(v-highlightjs="pingBody")
                                         code.java.display-0.font-weight-black
@@ -379,6 +379,8 @@ export default {
 
         this.getBGP()
         this.getDummy()
+
+        document.querySelectorAll(".v-messages").forEach(e => e.parentNode.removeChild(e));
     }
 }
 </script>
