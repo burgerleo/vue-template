@@ -8,21 +8,192 @@
                             v-layout.px-2
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     v-text-field(v-model="destinationIP" label="Destination IP" type="ip" name="ip" :rules="[rules.required, rules.ip]")
-                                    v-text-field(v-model="interfaceIP" label="Select Source IP as Below" type="ip" readonly :rules="[rules.required, rules.ip]")
+                                    v-text-field(v-model="sourceIP" label="Select Source IP as Below" readonly type="ip" :rules="[rules.required, rules.ip]")
                             v-layout.px-2
-                                v-flex(xs6 sm6 md6) In
-                                    p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{site}}
-                                        v-radio-group.mt-2(v-model="defaultIn" row @change="getDestinationIP()")
-                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in bgpList[site]" :label="inLine.name" :value="inLine.id" :key="inLine.id")
-                                v-flex(xs6 sm6 md6) Out
-                                    p.pt-0.pb-0.mb-0(v-for="(site,index) in siteList") {{site}}
-                                        v-radio-group.mt-2(v-model="defaultOut" row @change="getDestinationIP()")
-                                            v-radio.pt-0.pb-0.mb-0.mr-1(v-for="(inLine,index) in bgpList[site]" :label="inLine.name" :value="inLine.id" :key="inLine.id")
-                            //- v-text-field(v-model="count" label="Count" type="number" min="1" max="300")
-                            //- v-text-field(v-model="interval" label="Interval (1+) " type="number")
+                                v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
+                                    //- /* HEAD */
+                                    v-row.flex-child
+                                        v-col.d-flex(md='6' style='padding-left:20%;')
+                                            | Inbound Circuit
+                                        v-col.d-flex(md='6' style='padding-left:12%;')
+                                            | Outbound Circuit
+                                    //- /* R1 R2 */
+                                    v-row.flex-child
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col.d-flex(md='2' style='padding-left:7%;')
+                                            | R1
+                                        v-col.d-flex(md='2' style='padding-left:7%;')
+                                            | R2
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col.d-flex(md='2' style='padding-left:7%;')
+                                            | R1
+                                        v-col.d-flex(md='2' style='padding-left:7%;')
+                                            | R2
+                                    //- /* HK China */
+                                    v-row.flex-child(dense='' style='margin-bottom: -1.2%;')
+                                        //- /* HK IN R1 China */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in hkr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* HK IN R2 China */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in hkr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* HK OUT R1 China */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in hkr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* HK OUT R2 China */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in hkr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                    //- /* HK */
+                                    v-row.flex-child(dense='')
+                                        v-col(cols='1' md='1')
+                                            v-sheet.d-flex(style='padding-left: 35%;') HK
+                                    //- /* HK Global */
+                                    v-row.flex-child(dense='' style='margin-top: -1.2%;')
+                                        //- /* HK IN R1 Global */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in hkr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* HK IN R2 Global */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in hkr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* HK OUT R1 Global */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in hkr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* HK OUT R2 Global */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in hkr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        v-col(cols='1' md='1' dense='')
+                                    //- /* HK divider */
+                                    v-divider(dark)
+                                    //- /* TW China */
+                                    v-row.flex-child(dense='' style='margin-bottom: -1.2%;')
+                                        //- /* TW IN R1 China */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in twr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* TW IN R2 China */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in twr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* TW OUT R1 China */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in twr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* TW OUT R2 China */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in twr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                    //- /* TW */
+                                    v-row.flex-child(dense='')
+                                        v-col(cols='1' md='1')
+                                            v-sheet.d-flex(style='padding-left: 35%;') TW
+                                    //- /* TW Global */
+                                    v-row.flex-child(dense='' style='margin-top: -1.2%;')
+                                        //- /* TW IN R1 Global
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in twr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* TW IN R2 Global */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in twr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* TW OUT R1 Global */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in twr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* TW OUT R2 Global */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in twr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                    //- /* TW divider */
+                                    v-divider(dark)
+                                    //- /* PH China */
+                                    v-row.flex-child(dense='' style='margin-bottom: -1.2%;')
+                                        //- /* PH IN R1 China */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in phr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* PH IN R2 China */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in phr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        v-col(cols='1' md='1' dense='')
+                                        //- /* PH OUT R1 China */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in phr1c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* PH OUT R2 China */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='red lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in phr2c" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        v-col(cols='1' md='1' dense='')
+                                    //- /* PH */
+                                    v-row.flex-child(dense='')
+                                        v-col(cols='1' md='1')
+                                            v-sheet.d-flex(style='padding-left: 35%;') PH
+                                    //- /* PH Global */
+                                    v-row.flex-child(dense='' style='margin-top: -1.2%;')
+                                        //- /* PH IN R1 Global */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in phr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* PH IN R2 Global */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='inboundID' row='')
+                                                    v-radio(v-for="bgp in phr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* PH OUT R1 Global */
+                                        v-col(cols='1' md='1' dense='')
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in phr1g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
+                                        //- /* PH OUT R2 Global */
+                                        v-col(cols='2' md='2')
+                                            v-sheet.d-flex(color='blue lighten-3' height='auto')
+                                                v-radio-group(v-model='outboundID' row='')
+                                                    v-radio(v-for="bgp in phr2g" :label="bgp.isp" :value="bgp.id" :key="bgp.id")
                             v-divider
                             br
-                            v-layout.px-2
+                            //- v-layout.px-2
                                 v-flex(xs8 sm8 md8)
                                     v-text-field(v-model="mapCli" label="CLI" readonly)
                                 v-flex(xs4 sm4 md4)
@@ -49,44 +220,122 @@ export default {
     mixins: [textFieldRules],
     data() {
         return {
+            // from apis
+            bgpList: [],
+            dummyList: [],
+
+            // v-model: Inbound / Outbound Circuit
+            inboundID: 0,
+            outboundID: 0,
+
             site: '',
-            destinationIP: "",
-            interfaceIP: "",
+            destinationIP: null,
             // count: 10,
             // interval: 1,
+
             pingBody: [],
 
-            defaultIn: null,
-            defaultOut: null,
-
-            siteList: {},
-            dummy: {},
-            originBGPList: {},
-            bgpList: {},
-
+            // websocket
             ws_uri: "ws://172.31.251.103:8888/octopus-ping", // process.env.WS_URL,
             websock: null,
 
-            isBtnDisabled: false
+            // websocket send - cool down
+            isBtnDisabled: false,
         }
     },
+    // data() {
+    //     return {
+    //         site: '',
+    //         destinationIP: "",
+    //         interfaceIP: "",
+    //         // count: 10,
+    //         // interval: 1,
+    //         pingBody: [],
+
+    //         defaultIn: null,
+    //         defaultOut: null,
+
+    //         siteList: {},
+    //         dummy: {},
+    //         originBGPList: {},
+    //         bgpList: {},
+
+    //         ws_uri: "ws://172.31.251.103:8888/octopus-ping", // process.env.WS_URL,
+    //         websock: null,
+
+    //         isBtnDisabled: false
+    //     }
+    // },
     computed: {
+        // v-model: from Inbound / Outbound Circuit mapping
+        sourceIP: function () {
+            let dummy = this.dummyList.find(function (dm) { 
+                if (dm.in == this.inboundID && dm.out == this.outboundID) {
+                    this.site = dm.site
+                    // console.log({dm}, this.site)
+                    return dm.source_ip
+                }
+            }.bind(this));
+
+            return dummy ? dummy.source_ip : ""
+        },
+
+        // Inbound / Outbound Circuit data
+        hkr1c: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'HK' && bgp.br == 'R1' && bgp.routes == 'C');
+        },
+        hkr1g: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'HK' && bgp.br == 'R1' && bgp.routes == 'G');
+        },
+        hkr2c: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'HK' && bgp.br == 'R2' && bgp.routes == 'C');
+        },
+        hkr2g: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'HK' && bgp.br == 'R2' && bgp.routes == 'G');
+        },
+
+        twr1c: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'TW' && bgp.br == 'R1' && bgp.routes == 'C');
+        },
+        twr1g: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'TW' && bgp.br == 'R1' && bgp.routes == 'G');
+        },
+        twr2c: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'TW' && bgp.br == 'R2' && bgp.routes == 'C');
+        },
+        twr2g: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'TW' && bgp.br == 'R2' && bgp.routes == 'G');
+        },
+
+        phr1c: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'PH' && bgp.br == 'R1' && bgp.routes == 'C');
+        },
+        phr1g: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'PH' && bgp.br == 'R1' && bgp.routes == 'G');
+        },
+        phr2c: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'PH' && bgp.br == 'R2' && bgp.routes == 'C');
+        },
+        phr2g: function () {
+            return this.bgpList.filter(bgp => bgp.site == 'PH' && bgp.br == 'R2' && bgp.routes == 'G');
+        },
+        
+        // output logic
         pingBodyFormatted: function () {
             return this.pingBody.join('\n');
         },
+
+        // exam before SEND "Cli" <input>
         mapCli: function () {
             let tmpDestinationIP = this.destinationIP ? this.destinationIP : "x.x.x.x";
-            let tmpInterfaceIP = this.interfaceIP ? this.interfaceIP : "x.x.x.x";
-            return "ping  " + tmpDestinationIP + "  -I  " + tmpInterfaceIP + "  -i  1";
+            let tmpSourceIP = this.sourceIP ? this.sourceIP : "x.x.x.x";
+            return "ping  " + tmpDestinationIP + "  -I  " + tmpSourceIP + "  -i  1";
         },
+
+        // exam before SEND "From" <input>
         siteComputed () {
-            return this.interfaceIP ? this.site : "";
+            return this.sourceIP ? this.site : "";
         },
-    },
-    watch: {
-        pingURL: function() {
-            this.validateForm()
-        }
     },
     methods: {
         getBGP: function() {
@@ -95,25 +344,15 @@ export default {
                 .dispatch('bgp/getInfo')
                 .then(
                     function(result) {
-                        var bgpList = []
-                        var siteList = []
-                        var originBGPList = {}
-
-                        result.data.forEach(function(item, index) {
-                            if (!bgpList[item.site]) {
-                                bgpList[item.site] = []
-                                siteList.push(item.site)
-                            }
-                            bgpList[item.site].push(item)
-
-                            originBGPList[item.id] = item
-                        })
-
-                        this.siteList = siteList
-                        this.bgpList = bgpList
-                        this.originBGPList = originBGPList
-
                         this.$store.dispatch('global/finishLoading')
+
+                        this.bgpList = result.data.map(function(item, index) {
+                            delete item.wan_ip
+                            delete item.wan_prefix
+                            delete item.name
+                            delete item.wan
+                            return item
+                        })
                     }.bind(this)
                 )
                 .catch(
@@ -132,27 +371,16 @@ export default {
                 .dispatch('dummy/getInfo')
                 .then(
                     function(result) {
-                        var dummyList = {}
-
-                        result.data.map(function(item, index) {
-                            var site = item.in_bgp.site
-                            var inLine = item.in_bgp.id
-                            var outLine = item.out_bgp.id
-                            var ip = item.source_ip
-
-                            if (!dummyList[site]) {
-                                dummyList[site] = {}
-                            }
-
-                            if (!dummyList[site][inLine]) {
-                                dummyList[site][inLine] = {}
-                            }
-                            dummyList[site][inLine][outLine] = ip
-                        })
-
-                        this.dummy = dummyList
-
                         this.$store.dispatch('global/finishLoading')
+
+                        this.dummyList = result.data.map(function(item, index) {
+                            item.site = item.in_bgp.site
+                            delete item.id
+                            delete item.jkb_task_id
+                            delete item.in_bgp
+                            delete item.out_bgp
+                            return item
+                        })
                     }.bind(this)
                 )
                 .catch(
@@ -164,55 +392,6 @@ export default {
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
-        },
-        getDestinationIP: function() {
-            this.site = this.originBGPList[this.defaultIn].site
-
-            if (this.dummy[this.site][this.defaultIn]) {
-                // [site][in][out]
-                this.interfaceIP = this.dummy[this.site][this.defaultIn][
-                    this.defaultOut
-                ]
-            }
-
-            if (!this.interfaceIP) {
-                this.interfaceIP = ''
-            }
-        },
-        // getPingInfo: function() {
-        //     if (this.validateForm()) {
-        //         this.$store.dispatch('global/startLoading')
-        //         this.$store
-        //             .dispatch('ping/getPingInfo', {
-        //                 site: this.site,
-        //                 destination_ip: this.destinationIP,
-        //                 interface_ip: this.interfaceIP,
-        //                 interval: this.interval,
-        //                 count: this.count
-        //             })
-        //             .then(
-        //                 function(result) {
-        //                     this.pingBody = result.data
-        //                     this.$store.dispatch(
-        //                         'global/showSnackbarSuccess',
-        //                         'Success!'
-        //                     )
-        //                     this.$store.dispatch('global/finishLoading')
-        //                 }.bind(this)
-        //             )
-        //             .catch(
-        //                 function(error) {
-        //                     this.$store.dispatch(
-        //                         'global/showSnackbarError',
-        //                         error.message
-        //                     )
-        //                     this.$store.dispatch('global/finishLoading')
-        //                 }.bind(this)
-        //             )
-        //     }
-        // },
-        validateForm: function() {
-            return this.$refs.form.validate()
         },
 
         // WebSocket ++
@@ -242,11 +421,7 @@ export default {
             this.pingBody = tmp;
         },
         websocketsend(){ //發送數據
-            if ( !this.destinationIP || !this.interfaceIP || !this.site) {
-                this.$store.dispatch(
-                    'global/showSnackbarError',
-                    'Oops. Some required fields were left ..'
-                )
+            if (! this.validateForm()) {
                 return
             }
             this.websocketstop();
@@ -257,7 +432,7 @@ export default {
                 let actions = {
                     country: this.site,
                     destination_ip: this.destinationIP,
-                    interface_ip: this.interfaceIP,
+                    interface_ip: this.sourceIP,
                     interval: 1,
                 };
                 // console.log(JSON.stringify(actions));
@@ -281,7 +456,7 @@ export default {
         },
         getFormattedDate() {
             let date = new Date();
-            // let str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
             let str = date.getFullYear() + "-" +
             this.padLeft((date.getMonth() + 1), 2) + "-" +
             this.padLeft(date.getDate(), 2) + " " +
@@ -298,10 +473,13 @@ export default {
         clearTerminal() {
             this.pingBody = this.pingBody.slice(0, 1);
         },
+        validateForm: function() {
+            return this.$refs.form.validate()
+        }
     },
     mounted() {
         document.title = 'Ping Realtime';
-        // this.init()
+        
         this.getBGP()
         this.getDummy()
 
@@ -319,4 +497,7 @@ export default {
     color: #abb2bf
     background: #282c34
     word-break: break-all
+
+.d-flex
+    font-size: 1.5em
 </style>
