@@ -380,6 +380,7 @@ export default {
         this.getBGP()
         this.getDummy()
 
+        // 刪除 Inbound / Outbound Circuit 紅藍框下巴多餘 html
         document.querySelectorAll(".v-messages").forEach(e => e.parentNode.removeChild(e));
     }
 }
