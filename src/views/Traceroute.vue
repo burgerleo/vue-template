@@ -28,7 +28,7 @@
                                         v-col.d-flex(md='2' style='padding-left:7%;')
                                             | R1
                                         v-col.d-flex(md='2' style='padding-left:7%;')
-                                            | R2| R2
+                                            | R2
                                     v-flex(v-for="s in sort")
                                         //- /* China */
                                         v-row.flex-child(dense style='margin-bottom: -1.3%; margin-top: -0.5%;')
