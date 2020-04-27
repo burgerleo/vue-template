@@ -75,7 +75,6 @@
 
                                     v-card-text.pb-0.pl-0
                                         .subheading.font-weight-black Response:
-                                        .subheading.text-right {{timestamp}}
                                     v-divider
                                     v-card-text.font-weight-bold.pb-0 CURL Command:
                                     pre(v-highlightjs="commandData")
@@ -203,7 +202,18 @@
               this.commandData = result.data.command;
               this.responseCode = result.data.responseCode;
               this.timeTotal = result.data.timeTotal
-              this.responseCodeAndTimeTotal = result.data.responseCode+' '+result.data.timeTotal
+              this.responseCodeAndTimeTotal = (this.responseCodeAndTimeTotal === '')
+                ? this.timestamp
+                + ' '
+                + result.data.responseCode
+                + ' '
+                + result.data.timeTotal
+                : this.responseCodeAndTimeTotal
+                + "\r\n " + this.timestamp
+                + ' '
+                + result.data.responseCode
+                + ' '
+                + result.data.timeTotal
               this.$store.dispatch("global/finishLoading");
             }.bind(this)
           )
@@ -267,7 +277,7 @@
           this.multiHostIp = true
           this.hostIpList = arr
         }else{
-          this.hostIp = "FQDN Not Found"
+          this.hostIp = "FQDN Not Found in CDNBest"
         }
       },
       getDomainList:function (value) {
