@@ -79,7 +79,7 @@ export default {
                             router: '/traceroute'
                         },
                         {
-                            title: 'JKB Packet Loss',
+                            title: 'JKB Availability',
                             icon: 'mdi-lumx',
                             router: '/jkb-packetloss'
                         },
@@ -89,14 +89,19 @@ export default {
                             router: '/jkb-Latency'
                         },
                         {
-                            title: "Package IP Mapping",
-                            icon: "mdi-chart-histogram",
-                            router: "/dns-records"
+                            title: 'Package IP Mapping',
+                            icon: 'mdi-chart-histogram',
+                            router: '/dns-records'
                         },
                         {
-                            title: "Cert Management",
-                            icon: "mdi-format-align-justify",
-                            router: "/crt-key"
+                            title: 'Cert Management',
+                            icon: 'mdi-format-align-justify',
+                            router: '/crt-key'
+                        },
+                        {
+                            title: 'FQDN Management',
+                            icon: 'mdi-content-paste',
+                            router: '/domain-manage'
                         },
                         { header: 'Administrator' },
 
@@ -105,7 +110,7 @@ export default {
                         //     icon: "mdi-account-circle",
                         //     children: [
                         //         {
-                        //             title: "group",
+                        //             title: "group", 
                         //             icon: "mdi-view-dashboard",
                         //             children: [
                         //                 {
