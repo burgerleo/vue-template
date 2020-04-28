@@ -479,6 +479,8 @@ export default {
 
             if (!value) {
                 delete this.searchList[column]
+            } else {
+                this.searchList[column] = value.trim()
             }
 
             // 備份 and 還原資料
@@ -520,7 +522,7 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Dummy';
+        document.title = 'Dummy'
         this.getDummy()
         this.getBGP()
     }

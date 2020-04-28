@@ -404,6 +404,8 @@ export default {
 
             if (!value) {
                 delete this.searchList[column]
+            } else {
+                this.searchList[column] = value.trim()
             }
 
             // 備份 and 還原資料
