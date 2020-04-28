@@ -256,7 +256,7 @@
           this.multiHostIp = true
           this.hostIpList = arr
         }else{
-          this.hostIp = "FQDN Not Found"
+          this.hostIp = "FQDN Not Found in CDNBest"
         }
       },
       getDomainList:function (value) {
