@@ -140,7 +140,7 @@ export default {
                             router: '/bgp'
                         },
                         {
-                            title: 'Dummy IP',
+                            title: 'Dummy IP Combination',
                             icon: 'mdi-forward',
                             router: '/dummy-ip'
                         },
