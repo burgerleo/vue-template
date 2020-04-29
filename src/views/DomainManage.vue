@@ -306,7 +306,7 @@ export default {
                                         ? 'Yes'
                                         : 'No',
                                     update: ip.domain_ip_mapping.updated_at,
-                                    incdn: deleted_at ? 'Yes' : 'No',
+                                    incdn: deleted_at ? 'No' : 'Yes',
                                     domain_id: item.id,
                                     ip_id: ip.id
                                 }
