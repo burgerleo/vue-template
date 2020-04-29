@@ -73,11 +73,11 @@
                         v-form(ref="form" onsubmit="return false;")
                             v-text-field(v-model="formData.domain" label="Customer FQDN" type="text" name="domain" readonly)
                             v-text-field(v-model="formData.ip" label="Origin IP/FQDN" type="text" name="origin" readonly)
-                            b FrequentlyAttacked
-                            v-radio-group(v-model='formData.attacked' row) 
+                            b Frequently Attacked
+                            v-radio-group.pt-0(v-model='formData.attacked' row) 
                                 v-radio(v-for="bool,index in yesOrNo" :label="bool" :value="bool" :key="index")
-                            b QualityIssue
-                            v-radio-group(v-model='formData.quality' row)
+                            b Quality Issue
+                            v-radio-group.pt-0(v-model='formData.quality' row)
                                 v-radio(v-for="bool,index in yesOrNo" :label="bool" :value="bool" :key="index")
                             //- b inCDNBest
                             //- v-radio-group(v-model='formData.quality' row readonly) 
@@ -112,7 +112,7 @@ export default {
             page: 1,
             pageCount: 0,
             itemsPerPage: 50,
-            itemsPerPageList: [25, 50, 100, 500, 3000],
+            itemsPerPageList: [25, 50, 100, 500],
             editedIndex: -1,
             formTitle: '',
             dialog: {
@@ -229,7 +229,7 @@ export default {
             dialogData: {},
             formData: {},
             totalPage: 1,
-            perpageCount: 200,
+            perPageCount: 500,
             total: 0
         }
     },
@@ -266,14 +266,14 @@ export default {
             this.desserts = []
 
             // Get 第一頁，內有詳細分頁資訊
-            this.getDomains(page, this.perpageCount, needLoop)
+            this.getDomains(page, this.perPageCount, needLoop)
         },
         getFormSecondPageToLastPage() {
+            // 取得從第二頁至最後一頁的資料
             var page = 2
 
             for (page; page < this.totalPage; page++) {
-                console.log('page:' + page)
-                this.getDomains(page, this.perpageCount)
+                this.getDomains(page, this.perPageCount)
             }
         },
         getDomains(page, per_page, loop = 0) {
@@ -289,6 +289,8 @@ export default {
                             var deleted_at = !!item.deleted_at
 
                             item.ip.map(function(ip) {
+                                // 檢查是否不存在，只要一個 deleted_at 有時間戳
+                                // 就表示不存在了
                                 deleted_at =
                                     deleted_at ||
                                     !!ip.deleted_at ||
@@ -312,16 +314,18 @@ export default {
                             })
                         })
 
+                        // 組合資料
                         this.desserts = this.desserts.concat(domains)
-                        this.copyDesserts = []
 
+                        // 重新 copy data
+                        this.copyDesserts = []
                         this.backupAndRcoverData()
 
+                        // 取得總量
                         this.totalPage = result.data.last_page
                         this.total = result.data.total
 
                         if (loop) {
-                            console.log(loop)
                             this.getFormSecondPageToLastPage()
                         }
 
@@ -337,9 +341,6 @@ export default {
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
-            // . computed: {
-
-            return domains
         },
         getYesOrNoColor(string) {
             return this.transformYesOrNoToBool(string) ? 'primary' : 'red'
@@ -348,7 +349,7 @@ export default {
             return string.toLocaleUpperCase() == 'YES' ? 1 : 0
         },
         transformBoolToYesOrNo(bool = true) {
-            return bool ? 'Yes' : 'No'
+            return bool ? this.yesOrNo[1] : this.yesOrNo[0]
         },
         addFormData() {},
         updateFormData() {
@@ -493,7 +494,7 @@ export default {
 
 <style lang="scss" scoped>
 .v-data-table {
-    th {
+    tr {
         user-select: auto;
     }
     .v-toolbar {
@@ -502,8 +503,4 @@ export default {
         }
     }
 }
-
-// /deep/ .v-text-field{
-//       width: 400px;
-// }
 </style>
