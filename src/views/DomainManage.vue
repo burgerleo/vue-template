@@ -6,7 +6,7 @@
                     v-data-table.elevation-1(:headers="headers" :items="desserts" :search="searchText" dense :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event" hide-default-footer)
                         template(v-slot:top)
                             v-toolbar(flat white)
-                                v-toolbar-title FQDN Managment
+                                v-toolbar-title FQDN Management
                                 v-divider.mx-4(inset vertical)
                                 v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details @keydown.enter="onSearch" @click:append="onSearch")
                                 v-divider.mx-4(inset vertical)
@@ -45,12 +45,9 @@
                                 td {{item.domain}}
                                 td {{item.ip}}
                                 //- td {{item.originIp}}
-                                td 
-                                    v-chip(color="primary") {{item.attacked}}
-                                td 
-                                    v-chip(color="primary") {{item.quality}}
-                                td
-                                    v-chip(color="primary") {{item.incdn}}
+                                td {{item.attacked}}
+                                td {{item.quality}}
+                                td {{item.incdn}}
                                 //- td {{item.who}}
                                 td {{item.update}}
                                 td 
