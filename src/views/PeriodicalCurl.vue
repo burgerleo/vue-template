@@ -303,7 +303,6 @@
           .dispatch('edge/getCustomerInfo')
           .then(
             function(result) {
-              // console.log(result)
               this.customerList = result.data
             }.bind(this)
           )
@@ -321,7 +320,6 @@
           .dispatch('edge/getInfo')
           .then(
             function(result) {
-              // console.log(this.customerList)
               var arr = []
               this.customerList.forEach((item) => {
                 arr[item.id] = item.name
@@ -361,7 +359,6 @@
           this.timer = window.setInterval(() => {
             setTimeout(() => {
               this.getInfo(item)
-              console.log(item.second)
             }, 1)
 
           }, second);
