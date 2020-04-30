@@ -3,10 +3,10 @@
         v-data-table.elevation-1(:headers="headers" :items="items" :dense="dense" :loading="loading" hide-default-header hide-default-footer :items-per-page="1000" @page-count="1000" )
             template(v-slot:header="{item,index}")
                 tr
-                    th.pl-0.pr-1
+                    th.pl-0.pr-1.pb-1
                         v-avatar(tile width="100%" :height="columnHeight" color="transparent" dark ) 
                             h2 {{title + " In/Out"}}
-                    th.pr-1.pl-1(v-for="(outLine, value) in items") 
+                    th.pr-1.pl-1.pb-1(v-for="(outLine, value) in items") 
                         v-avatar(tile width="100%" :height="columnHeight"  :color="getCorGColor(outLine)" dark ) 
                             h2 {{outLine}}
             template(v-slot:item="{item,index}")
@@ -53,7 +53,7 @@ export default {
         },
         title: {
             type: String,
-            default: 'AABC'
+            default: 'HK'
         },
         range: {
             type: Array,
@@ -66,6 +66,10 @@ export default {
         typeList: {
             type: Array,
             default: ['outside', 'intermediate', 'inside']
+        },
+        networkFlowType: {
+            type: String,
+            default: 'packet_loss'
         }
     },
 
@@ -80,7 +84,7 @@ export default {
                 'red lighten-2',
                 'grey lighten-2',
                 'blue lighten-2'
-            ],
+            ]
         }
     },
     methods: {
@@ -100,15 +104,28 @@ export default {
                 ? this.colorList[2]
                 : this.columnColor[4]
         },
-        getColor(Latency) {
+        getColor(flow) {
             const range = this.getMaxAndMin()
-
-            if (Latency == null || Latency == 0) {
+            if (flow == null || flow == 0) {
                 return this.colorList[3]
-            } else if (Latency <= range['min']) {
-                return this.colorList[0]
-            } else if (Latency < range['max']) {
-                return this.colorList[1]
+            }
+
+            switch (this.networkFlowType) {
+                case 'packet_loss':
+                    if (flow >= range['max']) {
+                        return this.colorList[0]
+                    } else if (flow > range['min']) {
+                        return this.colorList[1]
+                    }
+                    break
+
+                case 'latency':
+                    if (flow <= range['min']) {
+                        return this.colorList[0]
+                    } else if (flow < range['max']) {
+                        return this.colorList[1]
+                    }
+                    break
             }
 
             return this.colorList[2]
@@ -126,7 +143,7 @@ export default {
                 return null
             }
 
-            return this.nxn[inLine][outLine][type]['latency']
+            return this.nxn[inLine][outLine][type][this.networkFlowType]
         }
     },
     created() {}

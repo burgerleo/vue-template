@@ -1,84 +1,72 @@
 <template lang="pug">
-    v-layout
-        v-flex(xs12 sm12 md12)
-            v-card
-                v-data-table.elevation-1(:headers="headers" :items="bgpList" dense hide-default-header hide-default-footer :items-per-page="1000" @page-count="1000" :loading="loading")
-                    template(v-slot:top)
-                        v-toolbar(flat white)
-                            v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "%≥"}}
-                            v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "%~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10)) + "%"}}
-                            v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']+"%"}}
-                            v-divider.mx-1(inset vertical)
-                            v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
-                            v-divider.mx-1(inset vertical)
+    v-container.ma-0.pa-0.fill-height.fluid
+        v-row
+            v-col(cols="12")
+                v-toolbar(flat white)
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "%≥"}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "%~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10)) + "%"}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']+"%"}}
+                    v-divider.mx-1(inset vertical)
+                    v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
+                    v-divider.mx-1(inset vertical)
 
-                            v-spacer
-                            v-toolbar-title.mb-2.mr-2 Countdown Refresh Time: {{totalTime}} s
-                            v-btn.mb-2.mr-2(v-if="timer" color="red darken-1" dark @click="stopTimer") Stop
-                            v-btn.mb-2.mr-2(v-if="!timer" color="primary" dark @click="getAllPacketLoss") Start
-                            v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
-                            v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
-                                v-icon mdi-refresh
-                    
-                    template(v-slot:header="{item,index}")
-                        tr
-                            th.pr-2.pl-2
-                                v-avatar(tile width="100%" height="85" color="transparent" dark ) 
-                                    h1 {{"In/Out"}}
-                            th.pr-2.pl-2(v-for="(outLine, value) in bgpList") 
-                                v-avatar(tile width="100%" height="85" color="transparent" dark ) 
-                                    h1 {{outLine}}
-                            
-                    template(v-slot:item="{item,index}")
-                        tr
-                            th.pr-2.pl-2
-                                v-avatar(tile width="100%" height="85" color="transparent" dark )
-                                    h1 {{bgpList[index]}}
-                            td.pr-1.pl-1.text-center(v-for="(outLine, value) in bgpList") 
-                                div.text-center(:class="getColor(getSource(item, outLine, typeList[0]))")
-                                    v-tooltip(top)
-                                        template(v-slot:activator="{on}")
-                                            v-avatar(tile width="100%" min-width="85" height="85" color="transparent" dark v-on="on")
-                                                v-avatar(size="54" color="black")
-                                                    v-tooltip(top)
-                                                        template(v-slot:activator="{ on }")
-                                                            v-avatar(size="50" :color="getColor(getSource(item, outLine, typeList[1]))" dark v-on="on")
-                                                                v-avatar(size="24" color="black")
-                                                                    v-tooltip(top)
-                                                                        template(v-slot:activator="{ on }")
-                                                                            v-avatar(size="20" :color="getColor(getSource(item, outLine, typeList[2]))" dark v-on="on")
-                                                                        span {{getSource(item, outLine, typeList[2]) + "%" }}       
-                                                        span {{getSource(item, outLine, typeList[1]) + "%"}}
-                                        span {{getSource(item, outLine, typeList[0]) + "%"}}
-            v-dialog(v-model="dialog" max-width="600" scrollable persistent)
-                v-card
-                    v-card-title.title Setting
-                    v-card-text.pt-6 Color Range
-                        v-form(ref="form" onsubmit="return false;")
-                            v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='0.01')
-                            v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
-                            v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Hours)" type="number" name="hour" max="24" min="1" :rules="[rules.required, rules.hours]")
-                            v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Days)" type="number" name="day" max="30" min="1" :rules="[rules.required, rules.days]")
-                            v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
-                    v-card-actions
-                        v-spacer
-                        v-btn(color="grey" @click="closeDialog") Cancel
-                        v-btn(color="primary" @click="save") Save
+                    v-spacer
+                    v-toolbar-title.mb-2.mr-2 {{totalTime}} s
+                    v-btn.mb-2.mr-2(v-if="timer" color="red darken-1" dark @click="stopTimer") Stop
+                    v-btn.mb-2.mr-2(v-if="!timer" color="primary" dark @click="getAllPacketLoss") Start
+                    v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
+                    v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
+                        v-icon mdi-refresh
+                NxnCirclesTable(title="HK" :headers="headers['HK']" :items="bgpList['HK']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
+        v-row
+            v-col.ml-0(cols="8")
+                NxnCirclesTable(title="TW" :headers="headers['TW']" :items="bgpList['TW']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+            v-col.ml-0.pl-0(cols="4")
+                NxnCirclesTable(title="PH" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
+        v-dialog(v-model="dialog" max-width="600" scrollable persistent)
+            v-card
+                v-card-title.title Setting
+                v-card-text.pt-6 Color Range
+                    v-form(ref="form" onsubmit="return false;")
+                        v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='0.01')
+                        v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
+                        v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Hours)" type="number" name="hour" max="24" min="1" :rules="[rules.required, rules.hours]")
+                        v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Days)" type="number" name="day" max="30" min="1" :rules="[rules.required, rules.days]")
+                        v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
+                v-card-actions
+                    v-spacer
+                    v-btn(color="grey" @click="closeDialog") Cancel
+                    v-btn(color="primary" @click="save") Save
 </template>
 
 <script>
 import textFieldRules from '../utils/textFieldRules'
+import NxnCirclesTable from '../components/NxnCirclesTable'
 
 export default {
     name: 'JKB-Packet-Loss',
     mixins: [textFieldRules],
 
-    components: {},
+    components: {
+        NxnCirclesTable
+    },
     data() {
         return {
-            headers: [],
-            bgpList: [],
-            tableData: {},
+            headers: {
+                HK: [],
+                TW: [],
+                PH: []
+            },
+            bgpList: {
+                HK: [],
+                TW: [],
+                PH: []
+            },
+            tableData: {
+                HK: {},
+                TW: {},
+                PH: {}
+            },
             loading: true,
             min: 95,
             max: 100,
@@ -87,10 +75,11 @@ export default {
             pageName: 'packet-loss',
             typeList: ['outside', 'intermediate', 'inside'],
             colorList: [
-                'green lighten-1',
-                'yellow lighten-1',
-                'red lighten-1',
-                'grey lighten-1'
+                'green lighten-2',
+                'yellow lighten-2',
+                'red lighten-2',
+                'grey lighten-2',
+                'blue lighten-2'
             ],
             timer: null,
             totalTime: 60,
@@ -109,7 +98,6 @@ export default {
                 }
             },
             copyConfigs: {},
-
             picker: new Date().toISOString().substr(0, 10)
         }
     },
@@ -267,8 +255,8 @@ export default {
             }
             this.loading = true
             this.$store.dispatch('global/startLoading')
-            var endTime = new Date()
             var startTime = new Date()
+            var endTime = new Date()
 
             startTime.setMinutes(startTime.getMinutes() - minute)
 
@@ -297,12 +285,12 @@ export default {
                 )
         },
         transforToTableData(typeId, data) {
-            var packetloss = data.length > 0 ? data : []
+            var latency = data.length > 0 ? data : []
 
             var type = this.typeList[typeId]
 
-            var bgpList = [...this.bgpList]
-            var headerList = [...this.headers]
+            var bgpList = Object.assign({}, this.bgpList)
+            var headerList = Object.assign({}, this.headers)
             var tableData = Object.assign({}, this.tableData)
 
             var header1 = {
@@ -318,32 +306,34 @@ export default {
                 align: 'center'
             }
 
-            if (headerList.length <= 0) {
-                headerList.push(header1)
-            }
-
-            packetloss.forEach(function(item) {
+            latency.forEach(function(item) {
+                var site = item.site
                 var inLine = item.inBgpName
                 var outLine = item.outBgpName
 
-                if (!tableData[inLine]) {
-                    tableData[inLine] = {}
-                    headerList.push(header2)
+                if (headerList[site].length <= 0) {
+                    headerList[site].push(header1)
                 }
 
-                bgpList.push(inLine)
-                bgpList.push(outLine)
+                if (!tableData[site][inLine]) {
+                    tableData[site][inLine] = {}
 
-                // 移除重複 Value
-                bgpList = bgpList.filter(
-                    (item, index) => bgpList.indexOf(item) === index
+                    headerList[site].push(header2)
+                }
+
+                bgpList[site].push(inLine)
+                bgpList[site].push(outLine)
+
+                // 移除重複 Line Name
+                bgpList[site] = bgpList[site].filter(
+                    (line, index) => bgpList[site].indexOf(line) === index
                 )
 
-                if (!tableData[inLine][outLine]) {
-                    tableData[inLine][outLine] = {}
+                if (!tableData[site][inLine][outLine]) {
+                    tableData[site][inLine][outLine] = {}
                 }
 
-                tableData[inLine][outLine][type] = {
+                tableData[site][inLine][outLine][type] = {
                     packet_loss: item.packet_loss,
                     latency: item.latency
                 }
@@ -437,7 +427,7 @@ export default {
     },
     created() {},
     mounted() {
-        document.title = 'JKB Packet Loss';
+        document.title = 'JKB Packet Loss'
         this.setPageName()
         this.getConfig()
     }
@@ -450,5 +440,8 @@ export default {
     th {
         user-select: auto;
     }
+}
+.container {
+    min-width: 100%;
 }
 </style>

@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-container.ma-0.pa-0.fill-height.fluidz
+    v-container.ma-0.pa-0.fill-height.fluid
         v-row
             v-col(cols="12")
                 v-toolbar(flat white)
@@ -17,12 +17,12 @@
                     v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
                     v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
                         v-icon mdi-refresh
-                NxnCirclesTable(title="HK" :headers="headers['HK']" :items="bgpList['HK']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList['HK']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
         v-row
             v-col.ml-0(cols="8")
-                NxnCirclesTable(title="TW" :headers="headers['TW']" :items="bgpList['TW']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList['TW']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
             v-col.ml-0.pl-0(cols="4")
-                NxnCirclesTable(title="PH" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable(title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
                 v-card-title.title Setting
@@ -68,6 +68,8 @@ export default {
                 PH: {}
             },
             loading: true,
+            min: 0,
+            max: 300,
             range: [130, 200],
             dialog: false,
             pageName: 'latency',
@@ -76,7 +78,8 @@ export default {
                 'green lighten-2',
                 'yellow lighten-2',
                 'red lighten-2',
-                'grey lighten-2'
+                'grey lighten-2',
+                'blue lighten-2'
             ],
             timer: false,
             totalTime: 60,
@@ -371,7 +374,7 @@ export default {
         startTimer() {
             // 計時器開始
             this.stopTimer()
-            // this.timer = setInterval(() => this.countdown(), 1000)
+            this.timer = setInterval(() => this.countdown(), 1000)
         },
         countdown() {
             // 檢查 網址路徑是否正確
@@ -433,7 +436,6 @@ export default {
         document.title = 'JKB Latency'
         this.setPageName()
         this.getConfig()
-        this.testnananana()
     }
 }
 </script>
