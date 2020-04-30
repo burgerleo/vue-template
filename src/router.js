@@ -8,6 +8,7 @@ import PeriodicalCurl from "./views/PeriodicalCurl.vue";
 import Ping from "./views/Ping.vue";
 import PingRealtime from "./views/PingRealtime.vue";
 import Traceroute from "./views/Traceroute.vue";
+import Mtr from "./views/Mtr.vue";
 import Dummy from "./views/Dummy.vue";
 import BGP from "./views/BGP.vue";
 import Edge from "./views/Edge.vue";
@@ -81,6 +82,11 @@ export default new Router({
                     name: "Traceroute",
                     path: "traceroute",
                     component: Traceroute
+                },
+                {
+                    name: "MTR",
+                    path: "mtr",
+                    component: Mtr
                 },
                 {
                     name: "DNS Records",

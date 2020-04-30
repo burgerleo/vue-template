@@ -5,6 +5,7 @@ import curl from './modules/curl'
 import helper from './modules/helper'
 import ping from './modules/ping'
 import traceroute from './modules/traceroute'
+import mtr from './modules/mtr'
 import bgp from './modules/bgp'
 import dummy from './modules/dummy'
 import edge from './modules/edge'
@@ -25,6 +26,7 @@ export default new Vuex.Store({
         helper,
         ping,
         traceroute,
+        mtr,
         bgp,
         dummy,
         edge,

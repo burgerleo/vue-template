@@ -79,6 +79,11 @@ export default {
                             router: '/traceroute'
                         },
                         {
+                            title: 'Mtr',
+                            icon: 'mdi-sitemap',
+                            router: '/mtr'
+                        },
+                        {
                             title: 'JKB Availability',
                             icon: 'mdi-lumx',
                             router: '/jkb-packetloss'
