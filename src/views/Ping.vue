@@ -103,11 +103,21 @@
                                         v-divider(dark)
                             v-text-field(v-model="count" label="Count" type="number" min="1" max="100")
                             v-text-field(v-model="interval" label="Interval (0.2+) " type="number" min="0.2" step="0.1")
+                            v-layout(style='margin-top: -0.5%;')
+                                v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
+                                    v-text-field(v-model="cliExam" label="Exam CLI Before Sending" readonly)
+                                v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
+                                    v-text-field(v-model="site" label="From" readonly)
                             v-btn(color="primary" block @click="getPingInfo()" style='margin-top: -1%;') SEND
-                            v-layout.px-2(style='margin-top: -1%; margin-bottom: -0.5%;')
+                            v-layout.pt-2(v-show="cliExecuted != false")
+                                v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
+                                    v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
+                                v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
+                                    v-text-field(v-model="siteExecuted" label="From" readonly)
+                            v-layout.px-2(style='margin-top: -1%; margin-bottom: -0.5%;'  v-show='pingResult.length > 0')
                                 v-flex(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Terminal:
-                                    pre(v-highlightjs="pingBody")
+                                    pre(v-highlightjs="pingResult")
                                         code.java.display-0.font-weight-black
 </template>
 
@@ -137,7 +147,9 @@ export default {
             interval: 0.5,
 
             // output result
-            pingBody: '',
+            siteExecuted: '',
+            cliExecuted: false,
+            pingResult: '',
         }
     },
     computed: {
@@ -151,7 +163,19 @@ export default {
                 }
             }.bind(this));
 
-            return dummy ? dummy.source_ip : ""
+            return dummy ? dummy.source_ip : "No Source IP Mapped"
+        },
+
+        // exam CLI before SEND
+        cliExam: function () {
+            let cli = 'ping '
+            // cli += this.site,
+            cli += this.destinationIP ? this.destinationIP : 'x.x.x.x'
+            cli += this.sourceIP != 'No Source IP Mapped' ? ' -I ' + this.sourceIP : ''
+            cli += this.count ? ' -c ' + this.count : ''
+            cli += this.interval ? ' -i ' + this.interval : ''
+        
+            return cli
         },
 
         // Inbound / Outbound Circuit data
@@ -265,7 +289,9 @@ export default {
                 })
                 .then(
                     function(result) {
-                        this.pingBody = result.data
+                        this.pingResult = result.data
+                        this.cliExecuted = this.cliExam
+                        this.siteExecuted = this.site
                         this.$store.dispatch(
                             'global/showSnackbarSuccess',
                             'Success!'

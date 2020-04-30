@@ -104,11 +104,21 @@
                             v-layout(style='margin-top: -0.5%;')
                                 v-checkbox.mx-6(v-model='I' label='-I: Use ICMP.')
                                 v-checkbox.mx-6(v-model='n' label='-n: Print hop addresses numerically.')
+                            v-layout(style='margin-top: -0.5%;')
+                                v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
+                                    v-text-field(v-model="cliExam" label="Exam CLI Before Sending" readonly)
+                                v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
+                                    v-text-field(v-model="site" label="From" readonly)
                             v-btn(color="primary" block @click="getTracerouteInfo()") SEND
-                            v-layout.px-2(style='margin-top: -0.5%; margin-bottom: -0.5%;')
+                            v-layout.pt-2(v-show="cliExecuted != false")
+                                v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
+                                    v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
+                                v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
+                                    v-text-field(v-model="siteExecuted" label="From" readonly)
+                            v-layout.px-2(style='margin-top: -0.5%; margin-bottom: -0.5%;' v-show="cliExecuted != false")
                                 v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Terminal:
-                                    pre(v-highlightjs="pingBody")
+                                    pre(v-highlightjs="tracerouteResult")
                                         code.java.display-0.font-weight-black
 </template>
 
@@ -138,7 +148,9 @@ export default {
             n: true,
 
             // output result
-            pingBody: '',
+            siteExecuted: '',
+            cliExecuted: false,
+            tracerouteResult: '',
         }
     },
     computed: {
@@ -152,7 +164,19 @@ export default {
                 }
             }.bind(this));
 
-            return dummy ? dummy.source_ip : ""
+            return dummy ? dummy.source_ip : "No Source IP Mapped"
+        },
+
+        // exam CLI before SEND
+        cliExam: function () {
+            let cli = 'traceroute '
+            // cli += this.site,
+            cli += this.destinationIP ? this.destinationIP : 'x.x.x.x'
+            cli += this.sourceIP != 'No Source IP Mapped' ? ' -s ' + this.sourceIP : ''
+            cli += this.n ? ' -n' : ''
+            cli += this.I ? ' -I' : ''
+        
+            return cli
         },
 
         // Inbound / Outbound Circuit data
@@ -266,7 +290,9 @@ export default {
                 })
                 .then(
                     function(result) {
-                        this.pingBody = result.data.result
+                        this.tracerouteResult = result.data.result
+                        this.cliExecuted = this.cliExam
+                        this.siteExecuted = this.site
                         this.$store.dispatch(
                             'global/showSnackbarSuccess',
                             'Success!'
