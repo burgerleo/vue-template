@@ -342,6 +342,41 @@ export default {
             this.bgpList = bgpList
             this.headers = headerList
             this.loading = false
+            this.itemTransform()
+        },
+        itemTransform() {
+            var items = this.bgpList
+
+            var newItems = {}
+
+            const itemsKeyList = Object.keys(items)
+
+            itemsKeyList.map(function(sites) {
+                items[sites].map(function(bgp) {
+                    var type = bgp.substr(-1)
+
+                    if (!newItems[sites]) {
+                        newItems[sites] = {}
+                    }
+
+                    if (!newItems[sites][type]) {
+                        newItems[sites][type] = []
+                    }
+
+                    newItems[sites][type].push(bgp)
+                })
+            })
+
+            itemsKeyList.map(function(sites) {
+                if (!newItems[sites]) {
+                    return
+                }
+                if(newItems[sites]['C'] && newItems[sites]['G']){
+                    items[sites] = [].concat(newItems[sites]['C'], newItems[sites]['G'])
+                }
+            })
+
+            this.bgpList = items
         },
         getSource(site, inLine, outLine, type) {
             if (!this.tableData[site][inLine]) {
