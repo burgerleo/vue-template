@@ -79,7 +79,8 @@ export default {
                 'yellow lighten-2',
                 'red lighten-2',
                 'grey lighten-2',
-                'blue lighten-2'
+                'blue lighten-2',
+                'pink lighten-4',
             ],
             timer: null,
             totalTime: 60,

@@ -83,7 +83,8 @@ export default {
                 'yellow lighten-2',
                 'red lighten-2',
                 'grey lighten-2',
-                'blue lighten-2'
+                'blue lighten-2',
+                'pink lighten-4',
             ]
         }
     },
@@ -101,7 +102,7 @@ export default {
         },
         getCorGColor(string) {
             return string.substr(-1) == 'C'
-                ? this.colorList[2]
+                ? this.colorList[5]
                 : this.colorList[4]
         },
         getColor(flow) {
