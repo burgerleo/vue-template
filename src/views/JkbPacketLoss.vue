@@ -244,21 +244,23 @@ export default {
 
         getPacketLoss(type) {
             var minute = this.configs.timeinterval[type]
+            var startTime = new Date()
 
             switch (type) {
+                case this.typeList[0]:
+                    startTime.setMinutes(startTime.getMinutes() - minute)
+                    break
                 case this.typeList[1]:
-                    minute = minute * 60
+                    startTime.setHours(startTime.getHours() - minute)
                     break
                 case this.typeList[2]:
-                    minute = minute * 60 * 24
+                    startTime.setDate(startTime.getDate() - minute)
                     break
             }
+
             this.loading = true
             this.$store.dispatch('global/startLoading')
-            var startTime = new Date()
             var endTime = new Date()
-
-            startTime.setMinutes(startTime.getMinutes() - minute)
 
             this.$store
                 .dispatch('traffic/getTrafficFlow', {
@@ -372,8 +374,11 @@ export default {
                 if (!newItems[sites]) {
                     return
                 }
-                if(newItems[sites]['C'] && newItems[sites]['G']){
-                    items[sites] = [].concat(newItems[sites]['C'], newItems[sites]['G'])
+                if (newItems[sites]['C'] && newItems[sites]['G']) {
+                    items[sites] = [].concat(
+                        newItems[sites]['C'],
+                        newItems[sites]['G']
+                    )
                 }
             })
 

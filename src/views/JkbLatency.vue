@@ -243,21 +243,23 @@ export default {
         },
         getLatency(type) {
             var minute = this.configs.timeinterval[type]
-            switch (type) {
-                case this.typeList[1]:
-                    minute = minute * 60
-                    break
-                case this.typeList[2]:
-                    minute = minute * 60 * 14
-                    break
-            }
-            this.loading = true
-            this.$store.dispatch('global/startLoading')
-
-            var endTime = new Date()
             var startTime = new Date()
 
-            startTime.setMinutes(startTime.getMinutes() - minute)
+            switch (type) {
+                case this.typeList[0]:
+                    startTime.setMinutes(startTime.getMinutes() - minute)
+                    break
+                case this.typeList[1]:
+                    startTime.setHours(startTime.getHours() - minute)
+                    break
+                case this.typeList[2]:
+                    startTime.setDate(startTime.getDate() - minute)
+                    break
+            }
+
+            this.loading = true
+            this.$store.dispatch('global/startLoading')
+            var endTime = new Date()
 
             this.$store
                 .dispatch('traffic/getTrafficFlow', {
@@ -371,8 +373,11 @@ export default {
                 if (!newItems[sites]) {
                     return
                 }
-                if(newItems[sites]['C'] && newItems[sites]['G']){
-                    items[sites] = [].concat(newItems[sites]['C'], newItems[sites]['G'])
+                if (newItems[sites]['C'] && newItems[sites]['G']) {
+                    items[sites] = [].concat(
+                        newItems[sites]['C'],
+                        newItems[sites]['G']
+                    )
                 }
             })
 
