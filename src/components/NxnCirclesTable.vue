@@ -102,7 +102,7 @@ export default {
         getCorGColor(string) {
             return string.substr(-1) == 'C'
                 ? this.colorList[2]
-                : this.columnColor[4]
+                : this.colorList[4]
         },
         getColor(flow) {
             const range = this.getMaxAndMin()
