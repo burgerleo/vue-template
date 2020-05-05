@@ -69,7 +69,7 @@ export default {
         },
         networkFlowType: {
             type: String,
-            default: 'packet_loss'
+            default: 'availability'
         }
     },
 
@@ -112,7 +112,7 @@ export default {
             }
 
             switch (this.networkFlowType) {
-                case 'packet_loss':
+                case 'availability':
                     if (flow >= range['max']) {
                         return this.colorList[0]
                     } else if (flow > range['min']) {
