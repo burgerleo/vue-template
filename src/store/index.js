@@ -16,6 +16,7 @@ import cert from './modules/cert'
 import traffic from './modules/traffic'
 import periodicalCurl from './modules/periodicalCurl'
 import domain from './modules/domain'
+import isp from './modules/isp'
 
 Vue.use(Vuex);
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
         cert,
         traffic,
         periodicalCurl,
-        domain
+        domain,
+        isp
     }
 });

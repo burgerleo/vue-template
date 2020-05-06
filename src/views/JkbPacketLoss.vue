@@ -9,8 +9,10 @@
                     v-divider.mx-1(inset vertical)
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
                     v-divider.mx-1(inset vertical)
-                    //- b.red--text JKB API Error
-                    //- v-divider.mx-1(inset vertical)
+
+                    b.red--text(v-if="!jkbAPIStatus") JKB API Error
+                    v-divider.mx-1(v-if="!jkbAPIStatus" inset vertical)
+
                     v-radio-group(v-model='isp' row hide-details)
                         v-radio(v-for="site,index in ispList" :label="site" :value="index" :key="index")
 
@@ -71,7 +73,7 @@ export default {
                 TW: {},
                 PH: {}
             },
-            ispList: ['All', 'CT', 'CU', 'CM'],
+            ispList: ['All'],
             isp: 0,
             loading: true,
             min: 95,
@@ -105,6 +107,7 @@ export default {
                 }
             },
             copyConfigs: {},
+            jkbAPIStatus: true, // true 表示正常
             picker: new Date().toISOString().substr(0, 10)
         }
     },
@@ -114,6 +117,30 @@ export default {
         }
     },
     methods: {
+        getIsp() {
+            this.$store
+                .dispatch('isp/getISPList')
+                .then(
+                    function(result) {
+                        var isp = ['ALL']
+                        var data = result.data
+
+                        for (let i = 0; i < 3; i++) {
+                            isp[data[i]['id']] = data[i]['name']
+                        }
+
+                        this.ispList = isp
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                    }.bind(this)
+                )
+        },
         getConfig() {
             this.stopTimer()
             this.$store.dispatch('global/startLoading')
@@ -281,6 +308,7 @@ export default {
                 })
                 .then(
                     function(result) {
+                        this.jkbAPIStatus = result.data.jkb_api_status
                         this.transforToTableData(
                             this.typeList.indexOf(type),
                             result.data.bgpIoMapping
@@ -481,6 +509,7 @@ export default {
     mounted() {
         document.title = 'JKB Packet Loss'
         this.setPageName()
+        this.getIsp()
         this.getConfig()
     }
 }

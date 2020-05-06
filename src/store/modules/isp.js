@@ -10,10 +10,8 @@ export default {
 
     },
     actions: {
-        getTrafficFlow: (context, data) => {
-            return axios.get("traffic-flow", {
-                params: data
-            }).then(function (response) {
+        getISPList: (context, data) => {
+            return axios.get("isp").then(function (response) {
                 return Promise.resolve(response.data);
             }).catch(function (error) {
                 return Promise.reject(error.response.data);
