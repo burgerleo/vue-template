@@ -73,7 +73,7 @@ export default {
                 TW: {},
                 PH: {}
             },
-            ispList: ['All'],
+            ispList: ['All China'],
             isp: 0,
             loading: true,
             min: 95,
@@ -122,7 +122,7 @@ export default {
                 .dispatch('isp/getISPList')
                 .then(
                     function(result) {
-                        var isp = ['ALL']
+                        var isp = ['All China']
                         var data = result.data
 
                         for (let i = 0; i < 3; i++) {
