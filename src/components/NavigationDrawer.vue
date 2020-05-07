@@ -79,9 +79,14 @@ export default {
                             router: '/traceroute'
                         },
                         {
-                            title: 'Mtr',
+                            title: 'MTR',
                             icon: 'mdi-sitemap',
                             router: '/mtr'
+                        },
+                        {
+                            title: 'Dig',
+                            icon: 'mdi-ethernet-cable',
+                            router: '/dig'
                         },
                         {
                             title: 'JKB Availability',
