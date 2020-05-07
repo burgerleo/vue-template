@@ -9,6 +9,7 @@ import Ping from "./views/Ping.vue";
 import PingRealtime from "./views/PingRealtime.vue";
 import Traceroute from "./views/Traceroute.vue";
 import Mtr from "./views/Mtr.vue";
+import Dig from "./views/Dig.vue";
 import Dummy from "./views/Dummy.vue";
 import BGP from "./views/BGP.vue";
 import Edge from "./views/Edge.vue";
@@ -87,6 +88,11 @@ export default new Router({
                     name: "MTR",
                     path: "mtr",
                     component: Mtr
+                },
+                {
+                    name: "Dig",
+                    path: "dig",
+                    component: Dig
                 },
                 {
                     name: "DNS Records",
