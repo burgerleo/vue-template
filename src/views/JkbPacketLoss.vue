@@ -35,9 +35,9 @@
                 v-card-text.pt-6 Color Range
                     v-form(ref="form" onsubmit="return false;")
                         v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='0.01')
-                        v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
-                        v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Hours)" type="number" name="hour" max="24" min="1" :rules="[rules.required, rules.hours]")
-                        v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Days)" type="number" name="day" max="30" min="1" :rules="[rules.required, rules.days]")
+                        v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly)
+                        v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly)
+                        v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Hours)" type="number" name="hour" max="30" min="1" :rules="[rules.required, rules.hours]")
                         v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
                 v-card-actions
                     v-spacer
@@ -289,10 +289,12 @@ export default {
                     startTime.setMinutes(startTime.getMinutes() - minute)
                     break
                 case this.typeList[1]:
-                    startTime.setHours(startTime.getHours() - minute)
+                    startTime.setMinutes(startTime.getMinutes() - minute)
+                    // startTime.setHours(startTime.getHours() - minute) // 原本計算小時
                     break
                 case this.typeList[2]:
-                    startTime.setDate(startTime.getDate() - minute)
+                    startTime.setHours(startTime.getHours() - minute) 
+                    // startTime.setDate(startTime.getDate() - minute) // 原本計算 天
                     break
             }
 
