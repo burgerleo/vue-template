@@ -5,6 +5,7 @@ import curl from './modules/curl'
 import helper from './modules/helper'
 import ping from './modules/ping'
 import traceroute from './modules/traceroute'
+import mtr from './modules/mtr'
 import bgp from './modules/bgp'
 import dummy from './modules/dummy'
 import edge from './modules/edge'
@@ -13,6 +14,9 @@ import dnsRecord from './modules/dnsRecord'
 import jkb from './modules/jkb'
 import cert from './modules/cert'
 import traffic from './modules/traffic'
+import periodicalCurl from './modules/periodicalCurl'
+import domain from './modules/domain'
+import isp from './modules/isp'
 
 Vue.use(Vuex);
 
@@ -23,6 +27,7 @@ export default new Vuex.Store({
         helper,
         ping,
         traceroute,
+        mtr,
         bgp,
         dummy,
         edge,
@@ -30,6 +35,9 @@ export default new Vuex.Store({
         dnsRecord,
         jkb,
         cert,
-        traffic
+        traffic,
+        periodicalCurl,
+        domain,
+        isp
     }
 });

@@ -148,7 +148,7 @@ export default {
                     text: 'IP',
                     align: 'left',
                     sortable: true,
-                    value: 'ip'
+                    value: 'source_ip'
                 },
                 {
                     text: 'Task ID',
@@ -289,6 +289,8 @@ export default {
                         this.copyDesserts = this.desserts
 
                         this.transformNXN()
+
+                        this.filterOnlyColumn()
 
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
@@ -472,13 +474,15 @@ export default {
 
             return null
         },
-        filterOnlyColumn(value, column) {
+        filterOnlyColumn(value = null, column = null) {
             var searchResult
 
             var searchResult
 
             if (!value) {
                 delete this.searchList[column]
+            } else {
+                this.searchList[column] = value.trim()
             }
 
             // 備份 and 還原資料
@@ -520,7 +524,7 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Dummy';
+        document.title = 'Dummy'
         this.getDummy()
         this.getBGP()
     }

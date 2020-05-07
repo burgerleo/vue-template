@@ -4,17 +4,21 @@ import Home from "./views/Home.vue";
 import Layout from "./views/Layout.vue";
 import Helper from "./views/admin/Helper.vue";
 import Curl from "./views/Curl.vue";
-import Ping from"./views/Ping.vue";
-import PingRealtime from"./views/PingRealtime.vue";
-import Traceroute from"./views/Traceroute.vue";
-import Dummy from"./views/Dummy.vue";
-import BGP from"./views/BGP.vue";
-import Edge from"./views/Edge.vue";
-import Customer from"./views/Customer.vue";
-import DnsRecord from"./views/DnsRecord.vue";
-import JkbPacketLoss from"./views/JkbPacketLoss.vue";
-import JkbLatency from"./views/JkbLatency.vue";
-import CrtKey from"./views/CrtKey.vue";
+import PeriodicalCurl from "./views/PeriodicalCurl.vue";
+import Ping from "./views/Ping.vue";
+import PingRealtime from "./views/PingRealtime.vue";
+import Traceroute from "./views/Traceroute.vue";
+import Mtr from "./views/Mtr.vue";
+import Dummy from "./views/Dummy.vue";
+import BGP from "./views/BGP.vue";
+import Edge from "./views/Edge.vue";
+import Customer from "./views/Customer.vue";
+import DnsRecord from "./views/DnsRecord.vue";
+import JkbPacketLoss from "./views/JkbPacketLoss.vue";
+import JkbLatency from "./views/JkbLatency.vue";
+import CrtKey from "./views/CrtKey.vue";
+import DomainManage from "./views/DomainManage.vue";
+
 Vue.use(Router);
 
 export default new Router({
@@ -25,10 +29,10 @@ export default new Router({
             path: "/",
             component: Layout,
             children: [
-                {
-                    path: "",
-                    redirect: "curl"
-                },
+                // {
+                //     path: "",
+                //     redirect: "curl"
+                // },
                 {
                     path: "home",
                     name: "home",
@@ -50,66 +54,80 @@ export default new Router({
                     component: Helper
                 },
                 {
-                    name:"Origin Server Testing",
+                    name: "Origin Server Testing",
                     path: "curl",
                     component: Curl
                 },
                 {
-                    name:"Ping",
+                    name: "Origin Server Periodical Testing",
+                    path: "periodical-curl",
+                    component: PeriodicalCurl
+                },
+                {
+                    name: "Ping",
                     path: "ping",
                     component: Ping
                 },
                 {
-                    name:"Ping Realtime",
+                    name: "Ping Realtime",
                     path: "ping-realtime",
                     component: PingRealtime
                 },
                 {
-                    name:"SSL File",
+                    name: "SSL File",
                     path: "crt-key",
                     component: CrtKey
                 },
                 {
-                    name:"Traceroute",
+                    name: "Traceroute",
                     path: "traceroute",
                     component: Traceroute
                 },
                 {
-                    name:"DNS Records",
+                    name: "MTR",
+                    path: "mtr",
+                    component: Mtr
+                },
+                {
+                    name: "DNS Records",
                     path: "dns-records",
                     component: DnsRecord
                 },
                 {
-                    name:"Bgp",
+                    name: "Bgp",
                     path: "bgp",
                     component: BGP
                 },
                 {
-                    name:"Dummy Ip",
+                    name: "Dummy Ip",
                     path: "dummy-ip",
                     component: Dummy
                 },
                 {
-                    name:"Edge",
+                    name: "Edge",
                     path: "edge",
                     component: Edge
                 },
                 {
-                    name:"Customer",
+                    name: "Customer",
                     path: "customer",
                     component: Customer
                 },
                 {
-                    name:"JKB-PacketLoss",
+                    name: "JKB-PacketLoss",
                     path: "jkb-packetloss",
                     component: JkbPacketLoss
                 },
                 {
-                    name:"JKB-Latency",
+                    name: "JKB-Latency",
                     path: "jkb-Latency",
                     component: JkbLatency
                 },
-                
+                {
+                    name: "DomainManage",
+                    path: "domain-manage",
+                    component: DomainManage
+                }
             ]
         }
     ]

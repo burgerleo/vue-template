@@ -59,6 +59,11 @@ export default {
                             router: '/curl'
                         },
                         {
+                            title: 'Origin Server Periodical Testing',
+                            icon: 'mdi-message-draw',
+                            router: '/periodical-curl'
+                        },
+                        {
                             title: 'Ping',
                             icon: 'mdi-pin',
                             router: '/ping'
@@ -74,7 +79,12 @@ export default {
                             router: '/traceroute'
                         },
                         {
-                            title: 'JKB Packet Loss',
+                            title: 'Mtr',
+                            icon: 'mdi-sitemap',
+                            router: '/mtr'
+                        },
+                        {
+                            title: 'JKB Availability',
                             icon: 'mdi-lumx',
                             router: '/jkb-packetloss'
                         },
@@ -84,14 +94,19 @@ export default {
                             router: '/jkb-Latency'
                         },
                         {
-                            title: "Package IP Mapping",
-                            icon: "mdi-chart-histogram",
-                            router: "/dns-records"
+                            title: 'Package IP Mapping',
+                            icon: 'mdi-chart-histogram',
+                            router: '/dns-records'
                         },
                         {
-                            title: "Cert Management",
-                            icon: "mdi-format-align-justify",
-                            router: "/crt-key"
+                            title: 'Cert Management',
+                            icon: 'mdi-format-align-justify',
+                            router: '/crt-key'
+                        },
+                        {
+                            title: 'FQDN Management',
+                            icon: 'mdi-content-paste',
+                            router: '/domain-manage'
                         },
                         { header: 'Administrator' },
 
@@ -100,7 +115,7 @@ export default {
                         //     icon: "mdi-account-circle",
                         //     children: [
                         //         {
-                        //             title: "group",
+                        //             title: "group", 
                         //             icon: "mdi-view-dashboard",
                         //             children: [
                         //                 {
@@ -130,7 +145,7 @@ export default {
                             router: '/bgp'
                         },
                         {
-                            title: 'Dummy IP',
+                            title: 'Dummy IP Combination',
                             icon: 'mdi-forward',
                             router: '/dummy-ip'
                         },

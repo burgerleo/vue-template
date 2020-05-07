@@ -7,6 +7,9 @@
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
                                 v-flex.pt-0.pb-0(xs12 sm12 md12)
+                                    v-layout.px-2(row)
+                                        v-flex.pt-0.pb-0(xs12 sm3 md3)
+                                            v-text-field(v-model="second" label="Second" type="number" min="10" max="100")
                                     v-radio-group.pt-0.pb-0(v-model="area" :mondatory="true")
                                         v-layout.px-2(row)
                                             v-flex.pt-5.pb-0(xs12 sm3 md1)
@@ -68,11 +71,10 @@
                                     v-checkbox(v-model="headerOnly" label="Header only")
                                 v-flex.pt-0.pb-0(xs12)
                                     v-btn(color="primary" block @click="send('nameForm')") SEND
-                                v-flex.pt-0.pb-0(xs12)
+                                v-flex.pt-0.pb-0(xs12 v-if="testType==0")
 
                                     v-card-text.pb-0.pl-0
                                         .subheading.font-weight-black Response:
-                                        .subheading.text-right {{timestamp}}
                                     v-divider
                                     v-card-text.font-weight-bold.pb-0 CURL Command:
                                     pre(v-highlightjs="commandData")
@@ -134,7 +136,12 @@
         edgeList: [],
         hkEdge:[],
         twEdge:[],
-        edge:''
+        edge:'',
+        testType : 0,
+        second: 10,
+        pollingList:[],
+        tabItems: [],
+        tab: null,
       };
     },
     watch:{
@@ -178,8 +185,9 @@
             "edge": this.edge,
             "second": this.second
           }
-            this.$store.dispatch("global/startLoading");
-            this.getInfo(data)
+          this.$store.dispatch("global/startLoading");
+          this.pollingList.push(data)
+          this.polling(this.pollingList)
         }
       },
       getInfo: function(data) {
@@ -187,12 +195,25 @@
           .dispatch("curl/getCurlInfo", data)
           .then(
             function(result) {
+              const time = new Date();
+              this.timestamp = time;
               this.headerData = result.data.header;
               this.bodyData = result.data.body;
               this.commandData = result.data.command;
               this.responseCode = result.data.responseCode;
               this.timeTotal = result.data.timeTotal
-              this.responseCodeAndTimeTotal = result.data.responseCode+' '+result.data.timeTotal
+              this.responseCodeAndTimeTotal = (this.responseCodeAndTimeTotal === '')
+                ? this.timestamp
+                + ' '
+                + result.data.responseCode
+                + ' '
+                + result.data.timeTotal
+                : this.responseCodeAndTimeTotal
+                + "\r\n " + this.timestamp
+                + ' '
+                + result.data.responseCode
+                + ' '
+                + result.data.timeTotal
               this.$store.dispatch("global/finishLoading");
             }.bind(this)
           )
@@ -282,7 +303,6 @@
           .dispatch('edge/getCustomerInfo')
           .then(
             function(result) {
-              // console.log(result)
               this.customerList = result.data
             }.bind(this)
           )
@@ -300,7 +320,6 @@
           .dispatch('edge/getInfo')
           .then(
             function(result) {
-              // console.log(this.customerList)
               var arr = []
               this.customerList.forEach((item) => {
                 arr[item.id] = item.name
@@ -327,18 +346,30 @@
           .catch(
             function(error) {
               this.$store.dispatch(
-                'global/showSnackbarError ',
+                'global/showSnackbarError',
                 error.message
               )
             }.bind(this)
           )
       },
+      polling: function (data) {
+        clearInterval(this.timer)
+        data.forEach((item, index, array) => {
+          var second = parseInt(item.second+'000')
+          this.timer = window.setInterval(() => {
+            setTimeout(() => {
+              this.getInfo(item)
+            }, 1)
+
+          }, second);
+        })
+      }
     },
     created() {
       this.getCustomerInfo();
       this.getEdgeInfo();
     },mounted() {
-      document.title = 'Curl';
+      document.title = 'Periodical Curl';
     }
   };
 </script>
