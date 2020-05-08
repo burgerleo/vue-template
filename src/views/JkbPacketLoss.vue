@@ -14,7 +14,7 @@
                     v-divider.mx-1(v-if="!jkbAPIStatus" inset vertical)
 
                     v-radio-group.mx-0(v-model='isp' row hide-details)
-                        v-radio.mx-0(v-for="site,index in ispList" :label="site" :value="index" :key="index")
+                        v-radio.mx-0.mr-1(v-for="site,index in ispList" :label="site" :value="index" :key="index")
 
                     v-spacer
 
@@ -60,7 +60,6 @@
 <script>
 import textFieldRules from '../utils/textFieldRules'
 import NxnCirclesTable from '../components/NxnCirclesTable'
-import nxndata from '../assets/nxn.json'
 
 export default {
     name: 'JKB-Packet-Loss',
