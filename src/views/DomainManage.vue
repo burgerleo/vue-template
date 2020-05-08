@@ -317,6 +317,7 @@ export default {
                         // 重新 copy data
                         this.copyDesserts = []
                         this.backupAndRcoverData()
+                        this.filterOnlyColumn()
 
                         // 取得總量
                         this.totalPage = result.data.last_page
@@ -435,7 +436,7 @@ export default {
             this.searchText = ''
             this.backupAndRcoverData()
         },
-        filterOnlyColumn(value, column) {
+        filterOnlyColumn(value = null, column = null) {
             var searchResult
 
             if (!value) {

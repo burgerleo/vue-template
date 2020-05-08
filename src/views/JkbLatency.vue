@@ -1,7 +1,7 @@
 <template lang="pug">
     v-container.ma-0.pa-0.fill-height.fluid
         v-row
-            v-col(cols="12")
+            v-col.pb-1.pt-1(cols="12")
                 v-toolbar(flat white)
                     v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['min'] + "≤"}}
                     v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMin()['max'] - 1).toFixed(10))}}
@@ -13,22 +13,34 @@
                     b.red--text(v-if="!jkbAPIStatus") JKB API Error
                     v-divider.mx-1(v-if="!jkbAPIStatus" inset vertical)
 
-                    v-radio-group(v-model='isp' row hide-details)
-                        v-radio(v-for="site,index in ispList" :label="site" :value="index" :key="index")
+                    v-radio-group.mx-0(v-model='isp' row hide-details)
+                        v-radio.mx-0(v-for="site,index in ispList" :label="site" :value="index" :key="index")
 
                     v-spacer
-                    v-toolbar-title.mb-2.mr-2 {{totalTime}} s
+
+                    v-toolbar-title.mb-0.mx-0 Latest:{{lastDataTime}}
+                    v-divider.mb-0.mx-1(inset vertical)
+
+                    v-toolbar-title.my-0.mr-2 {{totalTime}}s
                     v-btn.mb-2.mr-2(v-if="timer" color="red darken-1" dark @click="stopTimer") Stop
                     v-btn.mb-2.mr-2(v-if="!timer" color="primary" dark @click="getAllLatency") Start
                     v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
                     v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
                         v-icon mdi-refresh
-                NxnCirclesTable(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList['HK']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
         v-row
-            v-col.ml-0(cols="8")
-                NxnCirclesTable(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList['TW']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
-            v-col.ml-0.pl-0(cols="4")
-                NxnCirclesTable(title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
+            v-col.ml-0.pa-0.pl-6.pb-3(cols="8")
+                NxnCirclesTable(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
+            v-col.ml-0.pa-0.pb-2.pl-3(cols="4")
+                NxnCirclesTable(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
+                //- PH 是舊的格式
+                NxnCirclesTable.pt-6(title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
+        v-row
+            v-col.ml-0.pa-0.pl-6(cols="6")
+                NxnCirclesTable(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+            v-col.ml-0.pa-0.pl-2(cols="6")
+                NxnCirclesTable(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+
+
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
                 v-card-title.title Setting
@@ -66,6 +78,17 @@ export default {
             bgpList: {
                 HK: [],
                 TW: [],
+                PH: []
+            },
+            bgpList2: {
+                HK: {
+                    C: [],
+                    G: []
+                },
+                TW: {
+                    C: [],
+                    G: []
+                },
                 PH: []
             },
             tableData: {
@@ -108,6 +131,7 @@ export default {
             },
             copyConfigs: {},
             jkbAPIStatus: true, // true 表示正常
+            lastDataTime: null,
             picker: new Date().toISOString().substr(0, 10)
         }
     },
@@ -292,7 +316,7 @@ export default {
                     // startTime.setHours(startTime.getHours() - minute) // 原本計算小時
                     break
                 case this.typeList[2]:
-                    startTime.setHours(startTime.getHours() - minute) 
+                    startTime.setHours(startTime.getHours() - minute)
                     // startTime.setDate(startTime.getDate() - minute) // 原本計算 天
                     break
             }
@@ -310,6 +334,19 @@ export default {
                 .then(
                     function(result) {
                         this.jkbAPIStatus = result.data.jkb_api_status
+
+                        var lastDataTime = new Date(result.data.lastDataTime)
+
+                        var hours =
+                            lastDataTime.getHours() < 10
+                                ? '0' + lastDataTime.getHours()
+                                : lastDataTime.getHours()
+                        var minutes =
+                            lastDataTime.getMinutes() < 10
+                                ? '0' + lastDataTime.getMinutes()
+                                : lastDataTime.getMinutes()
+                        this.lastDataTime = hours + ':' + minutes
+
                         this.transforToTableData(
                             this.typeList.indexOf(type),
                             result.data.bgpIoMapping
@@ -424,6 +461,7 @@ export default {
             })
 
             this.bgpList = items
+            this.bgpList2 = newItems
         },
         getSource(site, inLine, outLine, type) {
             if (!this.tableData[site][inLine]) {
