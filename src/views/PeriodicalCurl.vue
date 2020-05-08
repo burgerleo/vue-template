@@ -9,7 +9,7 @@
                                 v-flex.pt-0.pb-0(xs12 sm12 md12)
                                     v-layout.px-2(row)
                                         v-flex.pt-0.pb-0(xs12 sm3 md3)
-                                            v-text-field(v-model="second" label="Second" type="number" min="10" max="100")
+                                            v-text-field(v-model="second" label="Second" type="number" min="5" max="100")
                                     v-radio-group.pt-0.pb-0(v-model="area" :mondatory="true")
                                         v-layout.px-2(row)
                                             v-flex.pt-5.pb-0(xs12 sm3 md1)
@@ -81,7 +81,7 @@
                                         code.bash
                                     v-card-text.font-weight-bold.pb-0 Response Code & Download Time:
                                     pre(v-highlightjs="responseCodeAndTimeTotal")
-                                        code.java.display-1.font-weight-black
+                                        code.python.headline.font-weight-black
 
                                     v-card-text.font-weight-bold Header:
                                         v-expansion-panels
@@ -128,6 +128,8 @@
         headers: [],
         area: 0,
         timestamp:'',
+        date:'',
+        time:'',
         responseCodeAndTimeTotal:'',
         domainList:[],
         hostIpList: [],
@@ -138,7 +140,7 @@
         twEdge:[],
         edge:'',
         testType : 0,
-        second: 10,
+        second: 5,
         pollingList:[],
         tabItems: [],
         tab: null,
@@ -195,24 +197,26 @@
           .dispatch("curl/getCurlInfo", data)
           .then(
             function(result) {
-              const time = new Date();
-              this.timestamp = time;
+              const time = new Date().toString();
+              const timeArray = time.split(" ");
+              this.date = timeArray[0] +' '+ timeArray[1]+ ' ' + timeArray[2] +' '+ timeArray[3];
+              this.time = timeArray[4] +' '+ timeArray[5];
               this.headerData = result.data.header;
               this.bodyData = result.data.body;
               this.commandData = result.data.command;
               this.responseCode = result.data.responseCode;
               this.timeTotal = result.data.timeTotal
               this.responseCodeAndTimeTotal = (this.responseCodeAndTimeTotal === '')
-                ? this.timestamp
-                + ' '
+                ? this.date+ '   ' + this.time
+                + '   '
                 + result.data.responseCode
-                + ' '
+                + '   '
                 + result.data.timeTotal
                 : this.responseCodeAndTimeTotal
-                + "\r\n " + this.timestamp
-                + ' '
+                + "\r\n " + this.date+ '   ' + this.time
+                + '   '
                 + result.data.responseCode
-                + ' '
+                + '   '
                 + result.data.timeTotal
               this.$store.dispatch("global/finishLoading");
             }.bind(this)
