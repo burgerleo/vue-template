@@ -5,9 +5,9 @@ export default {
         denseTable: true,
         snackbar: {
             text: "",
-              color: "success",
-              status: false,
-              timeout: 6000
+            color: "success",
+            status: false,
+            timeout: 6000
         },
         isLoading: false
     },
