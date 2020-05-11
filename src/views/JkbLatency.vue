@@ -167,7 +167,7 @@ export default {
         },
         getConfig() {
             this.stopTimer()
-            this.$store.dispatch('global/startLoading')
+            // this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('jkb/getConfig', { page: this.pageName })
                 .then(
@@ -181,7 +181,7 @@ export default {
 
                         this.getAllLatency()
 
-                        this.$store.dispatch('global/finishLoading')
+                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
                 .catch(
@@ -190,7 +190,7 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        this.$store.dispatch('global/finishLoading')
+                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
         },
@@ -244,7 +244,7 @@ export default {
 
             data.page = this.pageName
 
-            this.$store.dispatch('global/startLoading')
+            // this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('jkb/batchSetConfig', data)
                 .then(
@@ -253,7 +253,7 @@ export default {
                             'global/showSnackbarSuccess',
                             'Success!'
                         )
-                        this.$store.dispatch('global/finishLoading')
+                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
                 .catch(
@@ -262,7 +262,7 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        this.$store.dispatch('global/finishLoading')
+                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
         },
@@ -322,7 +322,7 @@ export default {
             }
 
             this.loading = true
-            this.$store.dispatch('global/startLoading')
+            // this.$store.dispatch('global/startLoading')
             var endTime = new Date()
 
             this.$store
@@ -351,7 +351,7 @@ export default {
                             this.typeList.indexOf(type),
                             result.data.bgpIoMapping
                         )
-                        this.$store.dispatch('global/finishLoading')
+                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
                 .catch(
@@ -360,7 +360,7 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        this.$store.dispatch('global/finishLoading')
+                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
         },
