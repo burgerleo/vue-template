@@ -27,6 +27,11 @@
                                     v-text-field(v-model="siteExecuted" label="From" readonly)
                             v-layout.px-2(style='margin-top: -0.5%; margin-bottom: -0.5%;' v-show="cliExecuted != false")
                                 v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
+                                    v-card-text.font-weight-bold.pb-0.pl-1 A Records:
+                                    pre(v-highlightjs="digResultARecords")
+                                        code.java.display-0.font-weight-black
+                            v-layout.px-2(style='margin-top: -0.5%; margin-bottom: -0.5%;' v-show="cliExecuted != false")
+                                v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Terminal:
                                     pre(v-highlightjs="digResult")
                                         code.java.display-0.font-weight-black
@@ -61,6 +66,7 @@ export default {
             siteIPExecuted: '',
             cliExecuted: false,
             digResult: '',
+            digResultARecords: '',
         }
     },
     computed: {
@@ -115,6 +121,7 @@ export default {
                 .then(
                     function(result) {
                         this.digResult = result.data.result
+                        this.digResultARecords = JSON.stringify(result.data.a_record_ip)
                         this.cliExecuted = this.cliExam
                         this.siteNameExecuted = this.siteSelectedName
                         this.siteIPExecuted = this.siteSelectedIP
