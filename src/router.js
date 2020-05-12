@@ -18,7 +18,6 @@ import JkbPacketLoss from "./views/JkbPacketLoss.vue";
 import JkbLatency from "./views/JkbLatency.vue";
 import CrtKey from "./views/CrtKey.vue";
 import DomainManage from "./views/DomainManage.vue";
-
 Vue.use(Router);
 
 export default new Router({
@@ -129,6 +128,11 @@ export default new Router({
                     component: DomainManage
                 }
             ]
+        },
+        {
+            name: "Origin Server Periodical Testing",
+            path: "/new-periodical-curl",
+            component: PeriodicalCurl
         }
     ]
 });

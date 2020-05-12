@@ -14,12 +14,12 @@
         v-snackbar(v-model="$store.state.global.snackbar.status" :color="$store.state.global.snackbar.color" :timeout="$store.state.global.snackbar.timeout" top ) {{$store.state.global.snackbar.text}}
             v-btn(dark text @click="$store.dispatch('global/closeSnackbar')") CLOSE
         v-content
-            router-view   
+            router-view
         v-footer(absolute :inset="inset" app color="primary")
             span.white--text COPYRIGHT © {{year}} Hiero7. ALL RIGHTS RESERVED.
             v-spacer
             span.white--text v {{version}}
-            span.white--text ({{env}}) 
+            span.white--text ({{env}})
                      
 </template>
 <script>

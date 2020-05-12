@@ -25,6 +25,15 @@ export default {
         .catch(function(error) {
           return Promise.reject(error.response.data);
         });
-    }
+    },
+    getRecursive: (context, data) => {
+      const baseUrl = process.env.VUE_APP_RECURSIVE_API_URL;
+      return axios.get(baseUrl+ '?url='+ data.url).then(function (response) {
+        return Promise.resolve(response.data);
+      })
+        .catch(function (error) {
+          return Promise.reject(error);
+        });
+    },
   }
 }

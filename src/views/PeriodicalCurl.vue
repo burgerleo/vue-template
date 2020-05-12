@@ -1,5 +1,6 @@
 <template lang="pug">
     v-container#sample-layout(grid-list-lg)
+        Loading
         v-layout(wrap column)
             v-flex(xs12)
                 v-card
@@ -10,17 +11,14 @@
                                     v-layout.px-2(row)
                                         v-flex.pt-0.pb-0(xs12 sm3 md3)
                                             v-text-field(v-model="second" label="Second" type="number" min="5" max="100")
-                                    v-radio-group.pt-0.pb-0(v-model="area" :mondatory="true")
-                                        v-layout.px-2(row)
-                                            v-flex.pt-5.pb-0(xs12 sm3 md1)
-                                                v-radio(label="TW" :value="0")
-                                            v-flex.pt-0.pb-0(xs12 sm3 md3)
-                                                v-select(:disabled="area==1" v-model="edge" :items="twEdge" label="TW Edge" name="tw_edge" item-text="text" item-value="id")
-                                        v-layout.px-2(row)
-                                            v-flex.pt-5.pb-0(xs12 sm3 md1)
-                                                v-radio(label="HK" :value="1")
-                                            v-flex.pt-0.pb-0(xs12 sm3 md3)
-                                                v-select(:disabled="area==0" v-model="edge" :items="hkEdge" label="HK Edge" name="hk_edge" item-text="text" item-value="id")
+                                                v-layout.ml-auto.mr-auto(wrap v-if="testType==0")
+                                    v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm12 md12)
+                                        v-radio-group.pt-0.pb-0.mt-0.mb-0(v-model="area" :mondatory="true" row)
+                                            v-radio(label="TW" :value="0")
+                                            v-radio(label="HK" :value="1")
+                                            v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm6 md6)
+                                                v-select(v-if="area==0" :disabled="area==1" v-model="edge" :items="twEdge" label="TW Edge" name="tw_edge" item-text="text" item-value="id")
+                                                v-select(v-if="area==1" :disabled="area==0" v-model="edge" :items="hkEdge" label="HK Edge" name="hk_edge" item-text="text" item-value="id")
                                 v-flex.pt-0.pb-0(xs12 sm6 md4)
                                     v-select(v-model="method" :items="selectMethod" label="HTTP Method" item-text="name" item-value="id" :rules="[rules.required]" @change="defaultParameters")
                                 v-flex.pt-0.pb-0(xs12 sm6 md4)
@@ -102,7 +100,11 @@
 </template>
 <script>
   import textFieldRules from "../utils/textFieldRules";
+  import Loading from '../components/Loading'
   export default {
+    components: {
+      Loading
+    },
     mixins: [textFieldRules],
     data() {
       return {

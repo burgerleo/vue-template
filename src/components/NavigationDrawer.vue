@@ -59,11 +59,6 @@ export default {
                             router: '/curl'
                         },
                         {
-                            title: 'Origin Server Periodical Testing',
-                            icon: 'mdi-message-draw',
-                            router: '/periodical-curl'
-                        },
-                        {
                             title: 'Ping',
                             icon: 'mdi-pin',
                             router: '/ping'
