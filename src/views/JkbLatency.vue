@@ -82,7 +82,7 @@ export default {
                 TW: {},
                 PH: {}
             },
-            ispList: ['All China'],
+            ispList: this.$store.getters['isp/ispList'](),
             isp: 0,
             loading: true,
             min: 0,
@@ -131,14 +131,7 @@ export default {
                 .dispatch('isp/getISPList')
                 .then(
                     function(result) {
-                        var isp = ['All China']
-                        var data = result.data
-
-                        for (let i = 0; i < 3; i++) {
-                            isp[data[i]['id']] = data[i]['name']
-                        }
-
-                        this.ispList = isp
+                        this.ispList = this.$store.getters['isp/ispList']()
                     }.bind(this)
                 )
                 .catch(
@@ -279,7 +272,6 @@ export default {
             this.startTimer()
 
             for (var type of this.typeList) {
-                // console.log(type)
                 this.getLatency(type)
             }
         },
