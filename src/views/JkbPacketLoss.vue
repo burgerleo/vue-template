@@ -30,7 +30,7 @@
         v-row
             v-col.ml-0.pa-0.pl-6.pb-3(cols="8")
                 NxnCirclesTable(title="HK" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
-            v-col.ml-0.pa-0.pb-2.pl-3(cols="4")
+            v-col.ml-0.pa-0.pb-2.pl-3.pr-6(cols="4")
                 NxnCirclesTable(title="HK" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
                 //- PH 是舊的格式
                 NxnCirclesTable.pt-6(title="PH" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
@@ -38,9 +38,8 @@
         v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
                 NxnCirclesTable(title="TW" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
-            v-col.ml-0.pa-0.pl-2(cols="6")
+            v-col.ml-0.pa-0.pl-2.pr-6(cols="6")
                 NxnCirclesTable(title="TW" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
-
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
                 v-card-title.title Setting
@@ -59,11 +58,12 @@
 
 <script>
 import textFieldRules from '../utils/textFieldRules'
+import dateFormat from '../utils/dateFormat'
 import NxnCirclesTable from '../components/NxnCirclesTable'
 
 export default {
     name: 'JKB-Packet-Loss',
-    mixins: [textFieldRules],
+    mixins: [textFieldRules, dateFormat],
 
     components: {
         NxnCirclesTable
@@ -75,28 +75,14 @@ export default {
                 TW: [],
                 PH: []
             },
-            bgpList: {
-                HK: [],
-                TW: [],
-                PH: []
-            },
-            bgpList2: {
-                HK: {
-                    C: [],
-                    G: []
-                },
-                TW: {
-                    C: [],
-                    G: []
-                },
-                PH: []
-            },
+            bgpList: this.$store.getters['dummy/bgpList'](),
+            bgpList2: this.$store.getters['dummy/bgpListPartition'](),
             tableData: {
                 HK: {},
                 TW: {},
                 PH: {}
             },
-            ispList: ['All China'],
+            ispList: this.$store.getters['isp/ispList'](),
             isp: 0,
             loading: true,
             min: 95,
@@ -131,8 +117,7 @@ export default {
             },
             copyConfigs: {},
             jkbAPIStatus: true, // true 表示正常
-            lastDataTime: null,
-            picker: new Date().toISOString().substr(0, 10),
+            lastDataTime: null
         }
     },
     watch: {
@@ -146,14 +131,7 @@ export default {
                 .dispatch('isp/getISPList')
                 .then(
                     function(result) {
-                        var isp = ['All China']
-                        var data = result.data
-
-                        for (let i = 0; i < 3; i++) {
-                            isp[data[i]['id']] = data[i]['name']
-                        }
-
-                        this.ispList = isp
+                        this.ispList = this.$store.getters['isp/ispList']()
                     }.bind(this)
                 )
                 .catch(
@@ -222,13 +200,13 @@ export default {
 
             this.setConfigByRankbar()
 
-            this.saveBatchSetConfig()
+            this.batchSaveConfig()
 
             this.copyConfigs = Object.assign({}, this.configs)
 
             this.closeDialog()
         },
-        saveBatchSetConfig() {
+        batchSaveConfig() {
             var configs = {}
             var data = {}
 
@@ -338,14 +316,8 @@ export default {
 
                         var lastDataTime = new Date(result.data.lastDataTime)
 
-                        var hours =
-                            lastDataTime.getHours() < 10
-                                ? '0' + lastDataTime.getHours()
-                                : lastDataTime.getHours()
-                        var minutes =
-                            lastDataTime.getMinutes() < 10
-                                ? '0' + lastDataTime.getMinutes()
-                                : lastDataTime.getMinutes()
+                        var hours = this.getDateHour(lastDataTime)
+                        var minutes = this.getDateMinute(lastDataTime)
                         this.lastDataTime = hours + ':' + minutes
 
                         this.transforToTableData(
@@ -421,48 +393,12 @@ export default {
             })
 
             this.tableData = tableData
-            this.bgpList = bgpList
             this.headers = headerList
+
+            this.$store.dispatch('dummy/bgpListReorder', bgpList)
+            this.bgpList = this.$store.getters['dummy/bgpList']()
+            this.bgpList2 = this.$store.getters['dummy/bgpListPartition']()
             this.loading = false
-            this.itemTransform()
-        },
-        itemTransform() {
-            var items = this.bgpList
-
-            var newItems = {}
-
-            const itemsKeyList = Object.keys(items)
-
-            itemsKeyList.map(function(sites) {
-                items[sites].map(function(bgp) {
-                    var type = bgp.substr(-1)
-
-                    if (!newItems[sites]) {
-                        newItems[sites] = {}
-                    }
-
-                    if (!newItems[sites][type]) {
-                        newItems[sites][type] = []
-                    }
-
-                    newItems[sites][type].push(bgp)
-                })
-            })
-
-            itemsKeyList.map(function(sites) {
-                if (!newItems[sites]) {
-                    return
-                }
-                if (newItems[sites]['C'] && newItems[sites]['G']) {
-                    items[sites] = [].concat(
-                        newItems[sites]['C'],
-                        newItems[sites]['G']
-                    )
-                }
-            })
-
-            this.bgpList = items
-            this.bgpList2 = newItems
         },
         getSource(inLine, outLine, type) {
             if (!this.tableData[inLine][outLine]) {
@@ -518,31 +454,6 @@ export default {
         setPageName() {
             const path = this.$route
             this.pageName = path.name
-        },
-        dateFormat(date) {
-            var year = date.getFullYear()
-            /*
-             *  在日期格式中，月份是從 0 開始的，因此要加 0
-             *  使用三元表達式在小於 10 的前面加 0，以達到格式統一 如 09:11:05
-             */
-            var month =
-                date.getMonth() + 1 < 10
-                    ? '0' + (date.getMonth() + 1)
-                    : date.getMonth() + 1
-            var day =
-                date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-            var hours =
-                date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
-            var minutes =
-                date.getMinutes() < 10
-                    ? '0' + date.getMinutes()
-                    : date.getMinutes()
-            var seconds =
-                date.getSeconds() < 10
-                    ? '0' + date.getSeconds()
-                    : date.getSeconds()
-            // 拼接
-            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes
         }
     },
     created() {},
