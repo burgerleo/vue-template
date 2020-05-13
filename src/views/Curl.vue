@@ -99,7 +99,50 @@
                                                         v-expansion-panel-content
                                                             pre(v-highlightjs="bodyData")
                                                                 code.bash
-                        v-divider
+
+                                        v-card-text.font-weight-bold Requests:
+                                            v-flex(xs12 sm12 md12)
+                                                v-card
+                                                    v-data-table.elevation-1(:headers="tableHeaders" :items="desserts" :search="searchText" :dense="true" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event" height="300" fixed-header)
+                                                        template(v-slot:header="{item,index}")
+                                                            tr
+                                                                td
+                                                                td
+                                                                    v-text-field.mt-0.pt-0(v-model="searchList.file" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'file')")
+                                                                td
+                                                                    v-text-field.mt-0.pt-0(v-model="searchList.host" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'host')")
+                                                                td
+                                                                    v-text-field.mt-0.pt-0(v-model="searchList.ip"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'ip')")
+                                                                td
+                                                                    v-text-field.mt-0.pt-0(v-model="searchList.status"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'status')")
+                                                                td
+                                                                    v-text-field.mt-0.pt-0(v-model="searchList.dnsLookup"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'dnsLookup')")
+                                                                td
+                                                                    v-text-field.mt-0.pt-0(v-model="searchList.tcpConnection"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'tcpConnection')")
+                                                                td
+                                                                    v-text-field.mt-0.pt-0(v-model="searchList.total"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'total')")
+                                                                td
+                                                                    v-text-field.mt-0.pt-0(v-model="searchList.size"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'size')")
+
+                                                        template(v-slot:item="{item,index}")
+                                                            tr
+                                                                td {{rowIndex(index)}}
+                                                                td {{item.file.slice(-15)}}
+                                                                td {{item.host}}
+                                                                td {{item.ip}}
+                                                                td {{item.status}}
+                                                                td {{item.dnsLookup}}
+                                                                td {{item.tcpConnection}}
+                                                                td {{item.total}}
+                                                                td {{item.size}}
+                                                    v-row.align-center
+                                                        v-col.pa-5.pd-0(cols="12" sm="4")
+                                                            v-select(:value="itemsPerPage" :items="itemsPerPageList" label="Items per page"  @change="itemsPerPage = parseInt($event, 10)")
+                                                        v-col.pa-5.pd-0(cols="12" sm="3")
+                                                        v-col.pa-5.pd-0(cols="12" sm="4")
+                                                            v-pagination(v-model="page" :length="pageCount")
+                                                        v-col.pa-5.pd-0(cols="12" sm="1")
+
 </template>
 <script>
   import textFieldRules from "../utils/textFieldRules";
@@ -144,7 +187,75 @@
         tabItems: [],
         tab: null,
         newWin:'',
-        newTab:''
+        newTab:'',
+        page: 1,
+        pageCount: 0,
+        itemsPerPage: 50,
+        itemsPerPageList: [10, 25, 50, 100],
+        searchText: '',
+        tableHeaders: [
+          {
+            text: '#',
+            align: 'center',
+            sortable: false,
+            width: '50px',
+            value: 'index'
+          },
+          {
+            text: 'Path/File',
+            align: 'left',
+            sortable: true,
+            value: 'file'
+          },
+          {
+            text: 'Host',
+            align: 'left',
+            sortable: true,
+            value: 'host'
+          },
+          {
+            text: 'IP Address',
+            align: 'left',
+            sortable: true,
+            value: 'ip'
+          },
+          {
+            text: 'Status Code',
+            align: 'left',
+            sortable: true,
+            value: 'status'
+          },
+          {
+            text: 'Dns Resolution Time (ms)',
+            align: 'left',
+            sortable: true,
+            value: 'area'
+          },
+          {
+            text: 'Connect Time (ms)',
+            align: 'left',
+            sortable: true,
+            // width: '10px',
+            value: 'edge'
+          },
+          {
+            text: 'Download time (ms)',
+            align: 'left',
+            sortable: false,
+            width: '100px',
+            value: 'actions'
+          },
+          {
+            text: 'Size',
+            align: 'left',
+            sortable: false,
+            width: '100px',
+            value: 'actions'
+          }
+        ],
+        desserts: [],
+        searchList: {},
+        copyDesserts: null,
       };
     },
     watch:{
@@ -198,6 +309,7 @@
           }
             this.$store.dispatch("global/startLoading");
             this.getInfo(data)
+            this.getRecursiveDate()
         }
       },
       getInfo: function(data) {
@@ -352,11 +464,16 @@
           )
       },
       getRecursiveDate: function () {
+        const data = {
+          "url" : this.url
+        }
         this.$store
-          .dispatch('curl/getRecursive')
+          .dispatch('curl/getRecursive', data)
           .then(
             function(result) {
-                console.log(result)
+              this.desserts = result.Response
+              this.copyDesserts = result.Response
+                console.log(result.Response)
             }.bind(this)
           )
           .catch(
@@ -370,6 +487,56 @@
       },
       newTabWindow: function () {
         this.newTab = [];
+      },
+      rowIndex: function(index) {
+        // 計算 每一列 Index 顯示 id
+        return (this.page - 1) * this.itemsPerPage + index + 1
+      },
+      filterOnlyColumn(value, column) {
+        // 根據 [欄位] 輸入的 [文字]，進行 Filter
+
+        var searchResult
+
+        if (!value) {
+          delete this.searchList[column]
+        }
+
+        // 備份 and 還原資料
+        this.backupAndRcoverData()
+
+        // 先將要搜尋的文字轉成大寫
+        for (var searchKey in this.searchList) {
+          var searchString = this.searchList[searchKey]
+            .toString()
+            .toLocaleUpperCase()
+
+          searchResult = this.desserts.filter(function(item) {
+            if (item[searchKey]) {
+              return (
+                item[searchKey]
+                  .toLocaleUpperCase()
+                  .indexOf(searchString) !== -1
+              )
+            }
+            return false
+          })
+
+          this.desserts = searchResult
+        }
+      },
+      backupAndRcoverData() {
+        // 備份與還原
+        // 當備份無資料時會進行第一次備份
+        // 之後都是使用還原
+        if (this.copyDesserts == null) {
+          // 備份資料
+          var list = this.desserts
+          this.copyDesserts = list
+        } else {
+          // 還原資料
+          var list = this.copyDesserts
+          this.desserts = list
+        }
       }
     },
     created() {
