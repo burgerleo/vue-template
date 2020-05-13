@@ -248,9 +248,10 @@
     },
     watch:{
       url: function(value) {
-        this.originalDataFormat(value)
-        if (value !== '' && value.match(/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/)){
-          this.getDomainList(value)
+
+        if (value !== '' && value.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.%]+$/gm)){
+           const domain = this.originalDataFormat(value)
+          this.getDomainList(domain)
         }
       },
       area: function (value) {
@@ -331,11 +332,17 @@
         }
       },
       originalDataFormat: function(value) {
-        const protomatch = /^(https?):\/\//
-        this.hostName = value.replace(protomatch, '');
-        if(protomatch && this.url != ''){
-          this.port = value.indexOf('https') ? 80 : 443
+        let url = '';
+        if(/(http(s?)):\/\//i.test(value)) {
+          url = value;
+        }else{
+          url= 'http://' + value;
         }
+
+        url = new URL(url);
+        this.hostName = url.host;
+        this.port = url.href.indexOf('https') ? 80 : 443
+        return url.host;
       },
       defaultParameters : function() {
         if(this.postInput == 'Parameters' || this.selectMethod=='GET'){
