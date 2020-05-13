@@ -103,31 +103,17 @@
                                         v-card-text.font-weight-bold Requests:
                                             v-flex(xs12 sm12 md12)
                                                 v-card
-                                                    v-data-table.elevation-1(:headers="tableHeaders" :items="desserts" :search="searchText" :dense="true" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event" height="300" fixed-header)
+                                                    v-data-table.elevation-1(:headers="tableHeaders" :items="desserts" :dense="true" :loading="loading" disable-pagination hide-default-footer  height="300" fixed-header)
                                                         template(v-slot:header="{item,index}")
-                                                            tr
-                                                                td
-                                                                td
-                                                                    v-text-field.mt-0.pt-0(v-model="searchList.file" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'file')")
-                                                                td
-                                                                    v-text-field.mt-0.pt-0(v-model="searchList.host" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'host')")
-                                                                td
-                                                                    v-text-field.mt-0.pt-0(v-model="searchList.ip"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'ip')")
-                                                                td
-                                                                    v-text-field.mt-0.pt-0(v-model="searchList.status"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'status')")
-                                                                td
-                                                                    v-text-field.mt-0.pt-0(v-model="searchList.dnsLookup"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'dnsLookup')")
-                                                                td
-                                                                    v-text-field.mt-0.pt-0(v-model="searchList.tcpConnection"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'tcpConnection')")
-                                                                td
-                                                                    v-text-field.mt-0.pt-0(v-model="searchList.total"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'total')")
-                                                                td
-                                                                    v-text-field.mt-0.pt-0(v-model="searchList.size"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'size')")
 
                                                         template(v-slot:item="{item,index}")
                                                             tr
                                                                 td {{rowIndex(index)}}
-                                                                td {{item.file.slice(-15)}}
+                                                                td
+                                                                    span &nbsp;
+                                                                    a(:href="item.url" target="_blank")
+                                                                        span(v-if="item.file==''") {{item.url}}
+                                                                        span(v-if="item.file!=''") {{item.file.slice(-45)}}
                                                                 td {{item.host}}
                                                                 td {{item.ip}}
                                                                 td {{item.status}}
@@ -135,13 +121,6 @@
                                                                 td {{item.tcpConnection}}
                                                                 td {{item.total}}
                                                                 td {{item.size}}
-                                                    v-row.align-center
-                                                        v-col.pa-5.pd-0(cols="12" sm="4")
-                                                            v-select(:value="itemsPerPage" :items="itemsPerPageList" label="Items per page"  @change="itemsPerPage = parseInt($event, 10)")
-                                                        v-col.pa-5.pd-0(cols="12" sm="3")
-                                                        v-col.pa-5.pd-0(cols="12" sm="4")
-                                                            v-pagination(v-model="page" :length="pageCount")
-                                                        v-col.pa-5.pd-0(cols="12" sm="1")
 
 </template>
 <script>
@@ -191,8 +170,8 @@
         page: 1,
         pageCount: 0,
         itemsPerPage: 50,
-        itemsPerPageList: [10, 25, 50, 100],
         searchText: '',
+        loading:false,
         tableHeaders: [
           {
             text: '#',
@@ -205,52 +184,57 @@
             text: 'Path/File',
             align: 'left',
             sortable: true,
-            value: 'file'
+            value: 'file',
+            width: '300px',
           },
           {
             text: 'Host',
             align: 'left',
             sortable: true,
-            value: 'host'
+            value: 'host',
+            width: '100px',
           },
           {
             text: 'IP Address',
             align: 'left',
             sortable: true,
-            value: 'ip'
+            value: 'ip',
+            width: '150px',
           },
           {
             text: 'Status Code',
             align: 'left',
             sortable: true,
-            value: 'status'
+            value: 'status',
+            width: '150px',
           },
           {
             text: 'Dns Resolution Time (ms)',
             align: 'left',
             sortable: true,
-            value: 'area'
+            value: 'dnsLookup',
+            width: '200px',
           },
           {
             text: 'Connect Time (ms)',
             align: 'left',
             sortable: true,
-            // width: '10px',
-            value: 'edge'
+            width: '150px',
+            value: 'tcpConnection'
           },
           {
             text: 'Download time (ms)',
             align: 'left',
-            sortable: false,
-            width: '100px',
-            value: 'actions'
+            sortable: true,
+            width: '150px',
+            value: 'total'
           },
           {
             text: 'Size',
             align: 'left',
-            sortable: false,
+            sortable: true,
             width: '100px',
-            value: 'actions'
+            value: 'size'
           }
         ],
         desserts: [],
@@ -464,21 +448,31 @@
           )
       },
       getRecursiveDate: function () {
+        const self = this;
         const data = {
           "url" : this.url
         }
+        this.loading= true;
         this.$store
           .dispatch('curl/getRecursive', data)
           .then(
             function(result) {
               this.desserts = result.Response
               this.copyDesserts = result.Response
-                console.log(result.Response)
+              console.log(result.Response)
+              result.Response.forEach(function(item) {
+                item.size = self.bytesToSize(item.size)
+              })
+
+              this.loading= false;
             }.bind(this)
           )
           .catch(
             function(error) {
-                console.log(error)
+              this.$store.dispatch(
+                'global/showSnackbarError ',
+                error.message
+              )
             }.bind(this)
           )
       },
@@ -537,6 +531,12 @@
           var list = this.copyDesserts
           this.desserts = list
         }
+      },
+      bytesToSize(bytes){
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (bytes == 0 || bytes == null) return '0 Byte';
+        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
       }
     },
     created() {
