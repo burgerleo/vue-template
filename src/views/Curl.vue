@@ -501,52 +501,6 @@
         // 計算 每一列 Index 顯示 id
         return (this.page - 1) * this.itemsPerPage + index + 1
       },
-      filterOnlyColumn(value, column) {
-        // 根據 [欄位] 輸入的 [文字]，進行 Filter
-
-        var searchResult
-
-        if (!value) {
-          delete this.searchList[column]
-        }
-
-        // 備份 and 還原資料
-        this.backupAndRcoverData()
-
-        // 先將要搜尋的文字轉成大寫
-        for (var searchKey in this.searchList) {
-          var searchString = this.searchList[searchKey]
-            .toString()
-            .toLocaleUpperCase()
-
-          searchResult = this.desserts.filter(function(item) {
-            if (item[searchKey]) {
-              return (
-                item[searchKey]
-                  .toLocaleUpperCase()
-                  .indexOf(searchString) !== -1
-              )
-            }
-            return false
-          })
-
-          this.desserts = searchResult
-        }
-      },
-      backupAndRcoverData() {
-        // 備份與還原
-        // 當備份無資料時會進行第一次備份
-        // 之後都是使用還原
-        if (this.copyDesserts == null) {
-          // 備份資料
-          var list = this.desserts
-          this.copyDesserts = list
-        } else {
-          // 還原資料
-          var list = this.copyDesserts
-          this.desserts = list
-        }
-      },
       bytesToSize(bytes){
         var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
         if (bytes == 0 || bytes == null) return '0 Byte';
