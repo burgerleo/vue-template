@@ -400,7 +400,6 @@
           .dispatch('edge/getCustomerInfo')
           .then(
             function(result) {
-              // console.log(result)
               this.customerList = result.data
             }.bind(this)
           )
@@ -418,7 +417,6 @@
           .dispatch('edge/getInfo')
           .then(
             function(result) {
-              // console.log(this.customerList)
               var arr = []
               this.customerList.forEach((item) => {
                 arr[item.id] = item.name
@@ -454,13 +452,12 @@
       getRecursiveDate: function () {
         const self = this;
         let url = '';
+        this.desserts = [];
         if(/(http(s?)):\/\//i.test(this.url)) {
           url = this.url;
         }else{
-          console.log('ddd')
           url =  (this.port == 443)? 'https://' + this.url : 'http://' + this.url;
         }
-        console.log(url)
         const data = {
           "url" : url
         }
@@ -471,7 +468,6 @@
             function(result) {
               this.desserts = result.Response
               this.copyDesserts = result.Response
-              console.log(result.Response)
               result.Response.forEach(function(item) {
                 item.size = self.bytesToSize(item.size)
               })
