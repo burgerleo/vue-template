@@ -453,8 +453,16 @@
       },
       getRecursiveDate: function () {
         const self = this;
+        let url = '';
+        if(/(http(s?)):\/\//i.test(this.url)) {
+          url = this.url;
+        }else{
+          console.log('ddd')
+          url =  (this.port == 443)? 'https://' + this.url : 'http://' + this.url;
+        }
+        console.log(url)
         const data = {
-          "url" : this.url
+          "url" : url
         }
         this.loading= true;
         this.$store
