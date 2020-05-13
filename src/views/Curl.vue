@@ -248,10 +248,11 @@
     },
     watch:{
       url: function(value) {
-
         if (value !== '' && value.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.%]+$/gm)){
            const domain = this.originalDataFormat(value)
           this.getDomainList(domain)
+        }else{
+          this.hostName = this.url
         }
       },
       area: function (value) {
