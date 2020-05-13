@@ -110,10 +110,14 @@
                                                             tr
                                                                 td {{rowIndex(index)}}
                                                                 td
-                                                                    span &nbsp;
-                                                                    a(:href="item.url" target="_blank")
-                                                                        span(v-if="item.file==''") {{item.url}}
-                                                                        span(v-if="item.file!=''") {{item.file.slice(-45)}}
+                                                                    v-tooltip(top)
+                                                                        template(v-slot:activator="{ on }")
+                                                                            span &nbsp;
+                                                                            a(:href="item.url" target="_blank" v-on="on")
+                                                                                span(v-if="item.file==''") {{item.url}}
+                                                                                span(v-else-if="item.file==item.file.slice(-40)") {{item.file}}
+                                                                                span(v-else) {{'....' + item.file.slice(-40)}}
+                                                                        span {{item.url}}
                                                                 td {{item.host}}
                                                                 td {{item.ip}}
                                                                 td {{item.status}}
