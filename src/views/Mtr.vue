@@ -5,11 +5,28 @@
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-layout.px-2
-                                v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
+                            v-layout(style='margin-top: -0.5%;')
+                                v-flex(xs3 sm3 md3)
                                     v-text-field(v-model="destinationIP" label="Destination IP" type="ip" name="ip" :rules="[rules.required, rules.ip]")
-                                    v-text-field(v-model="sourceIP" label="Select Source IP as Below" type="ip" readonly :rules="[rules.required, rules.ip]")
-                            v-layout.px-2(style='margin-top: -1%;')
+                                v-flex(xs1 sm1 md1)
+                                    v-text-field(v-model="count" label="Count" type="number" min="1" max="100")
+                                v-flex(xs1 sm1 md1)
+                                    v-checkbox(v-model='aslookup' label='-z')
+                                    //- v-checkbox(v-model='aslookup' label='-z: display AS number')
+                                    v-checkbox(v-model='noDNS' label='-n')
+                                    //- v-checkbox(v-model='noDNS' label='-n: do not resove host names')
+                                v-flex(xs3 sm3 md3)
+                                    v-radio-group(v-model='protocal' row)
+                                        v-radio(label='ICMP.' value='icmp')
+                                        v-radio(label='TCP.' value='tcp')
+                                        v-radio(label='UDP.' value='udp')
+                                    v-text-field(v-show="protocal!='icmp'" v-model="port" label="Port" type="number" min="1" max="65535")
+                                v-flex(xs4 sm4 md4)
+                                    v-radio-group(v-model='siteSelected' row)
+                                        v-radio(label='Dummy' value='dummy')
+                                        v-radio(v-for="e in edgeList" :label="e.area + ':' + e.name" :value="e.area + ':' + e.name")
+                                    v-text-field(v-show="isInOutBoundShow" v-model="sourceIP" label="Select Source IP as Below" readonly)
+                            v-layout.px-2(v-show="isInOutBoundShow" style='margin-top: -1.5%;')
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     //- /* HEAD */
                                     v-row.flex-child
@@ -18,7 +35,7 @@
                                         v-col.d-flex(md='6' style='padding-left:12%;')
                                             | Outbound Circuit
                                     //- /* R1 R2 */
-                                    v-row.flex-child(style='margin-top: -1%;')
+                                    v-row.flex-child(style='margin-top: -2.5%; margin-bottom: -1.3%;')
                                         v-col(cols='1' md='1' dense)
                                         v-col.d-flex(md='2' style='padding-left:7%;')
                                             | R1
@@ -31,7 +48,7 @@
                                             | R2
                                     v-flex(v-for="s in sort")
                                         //- /* China */
-                                        v-row.flex-child(dense style='margin-bottom: -1.3%; margin-top: -0.5%;')
+                                        v-row.flex-child(dense style='margin-top: -1%; margin-bottom: -1.5%;')
                                             //- /* IN R1 China */
                                             v-col(cols='1' md='1' dense)
                                             v-col(cols='2' md='2')
@@ -67,7 +84,7 @@
                                             v-col(cols='1' md='1')
                                                 v-sheet.d-flex(style='padding-left: 35%;') {{s}}
                                         //- /* Global */
-                                        v-row.flex-child(dense style='margin-top: -1.3%;')
+                                        v-row.flex-child(dense style='margin-top: -1.7%; margin-bottom: -0.5%;')
                                             //- /* IN R1 Global */
                                             v-col(cols='1' md='1' dense)
                                             v-col(cols='2' md='2')
@@ -102,20 +119,6 @@
                                         //- /* divider */
                                         v-divider(dark)
                             v-layout(style='margin-top: -0.5%;')
-                                v-flex.pt-6.pl-4(xs1 sm1 md1) Options
-                                v-flex.pl-5(xs3 sm3 md3)
-                                    v-radio-group(v-model='protocal' row)
-                                        v-radio(label='ICMP.' value='icmp' )
-                                        v-radio(label='TCP.' value='tcp' )
-                                        v-radio(label='UDP.' value='udp' )
-                                    v-text-field(v-show="protocal!='icmp'" v-model="port" label="Port" type="number" min="1" max="65535")
-                                v-flex.pl-7(xs3 sm3 md3)
-                                    v-checkbox.mx-6(v-model='aslookup' label='-z: display AS number')
-                                    v-checkbox.mx-6(v-model='noDNS' label='-n: do not resove host names')
-                                v-flex.pl-7(xs3 sm3 md3)
-                                    v-text-field(v-model="count" label="Count" type="number" min="1" max="100")
-                                v-flex(xs2 sm2 md2)
-                            v-layout(style='margin-top: -0.5%;')
                                 v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
                                     v-text-field(v-model="cliExam" label="Exam CLI Before Sending" readonly)
                                 v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
@@ -144,9 +147,13 @@ export default {
             // from apis
             bgpList: [],
             dummyList: [],
+            edgeList: [],
 
             // Sort Inbound / Outbound Circuit
             sort: ['HK', 'TW', 'PH'],
+
+            // Selecte Dummy / Edge
+            siteSelected: 'dummy',
 
             // v-model: Inbound / Outbound Circuit
             inboundID: 0,
@@ -172,13 +179,30 @@ export default {
         sourceIP: function () {
             let dummy = this.dummyList.find(function (dm) { 
                 if (dm.in == this.inboundID && dm.out == this.outboundID) {
-                    this.site = dm.site
-                    // console.log({dm}, this.site)
+                    this.site = dm.site + ':DUMMY'
+
                     return dm.source_ip
                 }
             }.bind(this));
 
             return dummy ? dummy.source_ip : "No Source IP Mapped"
+        },
+
+        // isInOutBoundShow ？
+        isInOutBoundShow: function () {
+            if (this.siteSelected !== 'dummy') {
+                this.inboundID = 0
+                this.outboundID = 0
+                this.site = this.siteSelected
+                return false
+            }
+            this.site = ''
+            return true
+        },
+
+        // redirectBy: HK / TW / PH Appliaction
+        redirectBy: function () {
+            return this.site.substring(0,2)
         },
 
         // exam CLI before SEND
@@ -294,6 +318,33 @@ export default {
                     }.bind(this)
                 )
         },
+        getEdges: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+            .dispatch('edge/getInfo')
+            .then(
+                function(result) {
+                    this.edgeList = result.data.map((item) => {
+                        return {
+                            name: item.name,
+                            edge: item.edge,
+                            area: item.area
+                        }
+                    })
+
+                this.$store.dispatch('global/finishLoading')
+                }.bind(this)
+            )
+            .catch(
+                function(error) {
+                this.$store.dispatch(
+                    'global/showSnackbarError',
+                    error.message
+                )
+                this.$store.dispatch('global/finishLoading')
+                }.bind(this)
+            )
+        },
         getMtrInfo: function() {
             if (! this.validateForm()) {
                 return
@@ -301,9 +352,10 @@ export default {
             this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('mtr/getMtrInfo', {
-                    site: this.site,
+                    redirect_by: this.redirectBy,
+                    machine_ip: this.getMachineIp(),
                     destination_ip: this.destinationIP,
-                    address: this.sourceIP,
+                    address: this.sourceIP == "No Source IP Mapped" ? "" : this.sourceIP,
                     protocal: this.protocal,
                     aslookup: this.aslookup == true ? 1 : 0,
                     no_dns: this.noDNS == true ? 1 : 0,
@@ -332,6 +384,13 @@ export default {
                     }.bind(this)
                 )
         },
+        getMachineIp: function() {
+            let targetEdge = this.edgeList.find(function (v) {
+                // ex: HK:hk-ubuntu-test
+                return v.area +':'+ v.name == this.site
+            }.bind(this))
+            return targetEdge ? targetEdge.edge : ''
+        },
         validateForm: function() {
             return this.$refs.form.validate()
         }
@@ -341,6 +400,7 @@ export default {
 
         this.getBGP()
         this.getDummy()
+        this.getEdges()
 
         // 刪除 Inbound / Outbound Circuit 紅藍框下巴多餘 html
         document.querySelectorAll(".v-messages").forEach(e => e.parentNode.removeChild(e))
@@ -355,7 +415,7 @@ export default {
     background: #282c34
     word-break: break-all
 
-.d-flex
-    font-size: 1.5em
+// .d-flex
+//     font-size: 1.5em
 
 </style>

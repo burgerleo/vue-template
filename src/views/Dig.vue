@@ -5,19 +5,20 @@
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-layout.px-2
-                                v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
+                            v-layout
+                                v-flex(xs3 sm3 md3)
                                     v-text-field(v-model="destinationIP" label="Destination FQDN" type="domain" :rules="[rules.required, rules.domain]")
-                                    v-text-field(v-model="dnsServerIP" label="DNS Server IP" type="ip" :rules="[rules.required, rules.ip]")
-                            v-layout.px-2
+                                v-flex(xs3 sm3 md3)
+                                    v-text-field(v-model="dnsServerIP" label="DNS Server IP" type="ip" :rules="[rules.ip]")
+                            v-layout
                                 v-flex.pl-2(xs1 sm1 md1) Options
                                 v-flex(xs12 sm12 md12)
                                     v-radio-group(v-model='siteSelectedName' row)
-                                        v-radio(v-for="s in site" :label='s.name + ": " + s.ip' :value='s.name' )
+                                        v-radio(v-for="s in site" :label="s.name + ' (' + s.machine_ip + ')'" :value="s.name" )
                             v-layout(style='margin-top: -0.5%;')
                                 v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
                                     v-text-field(v-model="cliExam" label="Exam CLI Before Sending" readonly)
-                                v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
+                                v-flex.py-6.pt-0.pb-0(xs3 sm3 md3)
                                     v-text-field(v-model="siteSelected" label="From" readonly)
                             v-btn(color="primary" block @click="getDigInfo()") SEND
                             v-layout.pt-2(v-show="cliExecuted != false")
@@ -45,17 +46,20 @@ export default {
     mixins: [textFieldRules],
     data() {
         return {
+            // from apis
+            edgeList: [],
+
             site: [{
-                    name: 'HK',
-                    ip: '172.29.249.103',
+                    name: 'HK Dummy',
+                    machine_ip: '172.29.249.103',
                 },{
-                    name: 'TW',
-                    ip: '172.31.249.105',
+                    name: 'TW Dummy',
+                    machine_ip: '172.31.249.105',
                 },{
-                    name: 'PH',
-                    ip: '172.30.249.103',
+                    name: 'PH Dummy',
+                    machine_ip: '172.30.249.103',
                 }],
-            siteSelectedName: 'HK',
+            siteSelectedName: 'HK Dummy',
             siteSelectedIP: '',
 
             destinationIP: '',
@@ -70,6 +74,11 @@ export default {
         }
     },
     computed: {
+        // redirectBy: HK / TW / PH Appliaction
+        redirectBy: function () {
+            return this.siteSelectedName.substring(0,2)
+        },
+
         // exam CLI before SEND
         cliExam: function () {
             let cli = 'dig '
@@ -85,9 +94,9 @@ export default {
             if (this.siteSelectedName != "") {
                 this.siteSelectedIP = this.site.find(function (v) {
                     return v.name == this.siteSelectedName
-                }.bind(this)).ip
+                }.bind(this)).machine_ip
                 
-                return this.siteSelectedName + ': ' + this.siteSelectedIP
+                return this.siteSelectedName + ' (' + this.siteSelectedIP + ')'
             }
             return ''
         },
@@ -102,6 +111,32 @@ export default {
         
     },
     methods: {
+        getEdges: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+            .dispatch('edge/getInfo')
+            .then(
+                function(result) {
+                    this.site.push(...result.data.map((item) => {
+                        return {
+                            name: item.area + ' ' + item.name,
+                            machine_ip: item.edge,
+                        }
+                    }))
+
+                    this.$store.dispatch('global/finishLoading')
+                }.bind(this)
+            )
+            .catch(
+                function(error) {
+                this.$store.dispatch(
+                    'global/showSnackbarError',
+                    error.message
+                )
+                this.$store.dispatch('global/finishLoading')
+                }.bind(this)
+            )
+        },
         getDigInfo: function() {
             if (! this.validateForm()) {
                 this.$store.dispatch(
@@ -114,7 +149,10 @@ export default {
             this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('dig/getDigInfo', {
-                    site: this.siteSelectedName,
+                    // site: this.siteSelectedName,
+                    redirect_by: this.redirectBy,
+                    machine_ip: this.siteSelectedIP,
+
                     destination_ip: this.destinationIP,
                     dns_server: this.dnsServerIP,
                 })
@@ -148,6 +186,8 @@ export default {
     },
     mounted() {
         document.title = 'Dig';
+
+        this.getEdges()
 
         // 刪除 Inbound / Outbound Circuit 紅藍框下巴多餘 html
         document.querySelectorAll(".v-messages").forEach(e => e.parentNode.removeChild(e))

@@ -6,10 +6,15 @@
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
                             v-layout.px-2(style='margin-top: -1%;')
-                                v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
+                                v-flex(xs3 sm3 md3)
                                     v-text-field(v-model="destinationIP" label="Destination IP" type="ip" name="ip" :rules="[rules.required, rules.ip]")
-                                    v-text-field(v-model="sourceIP" label="Select Source IP as Below" readonly type="ip" :rules="[rules.required, rules.ip]")
-                            v-layout.px-2(style='margin-top: -1%;')
+                                v-flex(xs4 sm4 md4)
+                                    v-radio-group(v-model='siteSelected' row)
+                                        v-radio(label='Dummy' value='dummy')
+                                        v-radio(v-for="e in edgeList" :label="e.area + ':' + e.name" :value="e.area + ':' + e.name")
+                                v-flex(xs3 sm3 md3)
+                                    v-text-field(v-show="isInOutBoundShow" v-model="sourceIP" label="Select Source IP as Below" readonly type="ip" :rules="[rules.ip]")
+                            v-layout.px-2(v-show="isInOutBoundShow" style='margin-top: -1.5%;')
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     //- /* HEAD */
                                     v-row.flex-child
@@ -18,7 +23,7 @@
                                         v-col.d-flex(md='6' style='padding-left:12%;')
                                             | Outbound Circuit
                                     //- /* R1 R2 */
-                                    v-row.flex-child(style='margin-top: -1%;')
+                                    v-row.flex-child(style='margin-top: -2.5%; margin-bottom: -1.3%;')
                                         v-col(cols='1' md='1' dense)
                                         v-col.d-flex(md='2' style='padding-left:7%;')
                                             | R1
@@ -31,7 +36,7 @@
                                             | R2
                                     v-flex(v-for="s in sort")
                                         //- /* China */
-                                        v-row.flex-child(dense style='margin-bottom: -1.3%; margin-top: -0.5%;')
+                                        v-row.flex-child(dense style='margin-top: -1%; margin-bottom: -1.5%;')
                                             //- /* IN R1 China */
                                             v-col(cols='1' md='1' dense)
                                             v-col(cols='2' md='2')
@@ -67,7 +72,7 @@
                                             v-col(cols='1' md='1')
                                                 v-sheet.d-flex(style='padding-left: 35%;') {{s}}
                                         //- /* Global */
-                                        v-row.flex-child(dense style='margin-top: -1.3%;')
+                                        v-row.flex-child(dense style='margin-top: -1.7%; margin-bottom: -0.5%;')
                                             //- /* IN R1 Global */
                                             v-col(cols='1' md='1' dense)
                                             v-col(cols='2' md='2')
@@ -142,18 +147,21 @@ export default {
             // from apis
             bgpList: [],
             dummyList: [],
+            edgeList: [],
 
             // Sort Inbound / Outbound Circuit
             sort: ['HK', 'TW', 'PH'],
+
+            // Selecte Dummy / Edge
+            siteSelected: 'dummy',
 
             // v-model: Inbound / Outbound Circuit
             inboundID: 0,
             outboundID: 0,
 
+            // v-model: other input
             site: '',
             destinationIP: null,
-            // count: 10,
-            // interval: 1,
 
             // output result
             siteExecuted: '',
@@ -173,13 +181,30 @@ export default {
         sourceIP: function () {
             let dummy = this.dummyList.find(function (dm) { 
                 if (dm.in == this.inboundID && dm.out == this.outboundID) {
-                    this.site = dm.site
+                    this.site = dm.site + ':DUMMY'
                     // console.log({dm}, this.site)
                     return dm.source_ip
                 }
             }.bind(this));
 
             return dummy ? dummy.source_ip : "No Source IP Mapped"
+        },
+
+        // isInOutBoundShow ？
+        isInOutBoundShow: function () {
+            if (this.siteSelected !== 'dummy') {
+                this.inboundID = 0
+                this.outboundID = 0
+                this.site = this.siteSelected
+                return false
+            }
+            this.site = ''
+            return true
+        },
+
+        // redirectBy: HK / TW / PH Appliaction
+        redirectBy: function () {
+            return this.site.substring(0,2)
         },
 
         // exam CLI before SEND
@@ -306,6 +331,40 @@ export default {
                     }.bind(this)
                 )
         },
+        getEdges: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+            .dispatch('edge/getInfo')
+            .then(
+                function(result) {
+                    this.edgeList = result.data.map((item) => {
+                        return {
+                            name: item.name,
+                            edge: item.edge,
+                            area: item.area
+                        }
+                    })
+
+                this.$store.dispatch('global/finishLoading')
+                }.bind(this)
+            )
+            .catch(
+                function(error) {
+                this.$store.dispatch(
+                    'global/showSnackbarError',
+                    error.message
+                )
+                this.$store.dispatch('global/finishLoading')
+                }.bind(this)
+            )
+        },
+        getMachineIp: function() {
+            let targetEdge = this.edgeList.find(function (v) {
+                // ex: HK:hk-ubuntu-test
+                return v.area +':'+ v.name == this.site
+            }.bind(this))
+            return targetEdge ? targetEdge.edge : ''
+        },
 
         // WebSocket ++
         initWebSocket(){ //初始化 websocket
@@ -345,7 +404,10 @@ export default {
                 this.pingBody = [];
                 
                 let actions = {
-                    country: this.site,
+                    // country: this.site,
+                    redirect_by: this.redirectBy,
+                    machine_ip: this.getMachineIp(),
+                    
                     destination_ip: this.destinationIP,
                     interface_ip: this.sourceIP,
                     interval: 1,
@@ -397,6 +459,7 @@ export default {
         
         this.getBGP()
         this.getDummy()
+        this.getEdges()
 
         this.initWebSocket(); // 連線 websocket
 
@@ -416,6 +479,6 @@ export default {
     background: #282c34
     word-break: break-all
 
-.d-flex
-    font-size: 1.5em
+// .d-flex
+//     font-size: 1.5em
 </style>
