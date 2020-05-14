@@ -114,17 +114,19 @@
                                                                         template(v-slot:activator="{ on }")
                                                                             span &nbsp;
                                                                             a(:href="item.url" target="_blank" v-on="on")
-                                                                                span(v-if="item.file==''") {{item.url}}
+                                                                                span(v-if="item.file==='' || item.file== null || item.file == undefined ") {{item.url}}
                                                                                 span(v-else-if="item.file==item.file.slice(-40)") {{item.file}}
                                                                                 span(v-else) {{'....' + item.file.slice(-40)}}
                                                                         span {{item.url}}
                                                                 td {{item.host}}
                                                                 td {{item.ip}}
+                                                                td {{item.method}}
                                                                 td {{item.status}}
                                                                 td {{item.dnsLookup}}
                                                                 td {{item.tcpConnection}}
                                                                 td {{item.total}}
                                                                 td {{item.size}}
+                                                                td {{item.failure}}
 
 </template>
 <script>
@@ -206,6 +208,13 @@
             width: '150px',
           },
           {
+            text: 'Method',
+            align: 'left',
+            sortable: true,
+            value: 'method',
+            width: '150px',
+          },
+          {
             text: 'Status Code',
             align: 'left',
             sortable: true,
@@ -239,6 +248,13 @@
             sortable: true,
             width: '100px',
             value: 'size'
+          },
+          {
+            text: 'Note',
+            align: 'left',
+            sortable: true,
+            width: '100px',
+            value: 'failure'
           }
         ],
         desserts: [],
@@ -485,10 +501,8 @@
           )
           .catch(
             function(error) {
-              this.$store.dispatch(
-                'global/showSnackbarError ',
-                error.message
-              )
+              this.loading= false;
+              console.log(error)
             }.bind(this)
           )
       },
