@@ -100,7 +100,7 @@
                                                             pre(v-highlightjs="bodyData")
                                                                 code.bash
 
-                                        v-card-text.font-weight-bold Requests:
+                                        v-card-text.font-weight-bold Response:
                                             v-flex(xs12 sm12 md12)
                                                 v-card
                                                     v-data-table.elevation-1(:headers="tableHeaders" :items="desserts" :dense="true" :loading="loading" disable-pagination hide-default-footer  height="300" fixed-header)
