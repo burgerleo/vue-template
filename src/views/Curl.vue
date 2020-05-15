@@ -4,15 +4,19 @@
             v-flex(xs12)
                 v-card
                     v-card-text
-                        v-form(ref="form" onsubmit="return false;")
-                            v-layout(wrap)
-                                v-flex.pt-0.pb-0.mb-0.mt-0.mr-10(xs12 sm12 md12)
+                        v-row
+                            v-col.pt-0.pb-0.mb-0.mt-0(cols="12")
+                                v-toolbar(flat white)
                                     v-radio-group.pt-0.pb-0.mb-0.mt-0(v-model="testType" :mondatory="true" row)
                                         v-radio(label="Single Testing" :value="0")
                                         v-radio(label="Periodical Testing" :value="1")
                                         v-flex.pb-0(v-if="testType==1" xs12 sm3 md3)
                                             v-btn.mb-2.mr-2(x-small color="primary" dark @click="newWindow()") New Window
                                             v-btn.mb-2.mr-2(x-small color="primary" dark @click="newTabWindow()") New Tab
+                                    v-spacer
+                                    v-btn.mb-2.mr-2(color="primary" dark @click="editDialog()") Setting
+                        v-form(ref="form" onsubmit="return false;")
+                            v-layout(wrap)
                                 v-layout.ml-auto.mr-auto(wrap)
                                     v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm12 md12)
                                         v-radio-group.pt-0.pb-0.mt-0.mb-0(v-model="area" :mondatory="true" row)
@@ -113,7 +117,7 @@
                                                                     v-tooltip(top)
                                                                         template(v-slot:activator="{ on }")
                                                                             span &nbsp;
-                                                                            a(:href="item.url" target="_blank" v-on="on" :style="item.status.toString().substr(0,1)==4?'color:red':''")
+                                                                            a(:href="item.url" target="_blank" v-on="on" :style="(item.status.toString().substr(0,1)==4 || item.status.toString().substr(0,1)==5)?'color:red':''")
                                                                                 span(v-if="item.file==='' || item.file== null || item.file == undefined ") {{item.url}}
                                                                                 span(v-else-if="item.file==item.file.slice(-40)") {{item.file}}
                                                                                 span(v-else) {{'....' + item.file.slice(-40)}}
@@ -128,6 +132,23 @@
                                                                 td {{item.total}}
                                                                 td {{item.size}}
                                                                 td {{item.failure}}
+
+        v-dialog(v-model="dialog" max-width="600" scrollable persistent)
+            v-card
+                v-card-title.title Setting
+                v-card-text.font-weight-bold.pt-6 Requests Color Range
+                    //v-form(ref="form" onsubmit="return false;")
+                        v-card-text DNS Resolution Time (ms)
+                            v-slider.align-center(v-model="dnsRange" hide-details thumb-label="always" thumb-size="36" step='1')
+                        v-card-text Connect Time (ms)
+                            v-slider.align-center(v-model="connectRange" hide-details thumb-label="always" thumb-size="36" step='1')
+                        v-card-text Download Time (ms)
+                            v-range-slider.align-center(v-model="downloadRange" hide-details thumb-label="always" thumb-size="36" step='1')
+
+                v-card-actions
+                    v-spacer
+                    v-btn(color="grey" @click="closeDialog") Cancel
+                    v-btn(color="primary" @click="save") Save
 
 </template>
 <script>
@@ -260,7 +281,13 @@
         ],
         desserts: [],
         searchList: {},
-        copyDesserts: null
+        copyDesserts: null,
+        dialog: false,
+        dnsRange:5,
+        connectRange:5,
+        downloadRange:[1,5],
+        max:5000,
+        min:0
       };
     },
     watch:{
@@ -533,6 +560,18 @@
           }else if (status.toString().substr(0,1) === '5'){
             return 'background-color: #E57373;'
           }
+      },
+      editDialog() {
+        this.dialog = true
+      },
+      closeDialog() {
+        this.dialog = false
+      },
+      save() {
+        if (!this.validateForm()) {
+          return
+        }
+        this.closeDialog()
       }
     },
     created() {
