@@ -1,21 +1,21 @@
 <template  lang="pug">
     v-container#sample-layout(grid-list-lg)
-        v-layout(wrap style='margin-top: -2%;')
+        v-layout.mt-n5(wrap)
             v-flex(xs12)
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-layout
+                            v-layout.mt-n4.px-2
                                 v-flex(xs3 sm3 md3)
                                     v-text-field(v-model="destinationIP" label="Destination FQDN" type="domain" :rules="[rules.required, rules.domain]")
                                 v-flex(xs3 sm3 md3)
-                                    v-text-field(v-model="dnsServerIP" label="DNS Server IP" type="ip" :rules="[rules.ip]")
-                            v-layout
+                                    v-text-field(v-model="dnsServerIP" label="DNS Server IP")
+                            v-layout.mt-n4
                                 v-flex.pl-2(xs1 sm1 md1) Options
                                 v-flex(xs12 sm12 md12)
                                     v-radio-group(v-model='siteSelectedName' row)
                                         v-radio(v-for="s in site" :label="s.name + ' (' + s.machine_ip + ')'" :value="s.name" )
-                            v-layout(style='margin-top: -0.5%;')
+                            v-layout.mt-n1
                                 v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
                                     v-text-field(v-model="cliExam" label="Exam CLI Before Sending" readonly)
                                 v-flex.py-6.pt-0.pb-0(xs3 sm3 md3)
@@ -26,12 +26,12 @@
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
                                 v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
                                     v-text-field(v-model="siteExecuted" label="From" readonly)
-                            v-layout.px-2(style='margin-top: -0.5%; margin-bottom: -0.5%;' v-show="cliExecuted != false")
+                            v-layout.mt-n7.px-2(v-show="cliExecuted != false")
                                 v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 A Records:
                                     pre(v-highlightjs="digResultARecords")
                                         code.java.display-0.font-weight-black
-                            v-layout.px-2(style='margin-top: -0.5%; margin-bottom: -0.5%;' v-show="cliExecuted != false")
+                            v-layout.mt-n2.px-2(v-show="cliExecuted != false")
                                 v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Terminal:
                                     pre(v-highlightjs="digResult")
@@ -83,7 +83,7 @@ export default {
         cliExam: function () {
             let cli = 'dig '
 
-            cli += this.dnsServerIP ? this.dnsServerIP : '<DNS Server IP>'
+            cli += this.dnsServerIP ? this.dnsServerIP : '<Default DNS Server IP>'
             cli += ' '
             cli += this.destinationIP ? this.destinationIP : '<Destination FQDN>'
 

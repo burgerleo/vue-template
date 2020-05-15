@@ -68,11 +68,11 @@ export default {
                             icon: 'mdi-pin',
                             router: '/ping'
                         },
-                        // {
-                        //     title: 'Ping Realtime',
-                        //     icon: 'mdi-lan-pending',
-                        //     router: '/ping-realtime'
-                        // },
+                        {
+                            title: 'Ping Realtime',
+                            icon: 'mdi-lan-pending',
+                            router: '/ping-realtime'
+                        },
                         {
                             title: 'Traceroute',
                             icon: 'mdi-file-tree',

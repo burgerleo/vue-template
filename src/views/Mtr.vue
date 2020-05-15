@@ -1,32 +1,32 @@
 <template  lang="pug">
     v-container#sample-layout(grid-list-lg)
-        v-layout(wrap style='margin-top: -2%;')
+        v-layout.mt-n5(wrap)
             v-flex(xs12)
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-layout(style='margin-top: -0.5%;')
+                            v-layout.mt-n4.px-2
                                 v-flex(xs3 sm3 md3)
                                     v-text-field(v-model="destinationIP" label="Destination IP" type="ip" name="ip" :rules="[rules.required, rules.ip]")
                                 v-flex(xs1 sm1 md1)
                                     v-text-field(v-model="count" label="Count" type="number" min="1" max="100")
-                                v-flex(xs1 sm1 md1)
+                                v-flex.mt-n2(xs1 sm1 md1)
                                     v-checkbox(v-model='aslookup' label='-z')
                                     //- v-checkbox(v-model='aslookup' label='-z: display AS number')
                                     v-checkbox(v-model='noDNS' label='-n')
                                     //- v-checkbox(v-model='noDNS' label='-n: do not resove host names')
-                                v-flex(xs3 sm3 md3)
+                                v-flex.mt-n2(xs3 sm3 md3)
                                     v-radio-group(v-model='protocal' row)
                                         v-radio(label='ICMP.' value='icmp')
                                         v-radio(label='TCP.' value='tcp')
                                         v-radio(label='UDP.' value='udp')
                                     v-text-field(v-show="protocal!='icmp'" v-model="port" label="Port" type="number" min="1" max="65535")
-                                v-flex(xs4 sm4 md4)
+                                v-flex.mt-n2(xs4 sm4 md4)
                                     v-radio-group(v-model='siteSelected' row)
                                         v-radio(label='Dummy' value='dummy')
                                         v-radio(v-for="e in edgeList" :label="e.area + ':' + e.name" :value="e.area + ':' + e.name")
                                     v-text-field(v-show="isInOutBoundShow" v-model="sourceIP" label="Select Source IP as Below" readonly)
-                            v-layout.px-2(v-show="isInOutBoundShow" style='margin-top: -1.5%;')
+                            v-layout.mt-n5.px-2(v-show="isInOutBoundShow")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     //- /* HEAD */
                                     v-row.flex-child
@@ -35,7 +35,7 @@
                                         v-col.d-flex(md='6' style='padding-left:12%;')
                                             | Outbound Circuit
                                     //- /* R1 R2 */
-                                    v-row.flex-child(style='margin-top: -2.5%; margin-bottom: -1.3%;')
+                                    v-row.mt-n7.mb-n2.flex-child
                                         v-col(cols='1' md='1' dense)
                                         v-col.d-flex(md='2' style='padding-left:7%;')
                                             | R1
@@ -48,7 +48,7 @@
                                             | R2
                                     v-flex(v-for="s in sort")
                                         //- /* China */
-                                        v-row.flex-child(dense style='margin-top: -1%; margin-bottom: -1.5%;')
+                                        v-row.mt-n3.mb-n2.flex-child(dense)
                                             //- /* IN R1 China */
                                             v-col(cols='1' md='1' dense)
                                             v-col(cols='2' md='2')
@@ -84,7 +84,7 @@
                                             v-col(cols='1' md='1')
                                                 v-sheet.d-flex(style='padding-left: 35%;') {{s}}
                                         //- /* Global */
-                                        v-row.flex-child(dense style='margin-top: -1.7%; margin-bottom: -0.5%;')
+                                        v-row.mt-n7.mb-n2.flex-child(dense)
                                             //- /* IN R1 Global */
                                             v-col(cols='1' md='1' dense)
                                             v-col(cols='2' md='2')
@@ -118,18 +118,18 @@
                                             v-col(cols='1' md='1' dense)
                                         //- /* divider */
                                         v-divider(dark)
-                            v-layout(style='margin-top: -0.5%;')
+                            v-layout.mt-n1
                                 v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
                                     v-text-field(v-model="cliExam" label="Exam CLI Before Sending" readonly)
                                 v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
                                     v-text-field(v-model="site" label="From" readonly)
-                            v-btn(color="primary" block @click="getMtrInfo()") SEND
+                            v-btn.mt-n3(color="primary" block @click="getMtrInfo()") SEND
                             v-layout.pt-2(v-show="cliExecuted")
                                 v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
                                 v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
                                     v-text-field(v-model="siteExecuted" label="From" readonly)
-                            v-layout.px-2(v-show="mtrResult" style='margin-top: -0.5%; margin-bottom: -0.5%;')
+                            v-layout.mt-n8.px-2(v-show="mtrResult")
                                 v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Terminal:
                                     pre(v-highlightjs="mtrResult")
