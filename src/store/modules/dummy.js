@@ -53,27 +53,24 @@ export default {
                     var type = bgp.substr(-1)
 
                     if (!newItems[sites]) {
-                        newItems[sites] = {}
-                    }
-
-                    if (!newItems[sites][type]) {
-                        newItems[sites][type] = []
+                        newItems[sites] = {
+                            C: [],
+                            G: []
+                        }
                     }
 
                     newItems[sites][type].push(bgp)
+                    newItems[sites][type].sort(function (a, b) {
+                        return a.indexOf('R2') >= 0 ? 1 : -1
+                    });
                 })
             })
 
             itemsKeyList.map(function (sites) {
-                if (!newItems[sites]) {
-                    return
-                }
-                if (newItems[sites]['C'] && newItems[sites]['G']) {
-                    items[sites] = [].concat(
-                        newItems[sites]['C'],
-                        newItems[sites]['G']
-                    )
-                }
+                items[sites] = [].concat(
+                    newItems[sites]['C'],
+                    newItems[sites]['G']
+                )
             })
 
             context.commit("updateBGPList", items)
