@@ -13,7 +13,7 @@
                                         v-radio(label='Dummy' value='dummy')
                                         v-radio(v-for="e in edgeList" :label="e.area + ':' + e.name" :value="e.area + ':' + e.name")
                                 v-flex(xs3 sm3 md3)
-                                    v-text-field(v-show="isInOutBoundShow" v-model="sourceIP" label="Select Source IP as Below" readonly type="ip" :rules="[rules.ip]")
+                                    v-text-field(v-show="isInOutBoundShow" v-model="sourceIP" label="Select Source IP as Below" readonly)
                             v-layout.px-2(v-show="isInOutBoundShow" style='margin-top: -1.5%;')
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     //- /* HEAD */
@@ -396,6 +396,7 @@ export default {
             if (! this.validateForm()) {
                 return
             }
+
             this.websocketstop();
             this.isBtnDisabled = true;
             this.siteExecuted = this.site
@@ -404,15 +405,13 @@ export default {
                 this.pingBody = [];
                 
                 let actions = {
-                    // country: this.site,
                     redirect_by: this.redirectBy,
                     machine_ip: this.getMachineIp(),
-                    
                     destination_ip: this.destinationIP,
-                    interface_ip: this.sourceIP,
+                    interface_ip: this.sourceIP == "No Source IP Mapped" ? "" : this.sourceIP,
                     interval: 1,
                 };
-                // console.log(JSON.stringify(actions));
+                
                 this.websock.send(JSON.stringify(actions));
             }, 1300);
 
