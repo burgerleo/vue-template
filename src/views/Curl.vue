@@ -113,7 +113,7 @@
                                                                     v-tooltip(top)
                                                                         template(v-slot:activator="{ on }")
                                                                             span &nbsp;
-                                                                            a(:href="item.url" target="_blank" v-on="on")
+                                                                            a(:href="item.url" target="_blank" v-on="on" :style="item.status.toString().substr(0,1)==4?'color:red':''")
                                                                                 span(v-if="item.file==='' || item.file== null || item.file == undefined ") {{item.url}}
                                                                                 span(v-else-if="item.file==item.file.slice(-40)") {{item.file}}
                                                                                 span(v-else) {{'....' + item.file.slice(-40)}}
@@ -121,7 +121,8 @@
                                                                 td {{item.host}}
                                                                 td {{item.ip}}
                                                                 td {{item.method}}
-                                                                td {{item.status}}
+                                                                td
+                                                                    span(:style="statusStyle(item.status)") {{item.status}}
                                                                 td {{item.dnsLookup}}
                                                                 td {{item.tcpConnection}}
                                                                 td {{item.total}}
@@ -259,7 +260,7 @@
         ],
         desserts: [],
         searchList: {},
-        copyDesserts: null,
+        copyDesserts: null
       };
     },
     watch:{
@@ -516,11 +517,22 @@
         // 計算 每一列 Index 顯示 id
         return (this.page - 1) * this.itemsPerPage + index + 1
       },
-      bytesToSize(bytes){
+      bytesToSize: function(bytes){
         var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
         if (bytes == 0 || bytes == null) return '0 Byte';
         var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
         return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+      },
+      statusStyle: function (status) {
+          if (status.toString().substr(0,1) === '2'){
+            return 'background-color: #80CBC4;'
+          }else if (status.toString().substr(0,1) === '3'){
+            return 'background-color: #90CAF9;'
+          }else if (status.toString().substr(0,1) === '4'){
+            return 'background-color: #FFB74D;'
+          }else if (status.toString().substr(0,1) === '5'){
+            return 'background-color: #E57373;'
+          }
       }
     },
     created() {
