@@ -35,5 +35,21 @@ export default {
           return Promise.reject(error);
         });
     },
+    setConfig: (context, data) => {
+      return axios.post("curl/config", data).then(function(response) {
+        return Promise.resolve(response.data);
+      })
+        .catch(function(error) {
+          return Promise.reject(error.response.data);
+        });
+    },
+    getConfig: (context, data) => {
+      return axios.get("curl/config", data).then(function(response) {
+        return Promise.resolve(response.data);
+      })
+        .catch(function(error) {
+          return Promise.reject(error.response.data);
+        });
+    },
   }
 }

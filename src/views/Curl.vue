@@ -127,9 +127,12 @@
                                                                 td {{item.method}}
                                                                 td
                                                                     span(:style="statusStyle(item.status)") {{item.status}}
-                                                                td {{item.dnsLookup}}
-                                                                td {{item.tcpConnection}}
-                                                                td {{item.total}}
+                                                                td
+                                                                    span(:style="dnsStyle(item.dnsLookup)") {{item.dnsLookup}}
+                                                                td
+                                                                    span(:style="connectStyle(item.tcpConnection)") {{item.tcpConnection}}
+                                                                td
+                                                                    span(:style="downloadStyle(item.total)") {{item.total}}
                                                                 td {{item.size}}
                                                                 td {{item.failure}}
 
@@ -137,13 +140,14 @@
             v-card
                 v-card-title.title Setting
                 v-card-text.font-weight-bold.pt-6 Requests Color Range
-                    //v-form(ref="form" onsubmit="return false;")
+                    v-form(ref="form" onsubmit="return false;")
                         v-card-text DNS Resolution Time (ms)
-                            v-slider.align-center(v-model="dnsRange" hide-details thumb-label="always" thumb-size="36" step='1')
+                            v-slider.align-center(v-model="configs.dnsRange" hide-details thumb-label="always" thumb-size="36" step='1')
                         v-card-text Connect Time (ms)
-                            v-slider.align-center(v-model="connectRange" hide-details thumb-label="always" thumb-size="36" step='1')
+                            v-slider.align-center(v-model="configs.connectRange" hide-details thumb-label="always" thumb-size="36" step='1')
                         v-card-text Download Time (ms)
-                            v-range-slider.align-center(v-model="downloadRange" hide-details thumb-label="always" thumb-size="36" step='1')
+                            v-slider.align-center(v-model="configs.downloadRangeFirstStage" :max="configs.downloadRangeSecondStage[0]" hide-details thumb-label="always" thumb-size="36" step='1')
+                            v-range-slider.align-center.mt-12(v-model="configs.downloadRangeSecondStage" :max="configs.max" :min="configs.min" hide-details thumb-label="always" thumb-size="36" step='1')
 
                 v-card-actions
                     v-spacer
@@ -283,11 +287,14 @@
         searchList: {},
         copyDesserts: null,
         dialog: false,
-        dnsRange:5,
-        connectRange:5,
-        downloadRange:[1,5],
-        max:5000,
-        min:0
+        configs: {
+          dnsRange:5,
+          connectRange:5,
+          downloadRangeFirstStage:50,
+          min:1,
+          max:10000,
+          downloadRangeSecondStage:[1000,5000]
+        }
       };
     },
     watch:{
@@ -561,6 +568,31 @@
             return 'background-color: #E57373;'
           }
       },
+      dnsStyle: function (dnsTime) {
+        if (dnsTime > this.configs.dnsRange){
+          return 'background-color: #E57373;'
+        }else{
+          return 'background-color: #80CBC4;'
+        }
+      },
+      connectStyle: function (connectTime) {
+        if (connectTime > this.configs.connectRange){
+          return 'background-color: #E57373;'
+        }else{
+          return 'background-color: #80CBC4;'
+        }
+      },
+      downloadStyle: function (downloadTime) {
+        if (downloadTime >= this.configs.downloadRangeSecondStage[1]){
+          return 'background-color: #E57373;'
+        }else if(downloadTime < this.configs.downloadRangeSecondStage[1] && downloadTime >= this.configs.downloadRangeSecondStage[0]){
+          return 'background-color: #FFB74D;'
+        }else if(downloadTime >= this.configs.downloadRangeFirstStage && downloadTime <= this.configs.downloadRangeSecondStage[0]){
+          return 'background-color: #90CAF9;'
+        }else if(downloadTime < this.configs.downloadRangeFirstStage){
+          return 'background-color: #80CBC4;'
+        }
+      },
       editDialog() {
         this.dialog = true
       },
@@ -568,10 +600,71 @@
         this.dialog = false
       },
       save() {
-        if (!this.validateForm()) {
-          return
+        if (this.$refs.form.validate()) {
+          const download = new Object();
+          download.min = this.configs.downloadRangeFirstStage;
+          download.middle = this.configs.downloadRangeSecondStage[0];
+          download.max = this.configs.downloadRangeSecondStage[1];
+
+          const data = {
+            "dnsRange" : this.configs.dnsRange,
+            "connectRange" : this.configs.connectRange,
+            "downloadRange" : download
+
+          }
+
+          this.$store
+            .dispatch('curl/setConfig', data)
+            .then(
+              function() {
+                this.$store.dispatch(
+                  'global/showSnackbarSuccess',
+                  'Success!'
+                )
+                this.$store.dispatch('global/finishLoading')
+              }.bind(this)
+            )
+            .catch(
+              function(error) {
+                this.$store.dispatch(
+                  'global/showSnackbarError',
+                  error.message
+                )
+                this.$store.dispatch('global/finishLoading')
+              }.bind(this)
+            )
+
+          this.closeDialog()
         }
-        this.closeDialog()
+      },
+      getConfig() {
+        this.$store.dispatch('global/startLoading')
+        this.$store
+          .dispatch('curl/getConfig')
+          .then(
+            function(result) {
+              for (var config of result.data) {
+                if (config.attributes && Object.keys(config.actions) != "downloadRange") {
+                  this.configs[config.attributes] = config.actions[config.attributes]
+                }else{
+                  const downloadRange = config.actions[config.attributes]
+                  this.configs.downloadRangeFirstStage = downloadRange.min;
+                  this.configs.downloadRangeSecondStage[0] = downloadRange.middle;
+                  this.configs.downloadRangeSecondStage[1] = downloadRange.max;
+                }
+              }
+              this.$store.dispatch('global/finishLoading')
+            }.bind(this)
+          )
+          .catch(
+            function(error) {
+              this.$store.dispatch(
+                'global/showSnackbarError',
+                error.message
+              )
+              this.$store.dispatch('global/finishLoading')
+            }.bind(this)
+          )
       }
     },
     created() {
@@ -579,6 +672,7 @@
       this.getEdgeInfo();
     },mounted() {
       document.title = 'Curl';
+      this.getConfig();
     }
   };
 </script>
