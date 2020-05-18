@@ -18,53 +18,18 @@
                                 tr
                                     th.pr-2.pl-2 {{desserts2[site][index]}}
                                     td.pr-1.pl-1(v-for="(outLine,value) in desserts2[site]") {{getNameIp(site,item,outLine)}}
-
-                        v-data-table.elevation-1(v-if="tabOn.table" :headers="headers" :items="desserts" :search="searchText" :dense="true" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event" )
-                            template(v-slot:top)
-                                v-toolbar(flat white)
-                                    v-toolbar-title Dummy
-                                    v-divider.mx-4(inset vertical)
-                                    v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details)
-                                    v-divider.mx-4(inset vertical)
-                                    v-spacer
-                                    v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
-                                    v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") New Dummy
-                                    v-btn.mb-2.mr-2(color="primary" dark @click="getDummy")
-                                        v-icon mdi-refresh
-                            template(v-slot:header="{item,index}")
-                                tr
-                                    td 
-                                    td 
-                                        v-text-field.mt-0.pt-0(v-model="searchList.site" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'site')")
-                                    td 
-                                        v-text-field.mt-0.pt-0(v-model="searchList.inName" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'inName')")
-                                    td 
-                                        v-text-field.mt-0.pt-0(v-model="searchList.outName" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'outName')")
-                                    td 
-                                        v-text-field.mt-0.pt-0(v-model="searchList.source_ip" width="10px"  label="Search" single-line hide-details @input="filterOnlyColumn($event,'source_ip')")
-                                    td 
-                                        v-text-field.mt-0.pt-0(v-model="searchList.jkb_task_id" width="10px"  label="Search" single-line hide-details @input="filterOnlyColumn($event,'jkb_task_id')")
-                            template(v-slot:item="{item,index}")
-                                tr
-                                    td {{rowIndex(index)}}
-                                    td {{item.site}}
-                                    td {{item.inName}}
-                                    td {{item.outName}}
-                                    td {{item.source_ip}}
-                                    td 
-                                        a(:href="jkbLink(item.jkb_task_id)" target="_blank") {{item.jkb_task_id}}
-                                    td 
-                                        v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
-                                        v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
-                            template(v-slot:footer) 
-                                v-footer
-                                    v-col.text-right.pt-0.pl-0.pb-0(cols="12" sm="2")
-                                        div Items per page
-                                    v-col.text-center.pt-0.pl-0.pb-0(cols="12" sm="2")
-                                        v-select.mt-0.pt-0(:value="itemsPerPage" :items="itemsPerPageList" menu-props="auto" label="Items per page" hide-details single-line  @change="itemsPerPage = parseInt($event, 10)")
-                                    v-col.text-right.pt-0.pl-0.pb-0 {{getFooterText()}}
-                                    v-col.text-right.pt-0.pl-0.pb-0 
-                                        v-pagination(v-model="page" :length="pageCount")
+                        v-toolbar(v-show="tabOn.table" flat white)
+                            v-toolbar-title Dummy
+                            v-divider.mx-4(inset vertical)
+                            v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details)
+                            v-divider.mx-4(inset vertical)
+                            v-spacer
+                            v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
+                            v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") New Dummy
+                            v-btn.mb-2.mr-2(color="primary" dark @click="getDummy")
+                                v-icon mdi-refresh
+                        
+                    DataTable2(ref="table2" v-show="tabOn.table" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :setUripath="jkbURI" @showDialog="dialogSwitch")
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
@@ -93,12 +58,15 @@
 
 <script>
 import textFieldRules from '../utils/textFieldRules'
+import DataTable2 from '../components/DataTable2'
 
 export default {
     name: 'Dummy',
     mixins: [textFieldRules],
 
-    components: {},
+    components: {
+        DataTable2
+    },
     data() {
         return {
             searchText: '',
@@ -154,14 +122,17 @@ export default {
                     text: 'Task ID',
                     align: 'left',
                     sortable: true,
-                    value: 'jkb_task_id'
+                    value: 'jkb_task_id',
+                    href: true
                 },
                 {
                     text: 'Actions',
                     align: 'left',
                     sortable: false,
                     width: '100px',
-                    value: 'actions'
+                    value: 'actions',
+                    edit: true,
+                    delete: true
                 }
             ],
             desserts: [],
@@ -174,7 +145,9 @@ export default {
                 NXN: false
             },
             lineList: [],
-            bgpList: {}
+            bgpList: {},
+            jkbURI:
+                'https://monitoring.cloudwise.com/monitoring/#/taskdata/overview/base?task_id='
         }
     },
     watch: {
@@ -190,6 +163,9 @@ export default {
         site() {}
     },
     methods: {
+        dialogSwitch(bool, item) {
+            bool ? this.editDialog(item) : this.deleteDialog(item)
+        },
         newDialog: function() {
             this.formTitle = 'Add Dummy'
             this.dialog.add = true
@@ -215,24 +191,6 @@ export default {
             this.dialog.add = false
             this.dialog.delete = false
             this.dummy = {}
-        },
-        getFooterText() {
-            var max = this.desserts.length
-            var maxStr = this.itemsPerPage * this.page
-
-            if (maxStr > max) {
-                maxStr = max
-            }
-
-            return (
-                'Displaying item ' +
-                (this.itemsPerPage * (this.page - 1) + 1) +
-                '-' +
-                maxStr +
-                ' from ' +
-                max +
-                ' items.'
-            )
         },
         getBGP: function() {
             this.$store.dispatch('global/startLoading')
@@ -290,7 +248,7 @@ export default {
 
                         this.transformNXN()
 
-                        this.filterOnlyColumn()
+                        this.$refs.table2.$emit('filter')
 
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
@@ -398,11 +356,6 @@ export default {
             }
             this.closeDialog()
         },
-        jkbLink(id) {
-            let jkb =
-                'https://monitoring.cloudwise.com/monitoring/#/taskdata/overview/base?task_id='
-            return jkb + id
-        },
         rowIndex: function(index) {
             return (this.page - 1) * this.itemsPerPage + index + 1
         },
@@ -410,10 +363,10 @@ export default {
             // 驗證表單資料
             return this.$refs.form.validate()
         },
-        clearFilter(value, search, item) {
+        clearFilter() {
             this.searchList = {}
             this.searchText = ''
-            this.backupAndRcoverData()
+            this.$refs.table2.$emit('clearAllFilter')
         },
         transformNXN() {
             var desserts2 = []
@@ -473,54 +426,6 @@ export default {
             }
 
             return null
-        },
-        filterOnlyColumn(value = null, column = null) {
-            var searchResult
-
-            var searchResult
-
-            if (!value) {
-                delete this.searchList[column]
-            } else {
-                this.searchList[column] = value.trim()
-            }
-
-            // 備份 and 還原資料
-            this.backupAndRcoverData()
-
-            for (var searchKey in this.searchList) {
-                var searchString = this.searchList[searchKey]
-
-                searchString = searchString.toString().toLocaleUpperCase()
-
-                searchResult = this.desserts.filter(function(item) {
-                    var searchData = item[searchKey]
-
-                    if (searchData === null) {
-                        return false
-                    }
-
-                    return (
-                        searchData
-                            .toString()
-                            .toLocaleUpperCase()
-                            .indexOf(searchString) !== -1
-                    )
-                })
-
-                this.desserts = searchResult
-            }
-        },
-        backupAndRcoverData() {
-            if (this.copyDesserts == null) {
-                // 備份資料
-                var list = this.desserts
-                this.copyDesserts = list
-            } else {
-                // 還原資料
-                var list = this.copyDesserts
-                this.desserts = list
-            }
         }
     },
     mounted() {

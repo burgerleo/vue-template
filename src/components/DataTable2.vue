@@ -6,11 +6,12 @@
                 tr
                     td 
                     td(v-for="header in headerList")
-                        v-text-field.mt-0.pt-0(v-model="searchList[header]" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,header)")
+                        v-text-field.mt-0.pt-0(v-model="searchList[header. value]" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event, header.value)" dense)
             template(v-slot:item="{item,index}")
                 tr
                     td {{rowIndex(index)}}
-                    td(v-for="header in headerList") {{ showColumn(header, item, index) }}
+                    td(v-for="header in headerList") {{ !header.href ? getColumn(header.value, item, index) : null}}
+                        a(v-if="header.href" :href="getLink(getColumn(header.value, item, index))" target="_blank") {{getColumn(header.value, item, index) }}
                     td 
                         v-icon.mr-2(v-if="actions.edit" small @click="editDialog(item)") mdi-pencil
                         v-icon.mr-2(v-if="actions.delete" small @click="deleteDialog(item)") mdi-delete
@@ -54,6 +55,10 @@ export default {
         defaultItemsPerPage: {
             type: Number,
             default: 5
+        },
+        setUripath: {
+            type: String,
+            default: ''
         }
     },
     data() {
@@ -86,8 +91,11 @@ export default {
         deleteDialog(value) {
             this.$emit('showDialog', 0, value)
         },
-
-        showColumn(name, item, index = 0) {
+        getLink(id) {
+            let jkb = this.setUripath
+            return jkb + id
+        },
+        getColumn(name, item, index) {
             return item[name] ? item[name] : null
         },
         getHeaderList() {
@@ -99,7 +107,7 @@ export default {
                     return
                 }
                 if (item.value != 'index') {
-                    return item.value
+                    return item
                 }
             })
 
