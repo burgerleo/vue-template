@@ -142,11 +142,11 @@
                 v-card-text.font-weight-bold.pt-6 Requests Color Range
                     v-form(ref="form" onsubmit="return false;")
                         v-card-text DNS Resolution Time (ms)
-                            v-slider.align-center(v-model="configs.dnsRange" hide-details thumb-label="always" thumb-size="36" step='1')
+                            v-slider.align-center.pt-10(v-model="configs.dnsRange" hide-details thumb-label="always" thumb-size="36" step='1')
                         v-card-text Connect Time (ms)
-                            v-slider.align-center(v-model="configs.connectRange" hide-details thumb-label="always" thumb-size="36" step='1')
+                            v-slider.align-center.pt-10(v-model="configs.connectRange" hide-details thumb-label="always" thumb-size="36" step='1')
                         v-card-text Download Time (ms)
-                            v-slider.align-center(v-model="configs.downloadRangeFirstStage" :max="configs.downloadRangeSecondStage[0]" hide-details thumb-label="always" thumb-size="36" step='1')
+                            v-slider.align-center.pt-10(v-model="configs.downloadRangeFirstStage" :max="configs.downloadRangeSecondStage[0]" hide-details thumb-label="always" thumb-size="36" step='1')
                             v-range-slider.align-center.mt-12(v-model="configs.downloadRangeSecondStage" :max="configs.max" :min="configs.min" hide-details thumb-label="always" thumb-size="36" step='1')
 
                 v-card-actions
