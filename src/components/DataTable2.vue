@@ -16,7 +16,7 @@
                         v-icon.mr-2(v-if="actions.edit" small @click="editDialog(item)") mdi-pencil
                         v-icon.mr-2(v-if="actions.delete" small @click="deleteDialog(item)") mdi-delete
             template(v-slot:footer) 
-                v-footer
+                v-footer(v-if="!hideFooter")
                     v-col.text-right.pt-0.pl-0.pb-0(cols="12" sm="2")
                         div Items per page
                     v-col.text-center.pt-0.pl-0.pb-0(cols="12" sm="2")
@@ -39,6 +39,10 @@ export default {
         headers: {
             type: Array,
             default: []
+        },
+        hideFooter:{
+            type: Boolean,
+            default: false
         },
         items: {
             type: Array,
