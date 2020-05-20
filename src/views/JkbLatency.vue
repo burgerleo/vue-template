@@ -3,13 +3,11 @@
         v-row
             v-col.pb-1.pt-1(cols="12")
                 v-toolbar(flat white dense)
-                    b.red--text(v-if="!jkbAPIStatus") JKB API Error
-                    v-divider.mx-1(v-if="!jkbAPIStatus" inset vertical)
                     v-radio-group.mx-0(v-model='isp' row hide-details)
                         v-radio.mx-0.mr-1(v-for="site,index in ispList" :label="site" :value="index" :key="index")
                     v-spacer
 
-                    v-toolbar-title.mb-0.mx-0 Latest:{{lastDataTime}}
+                    v-toolbar-title.my-0.mx-0(:class="!jkbAPIStatus ? 'blink' : 'black--text'") Latest for JKB:{{lastDataTime}}
                     v-divider.mb-0.mx-1(inset vertical)
                     v-toolbar-title.my-0.mr-2 {{totalTime}}s
                     v-btn.mb-2.mr-2(v-if="timer" color="red darken-1" dark @click="stopTimer") Stop
@@ -35,17 +33,17 @@
 
         v-row
             v-col.ml-0.pa-0.pl-6.pb-3(cols="8")
-                NxnCirclesTable(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
+                NxnCirclesTable(class="table_border" title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
             v-col.ml-0.pa-0.pb-2.pl-3.pr-6(cols="4")
-                NxnCirclesTable(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable(class="table_border" title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
                 //- PH 是舊的格式
                 //- NxnCirclesTable.pt-6(title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.pt-6(title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-4(class="table_border" title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
         v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
-                NxnCirclesTable(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range.china" :loading="loading" :typeList="typeList")
+                NxnCirclesTable(class="table_border" title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range.china" :loading="loading" :typeList="typeList")
             v-col.ml-0.pa-0.pl-2.pr-6(cols="6")
-                NxnCirclesTable(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable(class="table_border" title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range.global" :loading="loading" :typeList="typeList")
 
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
@@ -515,5 +513,43 @@ export default {
 }
 .container {
     min-width: 100%;
+}
+.table_border{
+    border-width: 3px;
+    border-style: dashed;
+    border-color: grey;
+}
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.2;
+    }
+}
+/* 添加兼容性前綴 */
+@-webkit-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.2;
+    }
+}
+@-moz-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.2;
+    }
+}
+.blink {
+    animation: blink 1.5s linear infinite;
+    background-color: #e53935 !important;
+    // font-weight: bold;
+    /* 其它瀏覽器兼容性前綴 */
+    -webkit-animation: blink 1.5s linear infinite;
+    -moz-animation: blink 1.5s linear infinite;
 }
 </style>
