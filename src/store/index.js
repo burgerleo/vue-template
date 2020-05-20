@@ -6,6 +6,7 @@ import helper from './modules/helper'
 import ping from './modules/ping'
 import traceroute from './modules/traceroute'
 import mtr from './modules/mtr'
+import dig from './modules/dig'
 import bgp from './modules/bgp'
 import dummy from './modules/dummy'
 import edge from './modules/edge'
@@ -16,6 +17,7 @@ import cert from './modules/cert'
 import traffic from './modules/traffic'
 import periodicalCurl from './modules/periodicalCurl'
 import domain from './modules/domain'
+import isp from './modules/isp'
 
 Vue.use(Vuex);
 
@@ -27,6 +29,7 @@ export default new Vuex.Store({
         ping,
         traceroute,
         mtr,
+        dig,
         bgp,
         dummy,
         edge,
@@ -36,6 +39,7 @@ export default new Vuex.Store({
         cert,
         traffic,
         periodicalCurl,
-        domain
+        domain,
+        isp
     }
 });

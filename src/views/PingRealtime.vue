@@ -1,15 +1,21 @@
 <template  lang="pug">
     v-container#sample-layout(grid-list-lg)
-        v-layout(wrap style='margin-top: -1%;')
+        v-layout.mt-n5(wrap)
             v-flex(xs12)
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-layout.px-2(style='margin-top: -1%;')
-                                v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
+                            v-layout.mt-n4.px-2
+                                v-flex(xs3 sm3 md3)
                                     v-text-field(v-model="destinationIP" label="Destination IP" type="ip" name="ip" :rules="[rules.required, rules.ip]")
-                                    v-text-field(v-model="sourceIP" label="Select Source IP as Below" readonly type="ip" :rules="[rules.required, rules.ip]")
-                            v-layout.px-2(style='margin-top: -1%;')
+                                v-flex(xs1 sm1 md1)
+                                v-flex(xs5 sm5 md5)
+                                    v-radio-group(v-model='siteSelected' row)
+                                        v-radio(label='Dummy' value='dummy')
+                                        v-radio(v-for="e in edgeList" :label="e.area + ':' + e.name" :value="e.area + ':' + e.name")
+                                v-flex(xs3 sm3 md3)
+                                    v-text-field(v-show="isInOutBoundShow" v-model="sourceIP" label="Select Source IP as Below" readonly)
+                            v-layout.mt-n5.px-2(v-show="isInOutBoundShow")
                                 v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
                                     //- /* HEAD */
                                     v-row.flex-child
@@ -18,7 +24,7 @@
                                         v-col.d-flex(md='6' style='padding-left:12%;')
                                             | Outbound Circuit
                                     //- /* R1 R2 */
-                                    v-row.flex-child(style='margin-top: -1%;')
+                                    v-row.mt-n7.mb-n2.flex-child
                                         v-col(cols='1' md='1' dense)
                                         v-col.d-flex(md='2' style='padding-left:7%;')
                                             | R1
@@ -31,7 +37,7 @@
                                             | R2
                                     v-flex(v-for="s in sort")
                                         //- /* China */
-                                        v-row.flex-child(dense style='margin-bottom: -1.3%; margin-top: -0.5%;')
+                                        v-row.mt-n3.mb-n2.flex-child(dense)
                                             //- /* IN R1 China */
                                             v-col(cols='1' md='1' dense)
                                             v-col(cols='2' md='2')
@@ -67,7 +73,7 @@
                                             v-col(cols='1' md='1')
                                                 v-sheet.d-flex(style='padding-left: 35%;') {{s}}
                                         //- /* Global */
-                                        v-row.flex-child(dense style='margin-top: -1.3%;')
+                                        v-row.mt-n7.mb-n2.flex-child(dense)
                                             //- /* IN R1 Global */
                                             v-col(cols='1' md='1' dense)
                                             v-col(cols='2' md='2')
@@ -101,18 +107,12 @@
                                             v-col(cols='1' md='1' dense)
                                         //- /* divider */
                                         v-divider(dark)
-                            //- br
-                            //- v-layout.px-2
-                                v-flex(xs8 sm8 md8)
-                                    v-text-field(v-model="mapCli" label="CLI" readonly)
-                                v-flex(xs4 sm4 md4)
-                                    v-text-field(v-model="siteComputed" label="From" readonly)
-                            v-layout(style='margin-top: -0.5%;')
+                            v-layout.mt-n1
                                 v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
                                     v-text-field(v-model="cliExam" label="Exam CLI Before Sending" readonly)
                                 v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
                                     v-text-field(v-model="site" label="From" readonly)
-                            v-layout.px-2
+                            v-layout.mt-n3.px-2
                                 v-flex(xs4 sm4 md4)
                                     v-btn(color="light-blue" block @click="websocketsend()" :disabled="isBtnDisabled") SEND
                                 v-flex(xs4 sm4 md4)
@@ -124,7 +124,7 @@
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
                                 v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
                                     v-text-field(v-model="siteExecuted" label="From" readonly)
-                            v-layout.px-2(style='margin-top: -1%; margin-bottom: -0.5%;' v-show='pingBody.length > 0')
+                            v-layout.mt-n8.px-2(v-show='pingBody.length > 0')
                                 v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12 fill-height)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Terminal:
                                     pre.formatted(v-highlightjs="pingBodyFormatted" height="100")
@@ -142,18 +142,21 @@ export default {
             // from apis
             bgpList: [],
             dummyList: [],
+            edgeList: [],
 
             // Sort Inbound / Outbound Circuit
             sort: ['HK', 'TW', 'PH'],
+
+            // Selecte Dummy / Edge
+            siteSelected: 'dummy',
 
             // v-model: Inbound / Outbound Circuit
             inboundID: 0,
             outboundID: 0,
 
+            // v-model: other input
             site: '',
             destinationIP: null,
-            // count: 10,
-            // interval: 1,
 
             // output result
             siteExecuted: '',
@@ -173,13 +176,30 @@ export default {
         sourceIP: function () {
             let dummy = this.dummyList.find(function (dm) { 
                 if (dm.in == this.inboundID && dm.out == this.outboundID) {
-                    this.site = dm.site
+                    this.site = dm.site + ':DUMMY'
                     // console.log({dm}, this.site)
                     return dm.source_ip
                 }
             }.bind(this));
 
             return dummy ? dummy.source_ip : "No Source IP Mapped"
+        },
+
+        // isInOutBoundShow ？
+        isInOutBoundShow: function () {
+            if (this.siteSelected !== 'dummy') {
+                this.inboundID = 0
+                this.outboundID = 0
+                this.site = this.siteSelected
+                return false
+            }
+            this.site = ''
+            return true
+        },
+
+        // redirectBy: HK / TW / PH Appliaction
+        redirectBy: function () {
+            return this.site.substring(0,2)
         },
 
         // exam CLI before SEND
@@ -306,6 +326,40 @@ export default {
                     }.bind(this)
                 )
         },
+        getEdges: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+            .dispatch('edge/getInfo')
+            .then(
+                function(result) {
+                    this.edgeList = result.data.map((item) => {
+                        return {
+                            name: item.name,
+                            edge: item.edge,
+                            area: item.area
+                        }
+                    })
+
+                this.$store.dispatch('global/finishLoading')
+                }.bind(this)
+            )
+            .catch(
+                function(error) {
+                this.$store.dispatch(
+                    'global/showSnackbarError',
+                    error.message
+                )
+                this.$store.dispatch('global/finishLoading')
+                }.bind(this)
+            )
+        },
+        getMachineIp: function() {
+            let targetEdge = this.edgeList.find(function (v) {
+                // ex: HK:hk-ubuntu-test
+                return v.area +':'+ v.name == this.site
+            }.bind(this))
+            return targetEdge ? targetEdge.edge : ''
+        },
 
         // WebSocket ++
         initWebSocket(){ //初始化 websocket
@@ -320,16 +374,14 @@ export default {
         },
         websocketonmessage(msg){ //接收數據
             // console.log(msg.data);
-            let lines = msg.data.split("\\n");
+            let lines = msg.data.split("\n");
             let tmp = this.pingBody;
 
-            lines.forEach( line => {
-                if (line.length >0 ) 
-                    tmp.push(this.getFormattedDate() + " " +line);
-            });
+            // 排除 split 後的空字串
+            tmp.push(lines[0]);
             
             if (tmp.length > 10) {
-                tmp.splice(1, 1);
+                tmp.splice(0, 1);
             }
             this.pingBody = tmp;
         },
@@ -337,6 +389,7 @@ export default {
             if (! this.validateForm()) {
                 return
             }
+
             this.websocketstop();
             this.isBtnDisabled = true;
             this.siteExecuted = this.site
@@ -345,12 +398,13 @@ export default {
                 this.pingBody = [];
                 
                 let actions = {
-                    country: this.site,
+                    redirect_by: this.redirectBy,
+                    machine_ip: this.getMachineIp(),
                     destination_ip: this.destinationIP,
-                    interface_ip: this.sourceIP,
+                    interface_ip: this.sourceIP == "No Source IP Mapped" ? "" : this.sourceIP,
                     interval: 1,
                 };
-                // console.log(JSON.stringify(actions));
+                
                 this.websock.send(JSON.stringify(actions));
             }, 1300);
 
@@ -397,6 +451,7 @@ export default {
         
         this.getBGP()
         this.getDummy()
+        this.getEdges()
 
         this.initWebSocket(); // 連線 websocket
 
@@ -416,6 +471,6 @@ export default {
     background: #282c34
     word-break: break-all
 
-.d-flex
-    font-size: 1.5em
+// .d-flex
+//     font-size: 1.5em
 </style>

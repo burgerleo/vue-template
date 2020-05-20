@@ -186,41 +186,7 @@ export default {
                     value: 'actions'
                 }
             ],
-            desserts: [
-                {
-                    domain: 'leo.com',
-                    ip: '1.1.1.1',
-                    origin: '1.1.1.1',
-                    attacked: 0,
-                    quality: 0,
-                    update: '2020-04-20 10:10:10',
-                    who: 'leo'
-                },
-                {
-                    domain: 'leo2.com',
-                    origin: 'lelele2.com',
-                    ip: '1.1.1.2',
-                    remark: 'No',
-                    update: '2020-04-20 10:10:10',
-                    who: 'leo1'
-                },
-                {
-                    domain: 'leo3.com',
-                    ip: '1.1.1.3',
-                    origin: 'lelele3.com',
-                    remark: 'Yes',
-                    update: '2020-04-20 10:10:10',
-                    who: 'leo2'
-                },
-                {
-                    domain: 'leo4.com',
-                    ip: '',
-                    origin: 't6-xxx-elb-web-dev-xxx.xxx.ap-xxx-1.xxx.xcom',
-                    remark: 'No',
-                    update: '2020-04-20 10:10:10',
-                    who: 'leo2'
-                }
-            ],
+            desserts: [],
             searchList: {},
             copyDesserts: [],
             dialogData: {},
@@ -317,6 +283,7 @@ export default {
                         // 重新 copy data
                         this.copyDesserts = []
                         this.backupAndRcoverData()
+                        this.filterOnlyColumn()
 
                         // 取得總量
                         this.totalPage = result.data.last_page
@@ -435,7 +402,7 @@ export default {
             this.searchText = ''
             this.backupAndRcoverData()
         },
-        filterOnlyColumn(value, column) {
+        filterOnlyColumn(value = null, column = null) {
             var searchResult
 
             if (!value) {

@@ -6,15 +6,15 @@
                     th.pl-0.pr-1.pb-1
                         v-avatar(tile width="100%" :height="columnHeight" color="transparent" dark ) 
                             h2 {{title + " In/Out"}}
-                    th.pr-1.pl-1.pb-1(v-for="(outLine, value) in items") 
+                    th.pr-1.pl-0.pb-1(v-for="(outLine, value) in items") 
                         v-avatar(tile width="100%" :height="columnHeight"  :color="getCorGColor(outLine)" dark ) 
-                            h2 {{outLine}}
+                            h2 {{linetext(outLine)}}
             template(v-slot:item="{item,index}")
                 tr
                     th.pl-0.pr-1
                         v-avatar(tile width="100%" :height="columnHeight"  :color="getCorGColor(items[index])" dark )
-                            h2 {{items[index]}}
-                    td.pr-1.pl-1.text-center(v-for="(outLine, value) in items") 
+                            h2 {{linetext(items[index])}}
+                    th.pr-1.pl-0(v-for="(outLine, value) in items") 
                         div.text-center(:class="getColor(getSource(item, outLine, typeList[0]))")
                             v-tooltip(top)
                                 template(v-slot:activator="{on}")
@@ -47,10 +47,6 @@ export default {
             type: Boolean,
             default: true
         },
-        searchText: {
-            type: String,
-            default: ''
-        },
         title: {
             type: String,
             default: 'HK'
@@ -69,7 +65,7 @@ export default {
         },
         networkFlowType: {
             type: String,
-            default: 'packet_loss'
+            default: 'availability'
         }
     },
 
@@ -84,11 +80,16 @@ export default {
                 'red lighten-2',
                 'grey lighten-2',
                 'blue lighten-2',
-                'pink lighten-4',
+                'pink lighten-4'
             ]
         }
     },
     methods: {
+        linetext(line) {
+            return line
+                .substring(0, line.length - 1) // 移除最後一個字
+                .replace('-' + this.title, '-') // 移除 Site
+        },
         getMaxAndMin() {
             var range = this.range
 
@@ -112,7 +113,7 @@ export default {
             }
 
             switch (this.networkFlowType) {
-                case 'packet_loss':
+                case 'availability':
                     if (flow >= range['max']) {
                         return this.colorList[0]
                     } else if (flow > range['min']) {
@@ -154,6 +155,8 @@ export default {
 .v-data-table {
     th {
         user-select: auto;
+        min-width: 80px;
+        max-width: 80px;
     }
 }
 </style>
