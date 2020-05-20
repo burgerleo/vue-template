@@ -107,7 +107,7 @@
                                         v-card-text.font-weight-bold Requests:
                                             v-flex(xs12 sm12 md12)
                                                 v-card
-                                                    v-data-table.elevation-1(:headers="tableHeaders" :items="desserts" :dense="true" :loading="loading" disable-pagination hide-default-footer  height="300" fixed-header)
+                                                    v-data-table.elevation-1(:headers="tableHeaders" :items="desserts" :dense="true" :loading="loading" disable-pagination hide-default-footer fixed-header)
                                                         template(v-slot:header="{item,index}")
 
                                                         template(v-slot:item="{item,index}")
@@ -238,34 +238,34 @@
             align: 'left',
             sortable: true,
             value: 'method',
-            width: '150px',
+            width: '40px',
           },
           {
             text: 'Status Code',
             align: 'left',
             sortable: true,
             value: 'status',
-            width: '150px',
+            width: '80px',
           },
           {
             text: 'Dns Resolution Time (ms)',
             align: 'left',
             sortable: true,
             value: 'dnsLookup',
-            width: '200px',
+            width: '80px',
           },
           {
             text: 'Connect Time (ms)',
             align: 'left',
             sortable: true,
-            width: '150px',
+            width: '80px',
             value: 'tcpConnection'
           },
           {
             text: 'Download time (ms)',
             align: 'left',
             sortable: true,
-            width: '150px',
+            width: '80px',
             value: 'total'
           },
           {
@@ -518,7 +518,9 @@
           url =  (this.port == 443)? 'https://' + this.url : 'http://' + this.url;
         }
         const data = {
-          "url" : url
+          "url" : url,
+          "area": self.area,
+          "edge": self.edge
         }
         this.loading= true;
         this.$store

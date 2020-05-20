@@ -27,9 +27,8 @@ export default {
         });
     },
     getRecursive: (context, data) => {
-      const baseUrl = process.env.VUE_APP_RECURSIVE_API_URL;
-      return axios.get(baseUrl+ '?url='+ data.url).then(function (response) {
-        return Promise.resolve(response.data);
+      return axios.post("recursive", data).then(function (response) {
+        return Promise.resolve(response.data.data);
       })
         .catch(function (error) {
           return Promise.reject(error);
