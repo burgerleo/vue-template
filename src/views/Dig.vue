@@ -18,13 +18,13 @@
                             v-layout.mt-n1
                                 v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
                                     v-text-field(v-model="cliExam" label="Exam CLI Before Sending" readonly)
-                                v-flex.py-6.pt-0.pb-0(xs3 sm3 md3)
+                                v-flex.py-6.pt-0.pb-0(xs4 sm4 md4)
                                     v-text-field(v-model="siteSelected" label="From" readonly)
                             v-btn(color="primary" block @click="getDigInfo()") SEND
                             v-layout.pt-2(v-show="cliExecuted != false")
                                 v-flex.py-6.pt-0.pb-0(xs8 sm8 md8)
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
-                                v-flex.py-6.pt-0.pb-0(xs2 sm2 md2)
+                                v-flex.py-6.pt-0.pb-0(xs4 sm4 md4)
                                     v-text-field(v-model="siteExecuted" label="From" readonly)
                             v-layout.mt-n7.px-2(v-show="cliExecuted != false")
                                 v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)

@@ -345,8 +345,8 @@ export default {
                 })
                 .then(
                     function(result) {
-                        this.pingResult = result.data
-                        this.cliExecuted = this.cliExam
+                        this.pingResult = result.data.result
+                        this.cliExecuted = result.data.command //this.cliExam
                         this.siteExecuted = this.site
                         this.$store.dispatch(
                             'global/showSnackbarSuccess',
