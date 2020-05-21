@@ -121,12 +121,13 @@
                                                                                 span(v-if="item.file==='' || item.file== null || item.file == undefined ") {{item.url}}
                                                                                 span(v-else-if="item.file==item.file.slice(-40)") {{item.file}}
                                                                                 span(v-else) {{'....' + item.file.slice(-40)}}
+                                                                            v-icon.mr-2(small @click="newWindowWithParams(item.url)") mdi-checkbox-multiple-blank-outline
                                                                         span {{item.url}}
+                                                                td
+                                                                    span(:style="statusStyle(item.status)") {{item.status}}
                                                                 td {{item.host}}
                                                                 td {{item.ip}}
                                                                 td {{item.method}}
-                                                                td
-                                                                    span(:style="statusStyle(item.status)") {{item.status}}
                                                                 td
                                                                     span(:style="dnsStyle(item.dnsLookup)") {{item.dnsLookup}}
                                                                 td
@@ -167,7 +168,7 @@
         postInput:'Parameters',
         postBody:'',
         method:'GET',
-        redirect: 0,
+        redirect: 3,
         url:'',
         headerOnly:0,
         commandData:'',
@@ -198,6 +199,7 @@
         tabItems: [],
         tab: null,
         newWin:'',
+        newWinWithParams:'',
         newTab:'',
         page: 1,
         pageCount: 0,
@@ -220,6 +222,13 @@
             width: '300px',
           },
           {
+            text: 'Status Code',
+            align: 'left',
+            sortable: true,
+            value: 'status',
+            width: '80px',
+          },
+          {
             text: 'Host',
             align: 'left',
             sortable: true,
@@ -239,13 +248,6 @@
             sortable: true,
             value: 'method',
             width: '40px',
-          },
-          {
-            text: 'Status Code',
-            align: 'left',
-            sortable: true,
-            value: 'status',
-            width: '80px',
           },
           {
             text: 'Dns Resolution Time (ms)',
@@ -320,7 +322,11 @@
       newTab(){
         let routeData = this.$router.resolve({path: '/periodical-curl'});
         window.open(routeData.href,'',)
-      }
+      },
+      newWinWithParams(){
+        let routeData = this.$router.resolve({path: '/new-periodical-curl'});
+        window.open(routeData.href,'','height=900,width=1200,resizable=yes,scrollbars=yes,toolbar=yes,status=yes')
+      },
     },
     methods: {
       send: function() {
@@ -545,6 +551,10 @@
       },
       newWindow: function () {
         this.newWin = [];
+      },
+      newWindowWithParams: function (path) {
+        let routeData = this.$router.resolve({path: '/new-periodical-curl', query: {  path: path }});
+        window.open(routeData.href,'','height=900,width=1200,resizable=yes,scrollbars=yes,toolbar=yes,status=yes')
       },
       newTabWindow: function () {
         this.newTab = [];

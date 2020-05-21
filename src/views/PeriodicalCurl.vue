@@ -146,6 +146,7 @@
         pollingList:[],
         tabItems: [],
         tab: null,
+        path:''
       };
     },
     watch:{
@@ -376,6 +377,7 @@
       this.getEdgeInfo();
     },mounted() {
       document.title = 'Periodical Curl';
+      this.url = this.path = this.$route.query.path ? this.$route.query.path : '';
     }
   };
 </script>

@@ -137,7 +137,7 @@ export default new Router({
         },
         {
             name: "Origin Server Periodical Testing",
-            path: "/new-periodical-curl",
+            path: "/new-periodical-curl/:path?",
             component: PeriodicalCurl
         }
     ]
