@@ -114,7 +114,7 @@
         postInput:'Parameters',
         postBody:'',
         method:'GET',
-        redirect: 0,
+        redirect: 3,
         url:'',
         headerOnly:0,
         commandData:'',
