@@ -7,6 +7,7 @@ import Curl from "./views/Curl.vue";
 import PeriodicalCurl from "./views/PeriodicalCurl.vue";
 import Ping from "./views/Ping.vue";
 import PingRealtime from "./views/PingRealtime.vue";
+import PingMultiple from "./views/PingMultiple.vue";
 import Traceroute from "./views/Traceroute.vue";
 import Mtr from "./views/Mtr.vue";
 import Dig from "./views/Dig.vue";
@@ -72,6 +73,11 @@ export default new Router({
                     name: "Ping Realtime",
                     path: "ping-realtime",
                     component: PingRealtime
+                },
+                {
+                    name: "Ping Multiple",
+                    path: "ping-multiple",
+                    component: PingMultiple
                 },
                 {
                     name: "SSL File",

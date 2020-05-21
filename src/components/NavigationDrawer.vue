@@ -69,6 +69,11 @@ export default {
                             router: '/ping-realtime'
                         },
                         {
+                            title: 'Ping Multiple',
+                            icon: 'mdi-lan-pending',
+                            router: '/ping-multiple'
+                        },
+                        {
                             title: 'Traceroute',
                             icon: 'mdi-file-tree',
                             router: '/traceroute'
