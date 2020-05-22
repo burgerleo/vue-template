@@ -120,7 +120,7 @@ export default {
                     this.site.push(...result.data.map((item) => {
                         return {
                             name: item.area + ' ' + item.name,
-                            machine_ip: item.edge,
+                            machine_ip: item.edge_oob,
                         }
                     }))
 

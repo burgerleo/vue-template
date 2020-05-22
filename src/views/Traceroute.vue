@@ -313,7 +313,7 @@ export default {
                     this.edgeList = result.data.map((item) => {
                         return {
                             name: item.name,
-                            edge: item.edge,
+                            edge_oob: item.edge_oob,
                             area: item.area
                         }
                     })
@@ -372,7 +372,7 @@ export default {
                 // ex: HK:hk-ubuntu-test
                 return v.area +':'+ v.name == this.site
             }.bind(this))
-            return targetEdge ? targetEdge.edge : ''
+            return targetEdge ? targetEdge.edge_oob : ''
         },
         validateForm: function() {
             return this.$refs.form.validate()

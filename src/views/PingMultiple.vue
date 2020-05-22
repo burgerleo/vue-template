@@ -114,7 +114,7 @@
                                 v-flex(xs12 sm12 md12)
                                     v-btn.mt-n3(color="primary" block @click="syncPing()") SYNC ({{selectSourceIPs.length * count * interval}} s)
                                 //- v-flex(xs6 sm6 md6)
-                                //-     v-btn.mt-n3(color="primary" block @click="asyncPing()") ASYNC ({{count * interval}} s)
+                                //-     v-btn.mt-n3(color="primary" block @click="asyncPing()") ASYNC ({{ selectSourceIPs.length ? count * interval : 0}} s)
                             v-layout.pt-2(v-show="cliExecuted != false")
                                 v-flex(xs8 sm8 md8)
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
