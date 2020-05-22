@@ -493,7 +493,7 @@
               })
 
               result.data.forEach((item) => {item.customer
-                item.text = item.name + ' (' + item.edge + ') '
+                item.text = item.name + ' (' + item.edge_oob + ') '
                 if (item.area=='HK'){
                   this.hkEdge.push(item)
                   this.edge = this.twEdge[0].id
