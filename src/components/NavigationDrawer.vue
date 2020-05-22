@@ -54,7 +54,7 @@ export default {
                         //     ]
                         // },
                         {
-                            title: 'Origin Server Testing',
+                            title: 'Curl & F12',
                             icon: 'mdi-check',
                             router: '/curl'
                         },
