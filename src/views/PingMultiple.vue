@@ -114,7 +114,7 @@
                                 v-flex(xs12 sm12 md12)
                                     v-btn.mt-n3(color="primary" block @click="syncPing()") SYNC ({{selectSourceIPs.length * count * interval}} s)
                                 //- v-flex(xs6 sm6 md6)
-                                //-     v-btn.mt-n3(color="primary" block @click="asyncPing()") ASYNC
+                                //-     v-btn.mt-n3(color="primary" block @click="asyncPing()") ASYNC ({{count * interval}} s)
                             v-layout.pt-2(v-show="cliExecuted != false")
                                 v-flex(xs8 sm8 md8)
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
@@ -171,28 +171,24 @@ export default {
                     text: '#',
                     align: 'center',
                     sortable: false,
-                    width: '50px',
                     value: 'index'
                 },
                 {
                     text: 'Site',
                     align: 'center',
                     sortable: false,
-                    width: '70px',
                     value: 'site'
                 },
                 {
                     text: 'In',
                     align: 'center',
                     sortable: true,
-                    width: '130px',
                     value: 'in_name'
                 },
                 {
                     text: 'Out',
                     align: 'center',
                     sortable: true,
-                    width: '130px',
                     value: 'out_name'
                 },
                 {
@@ -205,35 +201,30 @@ export default {
                     text: 'Packet Loss(%)',
                     align: 'center',
                     sortable: true,
-                    width: '150px',
                     value: 'packet_loss',
                 },
                 {
                     text: 'Time(ms)',
                     align: 'center',
                     sortable: true,
-                    width: '120px',
                     value: 'time'
                 },
                 {
                     text: 'Min(ms)',
                     align: 'center',
                     sortable: true,
-                    width: '120px',
                     value: 'min'
                 },
                 {
                     text: 'Avg(ms)',
                     align: 'center',
                     sortable: true,
-                    width: '120px',
                     value: 'avg'
                 },
                 {
                     text: 'Max(ms)',
                     align: 'center',
                     sortable: true,
-                    width: '120px',
                     value: 'max'
                 }
             ],
@@ -403,7 +394,7 @@ export default {
                 sourceIPs[i].mdev = arr[6]
             }
             this.$store.dispatch('global/finishLoading')
-            console.table(sourceIPs)
+            // console.table(sourceIPs)
             this.pingResult = sourceIPs
         },
         asyncPing: function() {
