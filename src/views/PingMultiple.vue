@@ -152,7 +152,7 @@ export default {
             site: '',
             destinationIP: null,
             count: 10,
-            interval: 0.5,
+            interval: 1,
 
             // regex
             regex: /(\d+)% packet loss, time (\d+)ms\nrtt min\/avg\/max\/mdev = ([0-9.]+)\/([0-9.]+)\/([0-9.]+)\/([0-9.]+) ms/g,
@@ -457,7 +457,7 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Ping Multiple';
+        document.title = 'Test All Circut';
 
         this.getBGP()
         this.getDummy()

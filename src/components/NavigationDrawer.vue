@@ -69,9 +69,9 @@ export default {
                             router: '/ping-realtime'
                         },
                         {
-                            title: 'Ping Multiple',
-                            icon: 'mdi-lan-pending',
-                            router: '/ping-multiple'
+                            title: 'Test All Circuts',
+                            icon: 'mdi-vector-circle',
+                            router: '/test-all-circuts'
                         },
                         {
                             title: 'Traceroute',

@@ -75,8 +75,8 @@ export default new Router({
                     component: PingRealtime
                 },
                 {
-                    name: "Ping Multiple",
-                    path: "ping-multiple",
+                    name: "Test All Circut",
+                    path: "test-all-circuts",
                     component: PingMultiple
                 },
                 {
