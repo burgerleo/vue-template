@@ -7,7 +7,7 @@
                         v-radio.mx-0.mr-1(v-for="site,index in ispList" :label="site" :value="index" :key="index")
                     v-spacer
 
-                    v-toolbar-title.my-0.mx-0(:class="!jkbAPIStatus ? 'blink' : 'black--text'") Latest for JKB:{{lastDataTime}}
+                    v-toolbar-title.my-0.mx-0(:class="!jkbAPIStatus ? 'blink' : 'black--text'") Latest form JKB:{{lastDataTime}}
                     v-divider.mb-0.mx-1(inset vertical)
                     v-toolbar-title.my-0.mr-2 {{totalTime}}s
                     v-btn.mb-2.mr-2(v-if="timer" color="red darken-1" dark @click="stopTimer") Stop

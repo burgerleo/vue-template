@@ -113,6 +113,11 @@ export default {
                             icon: 'mdi-content-paste',
                             router: '/domain-manage'
                         },
+                        {
+                            title: 'IP Location',
+                            icon: 'mdi-access-point',
+                            router: '/ip2location'
+                        },
                         { header: 'Administrator' },
 
                         // {

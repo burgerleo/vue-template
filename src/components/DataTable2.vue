@@ -1,6 +1,6 @@
 <template lang="pug">
     #dataTable2
-        v-data-table.elevation-1(:headers="headers" :items="newItems" :search="searchText" :dense="dense" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event" )
+        v-data-table.elevation-1(:headers="headers" :items="newItems" :search="searchText" :dense="dense" :loading="loading" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event" )
             template(v-slot:top)
             template(v-slot:header="{item,index}")
                 tr
@@ -47,6 +47,10 @@ export default {
         items: {
             type: Array,
             default: []
+        },
+        loading: {
+            type: Boolean,
+            default: false
         },
         dense: {
             type: Boolean,

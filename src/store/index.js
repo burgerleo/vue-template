@@ -18,6 +18,7 @@ import traffic from './modules/traffic'
 import periodicalCurl from './modules/periodicalCurl'
 import domain from './modules/domain'
 import isp from './modules/isp'
+import ip2LocationRawData from './modules/ip2LocationRawData'
 
 Vue.use(Vuex);
 
@@ -40,6 +41,7 @@ export default new Vuex.Store({
         traffic,
         periodicalCurl,
         domain,
-        isp
+        isp,
+        ip2LocationRawData
     }
 });

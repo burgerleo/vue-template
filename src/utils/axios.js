@@ -8,12 +8,13 @@ axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL;
 
 //Http Request
 axios.interceptors.request.use(config => {
+  axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL;
   var token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = "Bearer " + token;
   }
   return config;
-},error => {
+}, error => {
   return Promise.reject(error);
 });
 
@@ -27,7 +28,7 @@ axios.interceptors.response.use(response => {
       break;
   }
 
-  error.response.data.text = error.response.data.errorCode? errorHandler[error.response.data.errorCode] : error.response.data.message
+  error.response.data.text = error.response.data.errorCode ? errorHandler[error.response.data.errorCode] : error.response.data.message
   return Promise.reject(error)
 })
 

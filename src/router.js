@@ -19,6 +19,7 @@ import JkbPacketLoss from "./views/JkbPacketLoss.vue";
 import JkbLatency from "./views/JkbLatency.vue";
 import CrtKey from "./views/CrtKey.vue";
 import DomainManage from "./views/DomainManage.vue";
+import Ip2Location from "./views/Ip2Location.vue";
 
 Vue.use(Router);
 
@@ -133,6 +134,11 @@ export default new Router({
                     name: "DomainManage",
                     path: "domain-manage",
                     component: DomainManage
+                },
+                {
+                    name: "Ip2Location",
+                    path: "ip2location",
+                    component: Ip2Location
                 }
             ]
         }
