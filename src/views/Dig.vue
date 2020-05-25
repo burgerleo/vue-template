@@ -83,7 +83,7 @@ export default {
         cliExam: function () {
             let cli = 'dig '
 
-            cli += this.dnsServerIP ? this.dnsServerIP : '<Default DNS Server IP>'
+            cli += this.dnsServerIP ? this.dnsServerIP : '<Use Default Resolver>'
             cli += ' '
             cli += this.destinationIP ? this.destinationIP : '<Destination FQDN>'
 

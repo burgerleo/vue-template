@@ -69,9 +69,9 @@ export default {
                             router: '/ping-realtime'
                         },
                         {
-                            title: 'Test All Circuts',
+                            title: 'Test All Circuits',
                             icon: 'mdi-vector-circle',
-                            router: '/test-all-circuts'
+                            router: '/test-all-circuits'
                         },
                         {
                             title: 'Traceroute',

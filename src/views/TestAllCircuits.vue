@@ -111,10 +111,10 @@
                                 v-flex(xs2 sm2 md2)
                                     v-text-field(v-model="site" label="From" readonly)
                             v-layout.mt-n1
-                                v-flex(xs12 sm12 md12)
+                                v-flex(xs6 sm6 md6)
                                     v-btn.mt-n3(color="primary" block @click="syncPing()") SYNC ({{selectSourceIPs.length * count * interval}} s)
-                                //- v-flex(xs6 sm6 md6)
-                                //-     v-btn.mt-n3(color="primary" block @click="asyncPing()") ASYNC ({{ selectSourceIPs.length ? count * interval : 0}} s)
+                                v-flex(xs6 sm6 md6)
+                                    v-btn.mt-n3(color="primary" block @click="asyncPing()") ASYNC ({{ selectSourceIPs.length ? count * interval : 0}} s)
                             v-layout.pt-2(v-show="cliExecuted != false")
                                 v-flex(xs8 sm8 md8)
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
@@ -155,7 +155,7 @@ export default {
             interval: 1,
 
             // regex
-            regex: /(\d+)% packet loss, time (\d+)ms\nrtt min\/avg\/max\/mdev = ([0-9.]+)\/([0-9.]+)\/([0-9.]+)\/([0-9.]+) ms/g,
+            regexPingResult: /(\d+)% packet loss, time (\d+)ms\nrtt min\/avg\/max\/mdev = ([0-9.]+)\/([0-9.]+)\/([0-9.]+)\/([0-9.]+) ms/g,
 
             // output result
             siteExecuted: '',
@@ -260,7 +260,13 @@ export default {
                                 in_name: item.in_bgp.name,
                                 out_name: item.out_bgp.name,
                                 source_ip: item.source_ip,
-                                site: item.site
+                                site: item.site,
+                                packet_loss: "",
+                                time: "",
+                                min: "",
+                                avg: "",
+                                max: "",
+                                mdev: ""
                             }
                         })
             // console.table(targetSourceIPs)
@@ -357,8 +363,8 @@ export default {
 
                         this.dummyList = result.data.map(function(item, index) {
                             item.site = item.in_bgp.site
-                            // delete item.id
-                            // delete item.jkb_task_id
+                            delete item.id
+                            delete item.jkb_task_id
                             return item
                         })
                     }.bind(this)
@@ -379,23 +385,16 @@ export default {
             }
 
             let sourceIPs = this.selectSourceIPs
-            this.$store.dispatch('global/startLoading')
-            for(let i=0; i<sourceIPs.length; i++){
-                let result = await this.getPingInfo(sourceIPs[i].site, sourceIPs[i].source_ip)
-                // console.log(result)
-
-                // 正規表達式擷取資訊
-                let arr = result.split(this.regex)
-                sourceIPs[i].packet_loss = arr[1] ? arr[1] : '100'
-                sourceIPs[i].time = arr[2]
-                sourceIPs[i].min = arr[3]
-                sourceIPs[i].avg = arr[4]
-                sourceIPs[i].max = arr[5]
-                sourceIPs[i].mdev = arr[6]
-            }
-            this.$store.dispatch('global/finishLoading')
-            // console.table(sourceIPs)
             this.pingResult = sourceIPs
+            
+            // 證明按 Button 有做事 XD
+            this.$store.dispatch('global/startLoading')
+            setTimeout(function(){ this.$store.dispatch('global/finishLoading') }.bind(this), 500)
+            
+            // 同步開打～
+            for(let i=0; i<sourceIPs.length; i++){
+                await this.getPingInfo(sourceIPs[i].site, sourceIPs[i].source_ip)
+            }
         },
         asyncPing: function() {
             if (! this.validateForm()) {
@@ -403,27 +402,22 @@ export default {
             }
 
             let sourceIPs = this.selectSourceIPs
-            sourceIPs.forEach(async function (item, i) {
-                let result = await this.getPingInfo(item.site, item.source_ip)
+            this.pingResult = sourceIPs
+            
+            // 證明按 Button 有做事 XD
+            this.$store.dispatch('global/startLoading')
+            setTimeout(function(){ this.$store.dispatch('global/finishLoading') }.bind(this), 500)
 
-                // 正規表達式擷取資訊
-                let arr = await result.split(this.regex)
-                sourceIPs[i].packet_loss = await arr[1]
-                sourceIPs[i].time = await arr[2]
-                sourceIPs[i].min = await arr[3]
-                sourceIPs[i].avg = await arr[4]
-                sourceIPs[i].max = await arr[5]
-                sourceIPs[i].mdev = await arr[6]
+            // 異步開打～
+            sourceIPs.forEach(async function (item, i) {
+                this.getPingInfo(item.site, item.source_ip)
             }.bind(this))
-            // console.table(sourceIPs)
-            this.pingResult = JSON.stringify(sourceIPs)
         },
-        getPingInfo: async function(site, sourceIP) {
+        getPingInfo: function(site, sourceIP) {
             if (! this.validateForm()) {
                 return 'inputs error'
             }
-            // this.$store.dispatch('global/startLoading')
-            return await this.$store
+            return this.$store
                 .dispatch('ping/getPingInfo', {
                     redirect_by: site,
                     machine_ip: "", // 因全使用 Dummy 後端有 .env，不用指定
@@ -433,13 +427,28 @@ export default {
                     count: this.count
                 })
                 .then(
-                    async function(result) {
-                        return await result.data.result
-                        this.$store.dispatch(
-                            'global/showSnackbarSuccess',
-                            'Success!'
-                        )
+                    function(result) {
+                        let matchedArr = result.data.result.split(this.regexPingResult)
+
+                        this.pingResult.forEach(function (item, i) {
+                            if (item.source_ip == sourceIP) {
+                                let tmp = this.pingResult[i]
+                                
+                                tmp.packet_loss = matchedArr[1] ? matchedArr[1] : '100'
+                                tmp.time = matchedArr[2]
+                                tmp.min = matchedArr[3]
+                                tmp.avg = matchedArr[4]
+                                tmp.max = matchedArr[5]
+                                tmp.mdev = matchedArr[6]
+                            }
+                        }.bind(this))
+
+                        // this.$store.dispatch(
+                        //     'global/showSnackbarSuccess',
+                        //     'Success!'
+                        // )
                         // this.$store.dispatch('global/finishLoading')
+                        return
                     }.bind(this)
                 )
                 .catch(
@@ -457,7 +466,7 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Test All Circut';
+        document.title = 'Test All Circuits';
 
         this.getBGP()
         this.getDummy()
