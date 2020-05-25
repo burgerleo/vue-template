@@ -10,6 +10,33 @@ export default {
 
     },
     actions: {
+        getCountry: (context, data = {}) => {
+            axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL2;
+
+            return axios.get("country").then(function (response) {
+                return Promise.resolve(response.data);
+            }).catch(function (error) {
+                return Promise.reject(error.response.data);
+            });
+        },
+        getProvince: (context, data = {}) => {
+            axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL2;
+
+            return axios.get("province").then(function (response) {
+                return Promise.resolve(response.data);
+            }).catch(function (error) {
+                return Promise.reject(error.response.data);
+            });
+        },
+        getCity: (context, data = {}) => {
+            axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL2;
+
+            return axios.get("city").then(function (response) {
+                return Promise.resolve(response.data);
+            }).catch(function (error) {
+                return Promise.reject(error.response.data);
+            });
+        },
         getIpLocation: (context, data = {}) => {
             axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL2;
 

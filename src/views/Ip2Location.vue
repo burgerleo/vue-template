@@ -5,9 +5,10 @@
                 v-toolbar(flat white)
                     v-toolbar-title IP Location
                     v-divider.mx-4(inset vertical)
-                    v-text-field(v-model="searchIP" append-icon="mdi-magnify" label='Search IP (press key "enter")' single-line hide-details @keydown.enter="saveQuery")
+                    v-text-field(v-model="searchIP" append-icon="mdi-magnify" label='Search IP (press key "enter")' single-line hide-details @keydown.enter="toSearchCIDR")
                     v-divider.mx-4(inset vertical)
                     v-spacer
+                    v-btn.mb-2.mr-2(color="primary" dark @click="toSearch") Search
                     v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
                     v-btn.mb-2.mr-2(color="primary" dark @click="init")
                         v-icon mdi-refresh
@@ -76,26 +77,33 @@ export default {
                     align: 'left',
                     sortable: true,
                     width: '100px',
-                    value: 'cidr'
+                    value: 'cidr',
+                    search: true
                 },
                 {
                     text: 'GEC',
                     align: 'left',
                     sortable: true,
                     width: '100px',
-                    value: 'gec'
+                    value: 'gec',
+                    search: 'combobox',
+                    comboboxList: []
                 },
                 {
                     text: 'Province',
                     align: 'left',
                     sortable: true,
-                    value: 'province'
+                    value: 'province',
+                    search: 'combobox',
+                    comboboxList: []
                 },
                 {
                     text: 'City',
                     align: 'left',
                     sortable: true,
-                    value: 'city'
+                    value: 'city',
+                    search: 'combobox',
+                    comboboxList: []
                 },
                 {
                     text: 'Company',
@@ -122,13 +130,13 @@ export default {
             items: [],
             loading: false,
             totalPage: 1,
-            limitMaxPage: 10,
+            limitMaxPage: 5,
             query: {},
             searchIP: '',
 
             timer: null,
 
-            perPageCount: 500
+            perPageCount: 10
         }
     },
     watch: {},
@@ -138,7 +146,7 @@ export default {
             this.searchText = ''
             this.searchIP = ''
             this.query = {}
-            this.init()
+            // this.init()
             this.$refs.table2.$emit('clearAllFilter')
         },
         dialogSwitch(bool, item) {
@@ -172,12 +180,14 @@ export default {
             this.dialog.search = false
             this.item = {}
         },
-        saveQuery() {
+        toSearchCIDR() {
             const pattern = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/
 
             if (!this.searchIP) {
-                this.query = {}
+                this.query.cidr = null
             } else if (pattern.test(this.searchIP)) {
+                this.query = {}
+
                 this.query.cidr = this.searchIP + '/32'
             } else {
                 alert('IP Error !')
@@ -186,8 +196,16 @@ export default {
 
             this.init()
         },
+        toSearch() {
+            this.query = Object.assign(this.searchList, {})
+            this.query.cidr = null
+            this.searchIP = null
+
+            this.init()
+        },
         init() {
             this.$store.dispatch('global/startLoading')
+
             clearInterval(this.timer)
 
             var page = 1
@@ -197,6 +215,71 @@ export default {
             // Get 第一頁，內有詳細分頁資訊
             this.getItemsAction(page, this.perPageCount, needLoop)
         },
+        initColumn() {
+            this.getCountry()
+            this.getProvince()
+            this.getCity()
+        },
+        getCountry() {
+            this.$store
+                .dispatch('ip2LocationRawData/getCountry')
+                .then(
+                    function(result) {
+                        this.gec = result.data
+                        this.headers[2].comboboxList = result.data
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        getProvince() {
+            this.$store
+                .dispatch('ip2LocationRawData/getProvince')
+                .then(
+                    function(result) {
+                        this.gec = result.data
+                        this.headers[3].comboboxList = result.data
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        getCity() {
+            this.$store
+                .dispatch('ip2LocationRawData/getCity')
+                .then(
+                    function(result) {
+                        this.gec = result.data
+                        this.headers[4].comboboxList = result.data
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
         getFormSecondPageToLastPage() {
             // 取得從第二頁至最後一頁的資料
             var page = 2
@@ -204,8 +287,6 @@ export default {
                 this.totalPage > this.limitMaxPage
                     ? this.limitMaxPage
                     : this.totalPage
-
-            console.log(totalPage)
 
             this.timer = setInterval(() => {
                 if (page > totalPage) {
@@ -246,6 +327,7 @@ export default {
                                 : this.totalPage
 
                         console.log('page: ' + page)
+                        console.log('totalPage: ' + totalPage)
                         if (page >= totalPage) {
                             this.loading = false
                         }
@@ -318,7 +400,8 @@ export default {
     },
     mounted() {
         document.title = 'IP2Location'
-        this.init()
+        this.initColumn()
+        // this.init()
     }
 }
 </script>

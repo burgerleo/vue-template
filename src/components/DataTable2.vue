@@ -6,7 +6,10 @@
                 tr
                     td 
                     td(v-for="header in headerList")
-                        v-text-field.mt-0.pt-0(v-model="searchList[header. value]" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event, header.value)" dense)
+                        v-text-field.mt-0.pt-0(v-if="header.search != 'combobox'" v-model="searchList[header. value]" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event, header.value)" dense)
+                        v-combobox.mt-0.pt-0(v-if="header.search == 'combobox'" :items="header.comboboxList" :label="header.text" hide-selected  v-model="searchList[header. value]" dense single-line hide-details)
+                            template(v-slot:no-data)
+                                v-card-text No results matching 
             template(v-slot:item="{item,index}")
                 tr
                     td {{rowIndex(index)}}
@@ -40,7 +43,7 @@ export default {
             type: Array,
             default: []
         },
-        hideFooter:{
+        hideFooter: {
             type: Boolean,
             default: false
         },
@@ -158,24 +161,26 @@ export default {
 
             for (var searchKey in this.searchList) {
                 var searchString = this.searchList[searchKey]
-                searchString = searchString.toString().toLocaleUpperCase()
+                if (searchString) {
+                    searchString = searchString.toString().toLocaleUpperCase()
 
-                searchResult = this.newItems.filter(function(item) {
-                    var searchData = item[searchKey]
+                    searchResult = this.newItems.filter(function(item) {
+                        var searchData = item[searchKey]
 
-                    if (searchData === null) {
-                        return false
-                    }
+                        if (searchData === null) {
+                            return false
+                        }
 
-                    return (
-                        searchData
-                            .toString()
-                            .toLocaleUpperCase()
-                            .indexOf(searchString) !== -1
-                    )
-                })
+                        return (
+                            searchData
+                                .toString()
+                                .toLocaleUpperCase()
+                                .indexOf(searchString) !== -1
+                        )
+                    })
 
-                this.newItems = searchResult
+                    this.newItems = searchResult
+                }
             }
         },
         backupAndRcoverData() {
