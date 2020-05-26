@@ -26,7 +26,21 @@
                                 td
                                     v-text-field.mt-0.pt-0(v-model="searchList.area"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'area')")
                                 td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.edge" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'edge')")
+                                    v-text-field.mt-0.pt-0(v-model="searchList.edge_oob" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'edge_oob')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.edge_slb" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'edge_slb')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.edge_backend" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'edge_backend')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.os" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'os')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.v_cpu" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'v_cpu')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.v_memory" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'v_memory')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.disk_size" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'disk_size')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.status" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'status')")
 
                         template(v-slot:item="{item,index}")
                             tr
@@ -34,7 +48,14 @@
                                 td {{item.customer}}
                                 td {{item.name}}
                                 td {{item.area}}
-                                td {{item.edge}}
+                                td {{item.edge_oob}}
+                                td {{item.edge_slb}}
+                                td {{item.edge_backend}}
+                                td {{item.os}}
+                                td {{item.v_cpu}}
+                                td {{item.v_memory}}
+                                td {{item.disk_size}}
+                                td {{item.status}}
                                 td
                                     v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
                                     v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
@@ -54,7 +75,14 @@
                             v-select(v-model="edge.customer_id" :items="customerList" label="Customer" name="customer" item-text="name" item-value="id")
                             v-text-field(v-model="edge.name" label="Edge Name" type="text" name="name" :rules="[rules.required]")
                             v-select(v-model="edge.area" :items="areaList" label="Edge Area"  :rules="[rules.required]")
-                            v-text-field(v-model="edge.edge" label="Edge OOB" type="text" name="edge" :rules="[rules.required]")
+                            v-text-field(v-model="edge.edge_oob" label="Edge OOB" type="text" name="edge_oob" :rules="[rules.required]")
+                            v-text-field(v-model="edge.edge_slb" label="Edge SLB" type="text" name="edge_slb")
+                            v-text-field(v-model="edge.edge_backend" label="Edge Backend" type="text" name="edge_backend" )
+                            v-text-field(v-model="edge.os" label="OS" type="text" name="os" )
+                            v-text-field(v-model="edge.v_cpu" label="vCPU" type="text" name="v_cpu")
+                            v-text-field(v-model="edge.v_memory" label="vMEM" type="text" name="v_memory")
+                            v-text-field(v-model="edge.disk_size" label="Disk size" type="text" name="disk_size")
+                            v-select(v-model="edge.status" :items="status" item-text="name" item-value="id" name="status" label="Status"  :rules="[rules.required]")
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -102,13 +130,13 @@
             value: 'index'
           },
           {
-            text: 'Customer',
+            text: 'Customer ID',
             align: 'left',
             sortable: true,
             value: 'customer'
           },
           {
-            text: 'Edge',
+            text: 'Hostname',
             align: 'left',
             sortable: true,
             value: 'name'
@@ -124,7 +152,56 @@
             align: 'left',
             sortable: true,
             // width: '10px',
-            value: 'edge'
+            value: 'edge_oob'
+          },
+          {
+            text: 'Edge SLB',
+            align: 'left',
+            sortable: true,
+            // width: '10px',
+            value: 'edge_slb'
+          },
+          {
+            text: 'Edge Backend',
+            align: 'left',
+            sortable: true,
+            // width: '10px',
+            value: 'edge_backend'
+          },
+          {
+            text: 'OS',
+            align: 'left',
+            sortable: true,
+            // width: '10px',
+            value: 'os'
+          },
+          {
+            text: 'vCPU',
+            align: 'left',
+            sortable: true,
+            // width: '10px',
+            value: 'v_cpu'
+          },
+          {
+            text: 'vMEM',
+            align: 'left',
+            sortable: true,
+            // width: '10px',
+            value: 'v_memory'
+          },
+          {
+            text: 'Disk size',
+            align: 'left',
+            sortable: true,
+            // width: '10px',
+            value: 'disk_size'
+          },
+          {
+            text: 'Status',
+            align: 'left',
+            sortable: true,
+            // width: '10px',
+            value: 'status'
           },
           {
             text: 'Actions',
@@ -137,7 +214,8 @@
         desserts: [],
         searchList: {},
         copyDesserts: null,
-        customerList:[]
+        customerList:[],
+        status:['spare', 'alive']
       }
     },
     methods: {
@@ -155,6 +233,7 @@
               result.data.forEach((item) =>
               {
                 item.customer = arr[item.customer_id]
+                item.status = item.status===0?'spare':'alive'
               })
 
               this.desserts = result.data
@@ -193,16 +272,6 @@
       newDialog: function() {
         this.formTitle = 'Add Edge'
         this.dialog.add = true
-
-        // this.bgp = {
-        //   id: -1,
-        //   site: 'HK',
-        //   isp: 'TWG',
-        //   routes: 'G',
-        //   br: 'R1'
-        // }
-        //
-        // this.shortName()
       },
       editDialog: function(item) {
         this.formTitle = 'Edit Edge'
@@ -225,9 +294,12 @@
       },
       store: function() {
         // 新增 API
+        const data = this.edge
+        data.status = data.status== 'alive' ? 1 : 0;
+
         this.$store.dispatch('global/startLoading')
         this.$store
-          .dispatch('edge/createEdge', this.edge)
+          .dispatch('edge/createEdge', data)
           .then(
             function(result) {
               this.$store.dispatch(
@@ -246,14 +318,15 @@
               this.init()
             }.bind(this)
           )
-        // this.desserts.push(this.bgp)
-        // Object.assign(this.desserts[this.editedIndex], this.bgp)
       },
       update: function() {
         // Update API
+        const data = this.edge
+        data.status = data.status== 'alive' ? 1 : 0;
+
         this.$store.dispatch('global/startLoading')
         this.$store
-          .dispatch('edge/updateEdge', this.edge)
+          .dispatch('edge/updateEdge', data)
           .then(
             function(result) {
               this.$store.dispatch(
@@ -272,11 +345,8 @@
                 error.message
               )
               this.init()
-
-              // this.$store.dispatch('global/finishLoading')
             }.bind(this)
           )
-        // this.desserts.push(this.bgp)
       },
       save() {
         // 判斷是否執行哪一種 API
@@ -305,8 +375,6 @@
                 'Success!'
               )
               this.init()
-
-              // this.$store.dispatch('global/finishLoading')
             }.bind(this)
           )
           .catch(
@@ -316,12 +384,8 @@
                 error.message
               )
               this.init()
-
-              // this.$store.dispatch('global/finishLoading')
             }.bind(this)
           )
-
-        // this.desserts.splice(this.editedIndex, 1)
         this.closeDialog()
       },
       rowIndex: function(index) {

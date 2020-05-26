@@ -54,14 +54,9 @@ export default {
                         //     ]
                         // },
                         {
-                            title: 'Origin Server Testing',
+                            title: 'Curl & F12',
                             icon: 'mdi-check',
                             router: '/curl'
-                        },
-                        {
-                            title: 'Origin Server Periodical Testing',
-                            icon: 'mdi-message-draw',
-                            router: '/periodical-curl'
                         },
                         {
                             title: 'Ping',
@@ -72,6 +67,11 @@ export default {
                             title: 'Ping Realtime',
                             icon: 'mdi-lan-pending',
                             router: '/ping-realtime'
+                        },
+                        {
+                            title: 'Test All Circuits',
+                            icon: 'mdi-vector-circle',
+                            router: '/test-all-circuits'
                         },
                         {
                             title: 'Traceroute',

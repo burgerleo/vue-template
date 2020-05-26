@@ -335,7 +335,7 @@ export default {
                     this.edgeList = result.data.map((item) => {
                         return {
                             name: item.name,
-                            edge: item.edge,
+                            edge_oob: item.edge_oob,
                             area: item.area
                         }
                     })
@@ -358,7 +358,7 @@ export default {
                 // ex: HK:hk-ubuntu-test
                 return v.area +':'+ v.name == this.site
             }.bind(this))
-            return targetEdge ? targetEdge.edge : ''
+            return targetEdge ? targetEdge.edge_oob : ''
         },
 
         // WebSocket ++
@@ -374,16 +374,14 @@ export default {
         },
         websocketonmessage(msg){ //接收數據
             // console.log(msg.data);
-            let lines = msg.data.split("\\n");
+            let lines = msg.data.split("\n");
             let tmp = this.pingBody;
 
-            lines.forEach( line => {
-                if (line.length >0 ) 
-                    tmp.push(this.getFormattedDate() + " " +line);
-            });
+            // 排除 split 後的空字串
+            tmp.push(lines[0]);
             
             if (tmp.length > 10) {
-                tmp.splice(1, 1);
+                tmp.splice(0, 1);
             }
             this.pingBody = tmp;
         },

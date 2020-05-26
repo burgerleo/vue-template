@@ -7,6 +7,7 @@ import Curl from "./views/Curl.vue";
 import PeriodicalCurl from "./views/PeriodicalCurl.vue";
 import Ping from "./views/Ping.vue";
 import PingRealtime from "./views/PingRealtime.vue";
+import TestAllCircuits from "./views/TestAllCircuits.vue";
 import Traceroute from "./views/Traceroute.vue";
 import Mtr from "./views/Mtr.vue";
 import Dig from "./views/Dig.vue";
@@ -76,6 +77,11 @@ export default new Router({
                     component: PingRealtime
                 },
                 {
+                    name: "Test All Circuits",
+                    path: "test-all-circuits",
+                    component: TestAllCircuits
+                },
+                {
                     name: "SSL File",
                     path: "crt-key",
                     component: CrtKey
@@ -141,6 +147,11 @@ export default new Router({
                     component: Ip2Location
                 }
             ]
+        },
+        {
+            name: "Origin Server Periodical Testing",
+            path: "/new-periodical-curl/:path?",
+            component: PeriodicalCurl
         }
     ]
 });

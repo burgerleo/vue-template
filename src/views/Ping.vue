@@ -311,7 +311,7 @@ export default {
                     this.edgeList = result.data.map((item) => {
                         return {
                             name: item.name,
-                            edge: item.edge,
+                            edge_oob: item.edge_oob,
                             area: item.area
                         }
                     })
@@ -345,8 +345,8 @@ export default {
                 })
                 .then(
                     function(result) {
-                        this.pingResult = result.data
-                        this.cliExecuted = this.cliExam
+                        this.pingResult = result.data.result
+                        this.cliExecuted = result.data.command //this.cliExam
                         this.siteExecuted = this.site
                         this.$store.dispatch(
                             'global/showSnackbarSuccess',
@@ -370,7 +370,7 @@ export default {
                 // ex: HK:hk-ubuntu-test
                 return v.area +':'+ v.name == this.site
             }.bind(this))
-            return targetEdge ? targetEdge.edge : ''
+            return targetEdge ? targetEdge.edge_oob : ''
         },
         validateForm: function() {
             return this.$refs.form.validate()

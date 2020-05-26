@@ -1,5 +1,6 @@
 <template lang="pug">
     v-container#sample-layout(grid-list-lg)
+        Loading
         v-layout(wrap column)
             v-flex(xs12)
                 v-card
@@ -9,18 +10,15 @@
                                 v-flex.pt-0.pb-0(xs12 sm12 md12)
                                     v-layout.px-2(row)
                                         v-flex.pt-0.pb-0(xs12 sm3 md3)
-                                            v-text-field(v-model="second" label="Second" type="number" min="10" max="100")
-                                    v-radio-group.pt-0.pb-0(v-model="area" :mondatory="true")
-                                        v-layout.px-2(row)
-                                            v-flex.pt-5.pb-0(xs12 sm3 md1)
-                                                v-radio(label="TW" :value="0")
-                                            v-flex.pt-0.pb-0(xs12 sm3 md3)
-                                                v-select(:disabled="area==1" v-model="edge" :items="twEdge" label="TW Edge" name="tw_edge" item-text="text" item-value="id")
-                                        v-layout.px-2(row)
-                                            v-flex.pt-5.pb-0(xs12 sm3 md1)
-                                                v-radio(label="HK" :value="1")
-                                            v-flex.pt-0.pb-0(xs12 sm3 md3)
-                                                v-select(:disabled="area==0" v-model="edge" :items="hkEdge" label="HK Edge" name="hk_edge" item-text="text" item-value="id")
+                                            v-text-field(v-model="second" label="Second" type="number" min="5" max="100")
+                                                v-layout.ml-auto.mr-auto(wrap v-if="testType==0")
+                                    v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm12 md12)
+                                        v-radio-group.pt-0.pb-0.mt-0.mb-0(v-model="area" :mondatory="true" row)
+                                            v-radio(label="TW" :value="0")
+                                            v-radio(label="HK" :value="1")
+                                            v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm6 md6)
+                                                v-select(v-if="area==0" :disabled="area==1" v-model="edge" :items="twEdge" label="TW Edge" name="tw_edge" item-text="text" item-value="id")
+                                                v-select(v-if="area==1" :disabled="area==0" v-model="edge" :items="hkEdge" label="HK Edge" name="hk_edge" item-text="text" item-value="id")
                                 v-flex.pt-0.pb-0(xs12 sm6 md4)
                                     v-select(v-model="method" :items="selectMethod" label="HTTP Method" item-text="name" item-value="id" :rules="[rules.required]" @change="defaultParameters")
                                 v-flex.pt-0.pb-0(xs12 sm6 md4)
@@ -81,7 +79,7 @@
                                         code.bash
                                     v-card-text.font-weight-bold.pb-0 Response Code & Download Time:
                                     pre(v-highlightjs="responseCodeAndTimeTotal")
-                                        code.java.display-1.font-weight-black
+                                        code.python.headline.font-weight-black
 
                                     v-card-text.font-weight-bold Header:
                                         v-expansion-panels
@@ -102,7 +100,11 @@
 </template>
 <script>
   import textFieldRules from "../utils/textFieldRules";
+  import Loading from '../components/Loading'
   export default {
+    components: {
+      Loading
+    },
     mixins: [textFieldRules],
     data() {
       return {
@@ -112,7 +114,7 @@
         postInput:'Parameters',
         postBody:'',
         method:'GET',
-        redirect: 0,
+        redirect: 3,
         url:'',
         headerOnly:0,
         commandData:'',
@@ -128,6 +130,8 @@
         headers: [],
         area: 0,
         timestamp:'',
+        date:'',
+        time:'',
         responseCodeAndTimeTotal:'',
         domainList:[],
         hostIpList: [],
@@ -138,17 +142,26 @@
         twEdge:[],
         edge:'',
         testType : 0,
-        second: 10,
+        second: 5,
         pollingList:[],
         tabItems: [],
         tab: null,
+        path:''
       };
     },
     watch:{
+      // url: function(value) {
+      //   this.originalDataFormat(value)
+      //   if (value !== '' && value.match(/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/)){
+      //     this.getDomainList(value)
+      //   }
+      // },
       url: function(value) {
-        this.originalDataFormat(value)
-        if (value !== '' && value.match(/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/)){
-          this.getDomainList(value)
+        if (value !== '' && value.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.%]+$/gm)){
+          const domain = this.originalDataFormat(value)
+          this.getDomainList(domain)
+        }else{
+          this.hostName = this.url
         }
       },
       area: function (value) {
@@ -195,24 +208,26 @@
           .dispatch("curl/getCurlInfo", data)
           .then(
             function(result) {
-              const time = new Date();
-              this.timestamp = time;
+              const time = new Date().toString();
+              const timeArray = time.split(" ");
+              this.date = timeArray[0] +' '+ timeArray[1]+ ' ' + timeArray[2] +' '+ timeArray[3];
+              this.time = timeArray[4] +' '+ timeArray[5];
               this.headerData = result.data.header;
               this.bodyData = result.data.body;
               this.commandData = result.data.command;
               this.responseCode = result.data.responseCode;
               this.timeTotal = result.data.timeTotal
               this.responseCodeAndTimeTotal = (this.responseCodeAndTimeTotal === '')
-                ? this.timestamp
-                + ' '
+                ? this.date+ '   ' + this.time
+                + '   '
                 + result.data.responseCode
-                + ' '
+                + '   '
                 + result.data.timeTotal
                 : this.responseCodeAndTimeTotal
-                + "\r\n " + this.timestamp
-                + ' '
+                + "\r\n " + this.date+ '   ' + this.time
+                + '   '
                 + result.data.responseCode
-                + ' '
+                + '   '
                 + result.data.timeTotal
               this.$store.dispatch("global/finishLoading");
             }.bind(this)
@@ -234,11 +249,17 @@
         }
       },
       originalDataFormat: function(value) {
-        const protomatch = /^(https?):\/\//
-        this.hostName = value.replace(protomatch, '');
-        if(protomatch && this.url != ''){
-          this.port = value.indexOf('https') ? 80 : 443
+        let url = '';
+        if(/(http(s?)):\/\//i.test(value)) {
+          url = value;
+        }else{
+          url= 'http://' + value;
         }
+
+        url = new URL(url);
+        this.hostName = url.host;
+        this.port = url.href.indexOf('https') ? 80 : 443
+        return url.host;
       },
       defaultParameters : function() {
         if(this.postInput == 'Parameters' || this.selectMethod=='GET'){
@@ -331,7 +352,7 @@
               })
 
               result.data.forEach((item) => {item.customer
-                item.text = item.name + ' (' + item.edge + ') '
+                item.text = item.name + ' (' + item.edge_oob + ') '
                 if (item.area=='HK'){
                   this.hkEdge.push(item)
                   this.edge = this.twEdge[0].id
@@ -370,6 +391,7 @@
       this.getEdgeInfo();
     },mounted() {
       document.title = 'Periodical Curl';
+      this.url = this.path = this.$route.query.path ? this.$route.query.path : '';
     }
   };
 </script>
