@@ -6,8 +6,8 @@
                 tr
                     td 
                     td(v-for="header in headerList")
-                        v-text-field.mt-0.pt-0(v-if="header.search != 'combobox'" v-model="searchList[header. value]" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event, header.value)" dense)
-                        v-combobox.mt-0.pt-0(v-if="header.search == 'combobox'" :items="header.comboboxList" :label="header.text" hide-selected  v-model="searchList[header. value]" dense single-line hide-details)
+                        v-text-field.mt-0.pt-0(v-if="header.search === undefined ? true : header.search" v-model="searchList[header. value]" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event, header.value)" dense)
+                        v-combobox.mt-0.pt-0(v-if="header.combobox" :items="header.combobox" :label="header.text" hide-selected  v-model="searchList[header. value]" dense single-line hide-details)
                             template(v-slot:no-data)
                                 v-card-text No results matching 
             template(v-slot:item="{item,index}")

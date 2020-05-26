@@ -86,24 +86,24 @@ export default {
                     sortable: true,
                     width: '100px',
                     value: 'gec',
-                    search: 'combobox',
-                    comboboxList: []
+                    search: false,
+                    combobox: []
                 },
                 {
                     text: 'Province',
                     align: 'left',
                     sortable: true,
                     value: 'province',
-                    search: 'combobox',
-                    comboboxList: []
+                    search: false,
+                    combobox: []
                 },
                 {
                     text: 'City',
                     align: 'left',
                     sortable: true,
                     value: 'city',
-                    search: 'combobox',
-                    comboboxList: []
+                    search: false,
+                    combobox: []
                 },
                 {
                     text: 'Company',
@@ -130,13 +130,11 @@ export default {
             items: [],
             loading: false,
             totalPage: 1,
-            limitMaxPage: 5,
+            perPageCount: 1000,
+            limitMaxPage: 50,
             query: {},
             searchIP: '',
-
-            timer: null,
-
-            perPageCount: 10
+            timer: null
         }
     },
     watch: {},
@@ -203,18 +201,6 @@ export default {
 
             this.init()
         },
-        init() {
-            this.$store.dispatch('global/startLoading')
-
-            clearInterval(this.timer)
-
-            var page = 1
-            var needLoop = 1
-            this.items = []
-            this.loading = true
-            // Get 第一頁，內有詳細分頁資訊
-            this.getItemsAction(page, this.perPageCount, needLoop)
-        },
         initColumn() {
             this.getCountry()
             this.getProvince()
@@ -226,7 +212,7 @@ export default {
                 .then(
                     function(result) {
                         this.gec = result.data
-                        this.headers[2].comboboxList = result.data
+                        this.headers[2].combobox = result.data
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
@@ -246,7 +232,7 @@ export default {
                 .then(
                     function(result) {
                         this.gec = result.data
-                        this.headers[3].comboboxList = result.data
+                        this.headers[3].combobox = result.data
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
@@ -266,7 +252,7 @@ export default {
                 .then(
                     function(result) {
                         this.gec = result.data
-                        this.headers[4].comboboxList = result.data
+                        this.headers[4].combobox = result.data
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
@@ -279,6 +265,18 @@ export default {
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
+        },
+        init() {
+            this.$store.dispatch('global/startLoading')
+
+            clearInterval(this.timer)
+
+            var page = 1
+            var needLoop = 1
+            this.items = []
+            this.loading = true
+            // Get 第一頁，內有詳細分頁資訊
+            this.getItemsAction(page, this.perPageCount, needLoop)
         },
         getFormSecondPageToLastPage() {
             // 取得從第二頁至最後一頁的資料
@@ -295,7 +293,7 @@ export default {
                     this.getItemsAction(page, this.perPageCount)
                 }
                 page++
-            }, 2000)
+            }, 5000)
         },
         getItemsAction(page, per_page, loop = 0) {
             var data = Object.assign(
@@ -326,8 +324,8 @@ export default {
                                 ? this.limitMaxPage
                                 : this.totalPage
 
-                        console.log('page: ' + page)
-                        console.log('totalPage: ' + totalPage)
+                        // console.log('page: ' + page)
+                        // console.log('totalPage: ' + totalPage)
                         if (page >= totalPage) {
                             this.loading = false
                         }
