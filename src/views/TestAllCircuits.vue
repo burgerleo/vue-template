@@ -204,12 +204,6 @@ export default {
                     value: 'packet_loss',
                 },
                 {
-                    text: 'Time(ms)',
-                    align: 'center',
-                    sortable: true,
-                    value: 'time'
-                },
-                {
                     text: 'Min(ms)',
                     align: 'center',
                     sortable: true,
