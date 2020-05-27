@@ -93,6 +93,7 @@ export default {
                     text: 'Province',
                     align: 'left',
                     sortable: true,
+                    // width: '200px',
                     value: 'province',
                     search: false,
                     combobox: []
@@ -101,6 +102,7 @@ export default {
                     text: 'City',
                     align: 'left',
                     sortable: true,
+                    // width: '200px',
                     value: 'city',
                     search: false,
                     combobox: []
@@ -109,6 +111,7 @@ export default {
                     text: 'Company',
                     align: 'left',
                     sortable: true,
+                    // width: '200px',
                     value: 'company'
                 },
                 {
@@ -185,6 +188,7 @@ export default {
                 this.query.cidr = null
             } else if (pattern.test(this.searchIP)) {
                 this.query = {}
+                this.searchList = {}
 
                 this.query.cidr = this.searchIP + '/32'
             } else {
@@ -405,6 +409,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container {
+    max-width: 100%;
+}
 .v-data-table {
     th {
         user-select: auto;
