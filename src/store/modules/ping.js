@@ -17,6 +17,15 @@ export default {
             .catch(function (error) {
                 return Promise.reject(error.response.data);
             });
-        }
+        },
+        getPingReport: (context, data) => {
+            return axios.get("dummy/cronjob", data)
+            .then(function (response) {
+                return Promise.resolve(response.data);
+            })
+            .catch(function (error) {
+                return Promise.reject(error.response.data);
+            });
+        },
     }
 }

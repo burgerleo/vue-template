@@ -111,10 +111,12 @@
                                 v-flex(xs2 sm2 md2)
                                     v-text-field(v-model="site" label="From" readonly)
                             v-layout.mt-n1
-                                v-flex(xs6 sm6 md6)
+                                v-flex(xs4 sm4 md4)
                                     v-btn.mt-n3(color="primary" block @click="syncPing()") SYNC ({{selectSourceIPs.length * count * interval}} s)
-                                v-flex(xs6 sm6 md6)
+                                v-flex(xs4 sm4 md4)
                                     v-btn.mt-n3(color="primary" block @click="asyncPing()") ASYNC ({{ selectSourceIPs.length ? count * interval : 0}} s)
+                                v-flex(xs4 sm4 md4)
+                                    v-btn.mt-n3(color="purple lighten-2" block @click="reportPing()") REPORT
                             v-layout.pt-2(v-show="cliExecuted != false")
                                 v-flex(xs8 sm8 md8)
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
@@ -124,6 +126,10 @@
                                 v-flex(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Results:
                                     DataTable2(ref="table2" :headers="headers" :items="pingResult" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :searchList="searchList")
+                            v-layout.mt-n5(v-show='pingReport.length > 0')
+                                v-flex(xs12 sm12 md12)
+                                    v-card-text.font-weight-bold.pb-0.pl-1 Report:
+                                    DataTable2(ref="table2" :headers="headersReport" :items="pingReport" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :searchList="searchList")
 </template>
 
 <script>
@@ -161,6 +167,7 @@ export default {
             siteExecuted: '',
             cliExecuted: false,
             pingResult: [],
+            pingReport: [],
 
             // datatable2
             itemsPerPage: 15,
@@ -220,6 +227,33 @@ export default {
                     align: 'center',
                     sortable: true,
                     value: 'max'
+                }
+            ],
+
+            headersReport: [
+                {
+                    text: '#',
+                    align: 'center',
+                    sortable: false,
+                    value: 'index'
+                },
+                {
+                    text: 'CPIP',
+                    align: 'center',
+                    sortable: true,
+                    value: 'origin'
+                },
+                {
+                    text: 'Packet Loss(%)',
+                    align: 'center',
+                    sortable: true,
+                    value: 'packet_loss',
+                },
+                {
+                    text: 'Avg(ms)',
+                    align: 'center',
+                    sortable: true,
+                    value: 'rtt'
                 }
             ],
         }
@@ -452,6 +486,26 @@ export default {
                             error.message
                         )
                         // this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        reportPing: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('ping/getPingReport')
+                .then(
+                    function(result) {
+                        this.pingReport = result.data
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
         },
