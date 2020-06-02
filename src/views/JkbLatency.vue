@@ -83,8 +83,22 @@ export default {
                 TW: [],
                 PH: []
             },
-            bgpList: this.$store.getters['dummy/bgpList'](),
-            bgpList2: this.$store.getters['dummy/bgpListPartition'](),
+            bgpList: {
+                HK: [],
+                TW: [],
+                PH: []
+            },
+            bgpList2: {
+                HK: {
+                    C: [],
+                    G: []
+                },
+                TW: {
+                    C: [],
+                    G: []
+                },
+                PH: []
+            },
             tableData: {
                 HK: {},
                 TW: {},
@@ -169,7 +183,10 @@ export default {
                     function(result) {
                         for (var config of result.data) {
                             if (config.attributes) {
-                                this.configs[config.attributes] = Object.assign({}, config.actions)
+                                this.configs[config.attributes] = Object.assign(
+                                    {},
+                                    config.actions
+                                )
                             }
                         }
 
@@ -265,13 +282,11 @@ export default {
         setMaxAndMin() {
             this.range.china = [
                 this.configs.rankbar.china.min,
-                this.configs.rankbar.china.max,
-            
+                this.configs.rankbar.china.max
             ]
             this.range.global = [
                 this.configs.rankbar.global.min,
-                this.configs.rankbar.global.max,
-            
+                this.configs.rankbar.global.max
             ]
         },
         setConfigByRankbar() {
@@ -426,6 +441,8 @@ export default {
             this.tableData = tableData
             this.headers = headerList
 
+            // console.log(tableData)
+
             this.$store.dispatch('dummy/bgpListReorder', bgpList)
             this.bgpList = this.$store.getters['dummy/bgpList']()
             this.bgpList2 = this.$store.getters['dummy/bgpListPartition']()
@@ -514,7 +531,7 @@ export default {
 .container {
     min-width: 100%;
 }
-.table_border{
+.table_border {
     border-width: 3px;
     border-style: dashed;
     border-color: grey;

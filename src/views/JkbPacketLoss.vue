@@ -70,8 +70,22 @@ export default {
                 TW: [],
                 PH: []
             },
-            bgpList: this.$store.getters['dummy/bgpList'](),
-            bgpList2: this.$store.getters['dummy/bgpListPartition'](),
+            bgpList: {
+                HK: [],
+                TW: [],
+                PH: []
+            },
+            bgpList2: {
+                HK: {
+                    C: [],
+                    G: []
+                },
+                TW: {
+                    C: [],
+                    G: []
+                },
+                PH: []
+            },
             tableData: {
                 HK: {},
                 TW: {},
