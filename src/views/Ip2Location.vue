@@ -13,7 +13,7 @@
                     v-btn.mb-2.mr-2(color="primary" dark @click="init")
                         v-icon mdi-refresh
 
-                DataTable2(ref="table2" :headers="headers" :items="items" :loading="loading" :searchText="searchText" :searchList="searchList" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" @showDialog="dialogSwitch")
+                DataTable2(ref="table2" :headers="headers" :items="items" :loading="loading" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" @showDialog="dialogSwitch")
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card

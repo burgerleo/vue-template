@@ -29,8 +29,7 @@
                             v-btn.mb-2.mr-2(color="primary" dark @click="getDummy")
                                 v-icon mdi-refresh
                         
-                    DataTable2(ref="table2" v-show="tabOn.table" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :setUripath="jkbURI" @showDialog="dialogSwitch")
-
+                    DataTable2(ref="table2" v-show="tabOn.table" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :setUripath="jkbURI" @showDialog="dialogSwitch")
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
                     v-card-title.title {{formTitle}}

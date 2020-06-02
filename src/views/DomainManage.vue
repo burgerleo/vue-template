@@ -3,66 +3,16 @@
         v-layout
             v-flex(xs12 sm12 md12)
                 v-card
-                    v-data-table.elevation-1(:headers="headers" :items="desserts" :search="searchText" dense :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event" hide-default-footer)
-                        template(v-slot:top)
-                            v-toolbar(flat white)
-                                v-toolbar-title FQDN Management
-                                v-divider.mx-4(inset vertical)
-                                v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details @keydown.enter="onSearch" @click:append="onSearch")
-                                v-divider.mx-4(inset vertical)
-                                v-spacer
-                                v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
-                                v-btn.mb-2.mr-2(color="primary" dark @click="init")
-                                    v-icon mdi-refresh
-                                //- v-menu(offset-y)
-                                    template(v-slot:activator="{on}")
-                                        v-btn(icon small color="primary" v-on="on")
-                                            v-icon mdi-dots-vertical
-                                    v-list(width="250px")
-                                        v-list-item-group
-                                            v-list-item
-                                                v-list-item-content(@click="clearFilter") Download Origin IP/FQDN
-
-                        template(v-slot:header="{item,index}")
-                            tr
-                                td #
-                                td 
-                                    v-text-field.mt-0.pt-0(v-model="searchList.domain" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'domain')")
-                                td 
-                                    v-text-field.mt-0.pt-0(v-model="searchList.ip" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'ip')")
-                                td 
-                                    v-text-field.mt-0.pt-0(v-model="searchList.attacked"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'attacked')")
-                                td 
-                                    v-text-field.mt-0.pt-0(v-model="searchList.quality" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'quality')")
-                                td 
-                                    v-text-field.mt-0.pt-0(v-model="searchList.incdn"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'incdn')")                                    
-                                td 
-                                    v-text-field.mt-0.pt-0(v-model="searchList.update"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'update')")                                    
-
-                        template(v-slot:item="{item,index}")
-                            tr
-                                td {{rowIndex(index)}}
-                                td {{item.domain}}
-                                td {{item.ip}}
-                                //- td {{item.originIp}}
-                                td {{item.attacked}}
-                                td {{item.quality}}
-                                td {{item.incdn}}
-                                //- td {{item.who}}
-                                td {{item.update}}
-                                td 
-                                    v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
-                                    //- v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
-                        template(v-slot:footer)
-                            v-footer
-                                v-col.text-right.pt-0.pl-0.pb-0(cols="12" sm="2")
-                                    div Items per page
-                                v-col.text-center.pt-0.pl-0.pb-0(cols="12" sm="2")
-                                    v-select.mt-0.pt-0(:value="itemsPerPage" :items="itemsPerPageList" menu-props="auto" label="Items per page" hide-details single-line  @change="itemsPerPage = parseInt($event, 10)")
-                                v-col.text-right.pt-0.pl-0.pb-0 {{getFooterText()}}
-                                v-col.text-right.pt-0.pl-0.pb-0
-                                    v-pagination(v-model="page" :length="pageCount")
-
+                    v-toolbar(flat white)
+                        v-toolbar-title FQDN Management
+                        v-divider.mx-4(inset vertical)
+                        v-text-field(v-model="doSearchText" append-icon="mdi-magnify" label='Search (press key "enter")' single-line hide-details @keydown.enter="onSearch" )
+                        v-divider.mx-4(inset vertical)
+                        v-spacer
+                        v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
+                        v-btn.mb-2.mr-2(color="primary" dark @click="init")
+                            v-icon mdi-refresh
+                    DataTable2(ref="table2" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :loading="loading" @showDialog="dialogSwitch")
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
                     v-card-title.title {{formTitle}}
@@ -96,12 +46,15 @@
 
 <script>
 import textFieldRules from '../utils/textFieldRules'
+import DataTable2 from '../components/DataTable2'
 
 export default {
     name: 'DomainManage',
     mixins: [textFieldRules],
 
-    components: {},
+    components: {
+        DataTable2
+    },
     data() {
         return {
             doSearchText: '',
@@ -183,21 +136,25 @@ export default {
                     align: 'left',
                     sortable: false,
                     width: '100px',
-                    value: 'actions'
+                    value: 'actions',
+                    edit: true,
                 }
             ],
             desserts: [],
             searchList: {},
-            copyDesserts: [],
-            dialogData: {},
             formData: {},
             totalPage: 1,
             perPageCount: 500,
-            total: 0
+            total: 0,
+            loading: true,
+            loop: []
         }
     },
     watch: {},
     methods: {
+        dialogSwitch(bool, item) {
+            bool ? this.editDialog(item) : this.deleteDialog(item)
+        },
         newDialog() {
             this.formTitle = 'Add ...'
             this.dialog.add = true
@@ -222,22 +179,19 @@ export default {
             this.formData = {}
         },
         init() {
-            this.$store.dispatch('global/startLoading')
+            // this.$store.dispatch('global/startLoading')
 
             var page = 1
-            var needLoop = 1
             this.desserts = []
+            this.loading = true
 
-            // Get 第一頁，內有詳細分頁資訊
-            this.getDomains(page, this.perPageCount, needLoop)
-        },
-        getFormSecondPageToLastPage() {
-            // 取得從第二頁至最後一頁的資料
-            var page = 2
-
-            for (page; page < this.totalPage; page++) {
-                this.getDomains(page, this.perPageCount)
+            if (this.loop.length >= 1) {
+                this.loop[this.loop.length - 1] = false
             }
+            this.loop.push(true)
+
+            // Get All Domain 詳細資訊
+            this.getDomains(page, this.perPageCount, this.loop.length)
         },
         getDomains(page, per_page, loop = 0) {
             var domains = []
@@ -248,6 +202,10 @@ export default {
                 })
                 .then(
                     function(result) {
+                        if (this.loop.length > 1 && !this.loop[loop - 1]) {
+                            return
+                        }
+
                         result.data.data.map(function(item) {
                             var deleted_at = !!item.deleted_at
 
@@ -280,20 +238,28 @@ export default {
                         // 組合資料
                         this.desserts = this.desserts.concat(domains)
 
-                        // 重新 copy data
-                        this.copyDesserts = []
-                        this.backupAndRcoverData()
-                        this.filterOnlyColumn()
+                        this.$refs.table2.$emit('filter')
 
                         // 取得總量
                         this.totalPage = result.data.last_page
                         this.total = result.data.total
 
-                        if (loop) {
-                            this.getFormSecondPageToLastPage()
-                        }
-
                         this.$store.dispatch('global/finishLoading')
+
+                        console.log(
+                            '第 ' +
+                                this.loop.length +
+                                ' 次 Loop 的 ' +
+                                page +
+                                ' 頁'
+                        )
+
+                        if (this.totalPage > page) {
+                            page++
+                            this.getDomains(page, per_page, loop)
+                        } else {
+                            this.loading = false
+                        }
                     }.bind(this)
                 )
                 .catch(
@@ -315,7 +281,9 @@ export default {
         transformBoolToYesOrNo(bool = true) {
             return bool ? this.yesOrNo[1] : this.yesOrNo[0]
         },
-        addFormData() {},
+        addFormData() {
+            // do something ...
+        },
         updateFormData() {
             this.$store.dispatch('global/startLoading')
 
@@ -330,8 +298,8 @@ export default {
                 .dispatch('domain/updateDomainIpMapping', this.formData)
                 .then(
                     function(result) {
-                        this.init()
                         this.$store.dispatch('global/finishLoading')
+                        this.init()
                         this.$store.dispatch(
                             'global/showSnackbarSuccess',
                             'Success!'
@@ -344,9 +312,8 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        this.init()
-
                         this.$store.dispatch('global/finishLoading')
+                        this.init()
                     }.bind(this)
                 )
         },
@@ -368,27 +335,6 @@ export default {
             }
             this.closeDialog()
         },
-        getFooterText() {
-            var max = this.desserts.length
-            var maxStr = this.itemsPerPage * this.page
-
-            if (maxStr > max) {
-                maxStr = max
-            }
-
-            return (
-                'Displaying item ' +
-                (this.itemsPerPage * (this.page - 1) + 1) +
-                '-' +
-                maxStr +
-                ' from ' +
-                max +
-                ' items.'
-            )
-        },
-        rowIndex(index) {
-            return (this.page - 1) * this.itemsPerPage + index + 1
-        },
         validateForm() {
             // 驗證表單資料
             return this.$refs.form.validate()
@@ -400,53 +346,8 @@ export default {
         clearFilter(value, search, item) {
             this.searchList = {}
             this.searchText = ''
-            this.backupAndRcoverData()
-        },
-        filterOnlyColumn(value = null, column = null) {
-            var searchResult
-
-            if (!value) {
-                delete this.searchList[column]
-            } else {
-                this.searchList[column] = value.trim()
-            }
-
-            // 備份 and 還原資料
-            this.backupAndRcoverData()
-
-            for (var searchKey in this.searchList) {
-                var searchString = this.searchList[searchKey]
-
-                searchString = searchString.toString().toLocaleUpperCase()
-                searchResult = this.desserts.filter(function(item) {
-                    var searchData = item[searchKey]
-
-                    if (searchData === null) {
-                        return false
-                    }
-
-                    return (
-                        searchData
-                            .toString()
-                            .toLocaleUpperCase()
-                            .indexOf(searchString) !== -1
-                    )
-                })
-
-                this.desserts = searchResult
-            }
-        },
-        backupAndRcoverData() {
-            var list
-            if (!this.copyDesserts.length) {
-                // 備份資料
-                list = this.desserts
-                this.copyDesserts = list
-            } else {
-                // 還原資料
-                list = this.copyDesserts
-                this.desserts = list
-            }
+            this.doSearchText = ''
+            this.$refs.table2.$emit('clearAllFilter')
         }
     },
     mounted() {
@@ -457,6 +358,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container {
+    max-width: 100%;
+}
 .v-data-table {
     tr {
         user-select: auto;

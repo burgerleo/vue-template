@@ -90,9 +90,6 @@ export default {
             this.newItems = this.items
             this.copyItem = null
             this.filterOnlyColumn()
-        },
-        defaultItemsPerPage() {
-            this.itemsPerPage = this.defaultItemsPerPage
         }
     },
     methods: {
@@ -108,6 +105,9 @@ export default {
         },
         getColumn(name, item, index) {
             return item[name] ? item[name] : null
+        },
+        setDefaultPerPage(){
+            this.itemsPerPage = this.defaultItemsPerPage
         },
         getHeaderList() {
             var actions = this.actions
@@ -197,6 +197,7 @@ export default {
     },
     created() {
         this.getHeaderList()
+        this.setDefaultPerPage()
     },
 
     mounted() {
