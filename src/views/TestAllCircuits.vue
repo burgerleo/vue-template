@@ -111,12 +111,17 @@
                                 v-flex(xs2 sm2 md2)
                                     v-text-field(v-model="site" label="From" readonly)
                             v-layout.mt-n1
-                                v-flex(xs4 sm4 md4)
-                                    v-btn.mt-n3(color="primary" block @click="syncPing()") SYNC ({{selectSourceIPs.length * count * interval}} s)
-                                v-flex(xs4 sm4 md4)
-                                    v-btn.mt-n3(color="primary" block @click="asyncPing()") ASYNC ({{ selectSourceIPs.length ? count * interval : 0}} s)
-                                v-flex(xs4 sm4 md4)
-                                    v-btn.mt-n3(color="purple lighten-2" block @click="reportPing()") REPORT
+                                v-flex(xs6 sm6 md6)
+                                    v-btn.mt-n3(color="primary" block @click="syncPing()") SEQUENTIAL ({{selectSourceIPs.length * count * interval}} s)
+                                v-flex(xs6 sm6 md6)
+                                    v-btn.mt-n3(color="primary" block @click="asyncPing()") PARALLEL ({{ selectSourceIPs.length ? count * interval : 0}} s)
+                            v-layout.mt-1
+                                v-flex.mt-n4(xs8 sm8 md8)
+                                    v-textarea(v-model="cpips" solo="" label="Critical Pblic IPs: 1.1.1.1,2.2.2.2, ..." height="")
+                                v-flex(xs2 sm2 md2)
+                                    v-btn.mt-n3(color="purple lighten-2" block @click="makeReportPing()") REPORT
+                                v-flex(xs2 sm2 md2)
+                                    v-btn.mt-n3(color="purple lighten-2" block @click="downloadTwoReportsPing()") DOWNLOAD
                             v-layout.pt-2(v-show="cliExecuted != false")
                                 v-flex(xs8 sm8 md8)
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
@@ -147,6 +152,9 @@ export default {
             // from apis
             bgpList: [],
             dummyList: [],
+
+            // Critical Pblic IPs
+            cpips: '',
 
             // Sort Inbound / Outbound Circuit
             sort: ['HK', 'TW', 'PH'],
@@ -443,7 +451,11 @@ export default {
         },
         getPingInfo: function(site, sourceIP) {
             if (! this.validateForm()) {
-                return 'inputs error'
+                this.$store.dispatch(
+                    'global/showSnackbarError',
+                    'inputs error'
+                )
+                return
             }
             return this.$store
                 .dispatch('ping/getPingInfo', {
@@ -489,14 +501,26 @@ export default {
                     }.bind(this)
                 )
         },
-        reportPing: function() {
+        makeReportPing: function() {
+            if (! this.cpips.length) {
+                this.$store.dispatch(
+                    'global/showSnackbarError',
+                    'inputs cpips error'
+                )
+                return
+            }
+
             this.$store.dispatch('global/startLoading')
             this.$store
-                .dispatch('ping/getPingReport')
+                .dispatch('ping/makeReportPing', {
+                    "cpips" : this.cpips
+                })
                 .then(
                     function(result) {
-                        this.pingReport = result.data
-                        this.$store.dispatch('global/finishLoading')
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
                     }.bind(this)
                 )
                 .catch(
@@ -504,6 +528,35 @@ export default {
                         this.$store.dispatch(
                             'global/showSnackbarError',
                             error.message
+                        )
+                    }.bind(this)
+                )
+                this.$store.dispatch('global/finishLoading')
+        },
+        downloadTwoReportsPing: function() {
+            this.downloadReportPing('packetloss')
+            this.downloadReportPing('rtt')
+        },
+        downloadReportPing: function(type) {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('ping/downloadReportPing', {
+                    type: type
+                })
+                .then(
+                    function(result) {
+                        this.$store.dispatch(
+                            'global/showSnackbarSuccess',
+                            'Success!'
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error
                         )
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
