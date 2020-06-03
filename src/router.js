@@ -21,6 +21,7 @@ import JkbLatency from "./views/JkbLatency.vue";
 import CrtKey from "./views/CrtKey.vue";
 import DomainManage from "./views/DomainManage.vue";
 import Ip2Location from "./views/Ip2Location.vue";
+import TableExample from "./views/TableExample.vue";
 
 Vue.use(Router);
 
@@ -145,7 +146,12 @@ export default new Router({
                     name: "Ip2Location",
                     path: "ip2location",
                     component: Ip2Location
-                }
+                },
+                {
+                    name: "TableExample",
+                    path: "table-example",
+                    component: TableExample
+                },
             ]
         },
         {

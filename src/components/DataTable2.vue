@@ -70,6 +70,12 @@ export default {
         setUripath: {
             type: String,
             default: ''
+        },
+        setLinkMethod: {
+            type: Function,
+            default: (uri, id = null) => {
+                return uri + id
+            }
         }
     },
     data() {
@@ -81,7 +87,7 @@ export default {
             headerList: [],
             newItems: [],
             copyItem: null,
-
+            uri: '',
             actions: { edit: false, delete: false }
         }
     },
@@ -99,14 +105,17 @@ export default {
         deleteDialog(value) {
             this.$emit('showDialog', 0, value)
         },
-        getLink(id) {
-            let jkb = this.setUripath
-            return jkb + id
-        },
         getColumn(name, item, index) {
             return item[name] ? item[name] : null
         },
-        setDefaultPerPage(){
+        getLink(id) {
+            return this.setLinkMethod(this.uri, id)
+        },
+        setURI() {
+            var uri = this.setUripath
+            this.uri = uri
+        },
+        setDefaultPerPage() {
             this.itemsPerPage = this.defaultItemsPerPage
         },
         getHeaderList() {
@@ -198,8 +207,8 @@ export default {
     created() {
         this.getHeaderList()
         this.setDefaultPerPage()
+        this.setURI()
     },
-
     mounted() {
         this.$on('clearAllFilter', function() {
             // 清除全部的 Filter 欄位
