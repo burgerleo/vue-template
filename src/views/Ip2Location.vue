@@ -137,7 +137,7 @@ export default {
             limitMaxPage: 50,
             query: {},
             searchIP: '',
-            timer: null
+            loop: []
         }
     },
     watch: {},
@@ -199,8 +199,9 @@ export default {
             this.init()
         },
         toSearch() {
-            this.query = Object.assign(this.searchList, {})
-            this.query.cidr = null
+            this.query = Object.assign({}, this.searchList)
+            delete this.query.cidr
+            delete this.query.company
             this.searchIP = null
 
             this.init()
@@ -272,35 +273,26 @@ export default {
         },
         init() {
             this.$store.dispatch('global/startLoading')
-
-            clearInterval(this.timer)
-
-            var page = 1
-            var needLoop = 1
+            const page = 1
             this.items = []
             this.loading = true
-            // Get 第一頁，內有詳細分頁資訊
-            this.getItemsAction(page, this.perPageCount, needLoop)
-        },
-        getFormSecondPageToLastPage() {
-            // 取得從第二頁至最後一頁的資料
-            var page = 2
-            let totalPage =
-                this.totalPage > this.limitMaxPage
-                    ? this.limitMaxPage
-                    : this.totalPage
 
-            this.timer = setInterval(() => {
-                if (page > totalPage) {
-                    clearInterval(this.timer)
-                } else {
-                    this.getItemsAction(page, this.perPageCount)
-                }
-                page++
-            }, 5000)
+            if (this.loop.length >= 1) {
+                this.loop[this.loop.length - 1] = false
+            }
+
+            this.loop.push(true)
+
+            // Get 第一頁，內有詳細分頁資訊
+            this.getItemsAction(page, this.perPageCount, this.loop.length)
         },
         getItemsAction(page, per_page, loop = 0) {
+            if (this.loop.length > 1 && !this.loop[loop - 1]) {
+                return
+            }
+
             var data = Object.assign(
+                {},
                 {
                     page: page,
                     per_page: per_page
@@ -312,29 +304,30 @@ export default {
                 .dispatch('ip2LocationRawData/getIpLocation', data)
                 .then(
                     function(result) {
+                        if (this.loop.length > 1 && !this.loop[loop - 1]) {
+                            return
+                        }
                         // 組合資料
                         this.items = this.items.concat(result.data.data)
 
                         // 取得總量
                         this.totalPage = result.data.last_page
-                        // this.total = result.data.total
-
-                        if (loop) {
-                            this.getFormSecondPageToLastPage()
-                        }
 
                         let totalPage =
                             this.totalPage > this.limitMaxPage
                                 ? this.limitMaxPage
                                 : this.totalPage
 
-                        // console.log('page: ' + page)
-                        // console.log('totalPage: ' + totalPage)
-                        if (page >= totalPage) {
+                        this.$refs.table2.$emit('filter')
+
+                        // console.log('第 ' + this.loop.length + ' 次 Loop 的 ' + page + ' 頁')
+
+                        if (totalPage > page) {
+                            page++
+                            this.getItemsAction(page, per_page, loop)
+                        } else {
                             this.loading = false
                         }
-
-                        this.$refs.table2.$emit('filter')
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )

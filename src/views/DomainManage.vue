@@ -137,7 +137,7 @@ export default {
                     sortable: false,
                     width: '100px',
                     value: 'actions',
-                    edit: true,
+                    edit: true
                 }
             ],
             desserts: [],
@@ -195,6 +195,9 @@ export default {
         },
         getDomains(page, per_page, loop = 0) {
             var domains = []
+            if (this.loop.length > 1 && !this.loop[loop - 1]) {
+                return
+            }
             this.$store
                 .dispatch('domain/getDomains', {
                     page: page,
@@ -205,7 +208,6 @@ export default {
                         if (this.loop.length > 1 && !this.loop[loop - 1]) {
                             return
                         }
-
                         result.data.data.map(function(item) {
                             var deleted_at = !!item.deleted_at
 
@@ -237,7 +239,6 @@ export default {
 
                         // 組合資料
                         this.desserts = this.desserts.concat(domains)
-
                         this.$refs.table2.$emit('filter')
 
                         // 取得總量
@@ -246,13 +247,7 @@ export default {
 
                         this.$store.dispatch('global/finishLoading')
 
-                        console.log(
-                            '第 ' +
-                                this.loop.length +
-                                ' 次 Loop 的 ' +
-                                page +
-                                ' 頁'
-                        )
+                        // console.log('第 ' + this.loop.length + ' 次 Loop 的 ' + page + ' 頁')
 
                         if (this.totalPage > page) {
                             page++
