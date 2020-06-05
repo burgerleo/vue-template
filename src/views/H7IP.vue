@@ -6,7 +6,7 @@
                     v-data-table.elevation-1(:headers="headers" :items="desserts" :search="searchText" :dense="true" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event")
                         template(v-slot:top)
                             v-toolbar(flat white)
-                                v-toolbar-title H7 IP
+                                v-toolbar-title H7 IP Prefix
                                 v-divider.mx-4(inset vertical)
                                 v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details)
                                 v-divider.mx-4(inset vertical)
@@ -24,17 +24,20 @@
                                 td
                                     v-text-field.mt-0.pt-0(v-model="searchList.usage" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'usage')")
                                 td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.remark" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'remark')")
-                                td
                                     v-text-field.mt-0.pt-0(v-model="searchList.owner" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'owner')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.route_profile" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'route_profile')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.remark" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'remark')")
 
                         template(v-slot:item="{item,index}")
                             tr
                                 td {{rowIndex(index)}}
                                 td {{item.prefix}}
                                 td {{item.usage}}
-                                td {{item.remark}}
                                 td {{item.owner}}
+                                td {{item.route_profile}}
+                                td {{item.remark}}
                                 td
                                     v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
                                     v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
@@ -51,10 +54,11 @@
                     v-card-title.title {{formTitle}}
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-text-field(v-model="H7Ip.prefix" label="H7Ip Prefix" type="text" name="name" :rules="[rules.required]")
-                            v-select(v-model="H7Ip.usage" :items="usageList" label="H7Ip Usage"  :rules="[rules.required]")
-                            v-text-field(v-model="H7Ip.remark" label="H7Ip Remark" type="text" name="remark")
-                            v-select(v-model="H7Ip.owner" :items="ownerList" label="H7Ip Owner"  :rules="[rules.required]")
+                            v-text-field(v-model="H7Ip.prefix" label="Prefix" type="text" name="name" :rules="[rules.required]")
+                            v-select(v-model="H7Ip.usage" :items="usageList" label="Usage"  :rules="[rules.required]")
+                            v-select(v-model="H7Ip.owner" :items="ownerList" label="Owner"  :rules="[rules.required]")
+                            v-select(v-model="H7Ip.route_profile" :items="routeProfileList" label="Route Profile"  :rules="[rules.required]")
+                            v-text-field(v-model="H7Ip.remark" label="Remark" type="text" name="remark")
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -113,16 +117,22 @@
             value: 'usage'
           },
           {
-            text: 'Remark',
-            align: 'left',
-            sortable: true,
-            value: 'remark'
-          },
-          {
             text: 'Owner',
             align: 'left',
             sortable: true,
             value: 'owner'
+          },
+          {
+            text: 'Route Profile',
+            align: 'left',
+            sortable: true,
+            value: ''
+          },
+          {
+            text: 'Remark',
+            align: 'left',
+            sortable: true,
+            value: 'remark'
           },
           {
             text: 'Actions',
@@ -136,7 +146,8 @@
         searchList: {},
         copyDesserts: null,
         usageList:['uCDN', 'CDNBest', 'H7 others'],
-        ownerList:['H7', 'Cogent', 'logicweb']
+        ownerList:['H7', 'Cogent', 'logicweb'],
+        routeProfileList:['China', 'Global'],
       }
     },
     methods: {
@@ -168,7 +179,8 @@
         this.H7Ip = {
           id: -1,
           usage: 'H7 others',
-          owner: 'H7'
+          owner: 'H7',
+          route_profile: 'China'
         }
       },
       editDialog: function(item) {

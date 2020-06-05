@@ -170,7 +170,7 @@ export default {
                             router: '/customer'
                         },
                         {
-                            title: 'H7 IP',
+                            title: 'H7 IP Prefix',
                             icon: 'mdi-white-balance-sunny',
                             router: '/h7-ip'
                         }
