@@ -168,6 +168,11 @@ export default {
                             title: 'Customer',
                             icon: 'mdi-human-male-female',
                             router: '/customer'
+                        },
+                        {
+                            title: 'H7 IP',
+                            icon: 'mdi-white-balance-sunny',
+                            router: '/h7-ip'
                         }
                     ]
                 }

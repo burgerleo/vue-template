@@ -19,7 +19,7 @@ import periodicalCurl from './modules/periodicalCurl'
 import domain from './modules/domain'
 import isp from './modules/isp'
 import ip2LocationRawData from './modules/ip2LocationRawData'
-
+import h7Ip from './modules/h7Ip'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -42,6 +42,7 @@ export default new Vuex.Store({
         periodicalCurl,
         domain,
         isp,
-        ip2LocationRawData
+        ip2LocationRawData,
+        h7Ip
     }
 });
