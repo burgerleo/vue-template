@@ -20,7 +20,6 @@
             v-spacer
             span.white--text v {{version}}
             span.white--text ({{env}})
-                     
 </template>
 <script>
 import NavigationDrawer from '../components/NavigationDrawer'
@@ -51,14 +50,14 @@ export default {
             dialog: {
                 setting: false
             },
-            path:''
+            path: ''
         }
     },
     watch: {
         selectedTab: function() {
             this.selectedTabId = this.selectedTab - 1
         },
-        $route (to, from) {
+        $route(to, from) {
             this.setPath()
         }
     },
@@ -68,10 +67,10 @@ export default {
             this.selectedTabId = this.selectedTab - 1
         },
         setPath() {
-          this.path = this.$router.currentRoute.path;
+            this.path = this.$router.currentRoute.path
         },
         displayHelper() {
-          return this.path.includes('helper')
+            return this.path.includes('helper')
         }
     },
     mounted() {
@@ -80,7 +79,7 @@ export default {
     },
     created() {
         this.setPath()
-    },
+    }
 }
 </script>
 <style>

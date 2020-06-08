@@ -14,6 +14,10 @@
                         v-btn.mb-2.mr-2(color="primary" dark @click="init")
                             v-icon mdi-refresh
                     DataTable2(ref="table2" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :loading="loading" @showDialog="dialogSwitch" :setUripath="jkbURI" :setLinkMethod="setLinkMethod")
+                    v-row
+                        lottie(:options="defaultOptions" :width="60" :height="60"  v-on:animCreated="handleAnimation")
+                        lottie(:options="defaultOptions" :width="60" :height="60"  v-on:animCreated="handleAnimation")
+
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
                     v-card-title.title {{formTitle}}
@@ -50,6 +54,7 @@
 <script>
 import textFieldRules from '../utils/textFieldRules'
 import DataTable2 from '../components/DataTable2'
+import addJson from '../assets/icon/add/add.json'
 
 export default {
     name: 'DomainManage',
@@ -137,11 +142,20 @@ export default {
             jkbURI: 'https://www.google.com.tw/',
             setLinkMethod: (uri, value = null) => {
                 return uri + 'search?q=' + value
-            }
+            },
+            defaultOptions: {
+                animationData: addJson,
+                loop: true,
+                autoplay: true
+            },
+            defaultAnim:""
         }
     },
     watch: {},
     methods: {
+        handleAnimation(anim) {
+            this.defaultAnim = anim
+        },
         dialogSwitch(bool, item) {
             bool ? this.editDialog(item) : this.deleteDialog(item)
         },
@@ -150,6 +164,8 @@ export default {
             this.dialog.add = true
             this.formData = {}
             this.formData.id = -1
+
+            this.defaultAnim.pause()
         },
         editDialog(item) {
             this.formTitle = 'Edit ...'
@@ -167,6 +183,7 @@ export default {
             this.dialog.add = false
             this.dialog.delete = false
             this.formData = {}
+            this.defaultAnim.play()
         },
         init() {
             // this.$store.dispatch('global/startLoading')
