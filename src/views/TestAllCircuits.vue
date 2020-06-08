@@ -567,8 +567,6 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Test All Circuits';
-
         this.getBGP()
         this.getDummy()
 

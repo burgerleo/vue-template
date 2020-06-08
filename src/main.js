@@ -19,6 +19,13 @@ import dataTable from "./components/DataTable.vue";
 Vue.component("h7-data-table", dataTable);
 Vue.use(VueQuillEditor, /* { default global options } */)
 
+router.beforeEach((to, from, next) => {
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
+    next()
+})
+
 new Vue({
     router,
     store,

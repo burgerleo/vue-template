@@ -352,7 +352,6 @@
       }
     },
     mounted() {
-      document.title = 'H7 IP Prefix';
       this.init()
     },
     created() {

@@ -346,7 +346,6 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Domain Manage'
         this.init()
     }
 }

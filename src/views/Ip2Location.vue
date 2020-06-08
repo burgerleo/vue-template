@@ -394,7 +394,6 @@ export default {
         }
     },
     mounted() {
-        document.title = 'IP2Location'
         this.initColumn()
         // this.init()
     }

@@ -396,8 +396,6 @@ export default {
         }
     },
     mounted() {
-        document.title = 'MTR';
-
         this.getBGP()
         this.getDummy()
         this.getEdges()

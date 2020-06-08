@@ -377,8 +377,6 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Ping';
-
         this.getBGP()
         this.getDummy()
         this.getEdges()

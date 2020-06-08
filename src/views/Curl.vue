@@ -683,7 +683,6 @@
       this.getCustomerInfo();
       this.getEdgeInfo();
     },mounted() {
-      document.title = 'Curl';
       this.getConfig();
     }
   };

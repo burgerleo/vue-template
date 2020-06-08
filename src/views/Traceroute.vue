@@ -379,8 +379,6 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Traceroute';
-
         this.getBGP()
         this.getDummy()
         this.getEdges()
