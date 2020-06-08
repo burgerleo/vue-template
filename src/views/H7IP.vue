@@ -54,7 +54,7 @@
                     v-card-title.title {{formTitle}}
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-text-field(v-model="H7Ip.prefix" label="Prefix" type="text" name="name" :rules="[rules.required]")
+                            v-text-field(v-model="H7Ip.prefix" label="Prefix" type="text" name="name" :rules="[rules.required, rules.mask]")
                             v-select(v-model="H7Ip.usage" :items="usageList" label="Usage"  :rules="[rules.required]")
                             v-select(v-model="H7Ip.owner" :items="ownerList" label="Owner"  :rules="[rules.required]")
                             v-select(v-model="H7Ip.route_profile" :items="routeProfileList" label="Route Profile"  :rules="[rules.required]")
