@@ -15,7 +15,7 @@
 
                                 v-dialog(v-model="dialog.add")
                                     template(v-slot:activator="{ on }")
-                                        v-btn.mb-2(color="primary" dark @click="newDialog") New H7 IP
+                                        v-btn.mb-2(color="primary" dark @click="newDialog") NEW H7 IP Prefix
                         template(v-slot:header="{item,index}")
                             tr
                                 td
@@ -173,7 +173,7 @@
           )
       },
       newDialog: function() {
-        this.formTitle = 'Add H7 IP'
+        this.formTitle = 'Add H7 IP Prefix'
         this.dialog.add = true
 
         this.H7Ip = {
@@ -184,13 +184,13 @@
         }
       },
       editDialog: function(item) {
-        this.formTitle = 'Edit H7 IP'
+        this.formTitle = 'Edit H7 IP Prefix'
         this.dialog.add = true
         this.editedIndex = this.desserts.indexOf(item)
         this.H7Ip = Object.assign({}, item)
       },
       deleteDialog: function(item) {
-        this.formTitle = 'Delete H7 IP'
+        this.formTitle = 'Delete H7 IP Prefix'
         this.dialog.delete = true
         this.editedIndex = this.desserts.indexOf(item)
         this.H7Ip = item
@@ -352,7 +352,7 @@
       }
     },
     mounted() {
-      document.title = 'H7 IP';
+      document.title = 'H7 IP Prefix';
       this.init()
     },
     created() {
