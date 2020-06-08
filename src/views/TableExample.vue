@@ -14,7 +14,6 @@
                         v-btn.mb-2.mr-2(color="primary" dark @click="init")
                             v-icon mdi-refresh
                     DataTable2(ref="table2" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :loading="loading" @showDialog="dialogSwitch" :setUripath="jkbURI" :setLinkMethod="setLinkMethod")
-                    //- v-card-title {{desserts}}
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
                     v-card-title.title {{formTitle}}
@@ -27,9 +26,8 @@
                             v-select(v-model="formData.good" :items="['Yes','No']" label="Good")
                             
                             v-combobox(v-model="formData.tag" :items="['A','B','C','D']" label="Tag" hide-selected dense hide-details)
-
-                            template(v-slot:no-data)
-                                v-card-text No results matching 
+                                template(v-slot:no-data)
+                                    v-card-text No results matching 
                             
                             v-text-field(v-model="formData.url" label="URL Search" type="search" name="path")
 

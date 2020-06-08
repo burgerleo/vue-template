@@ -1,32 +1,22 @@
 <template lang="pug">
     v-navigation-drawer(v-model="drawer" :clipped="clipped" fixed app :tabId="tabId")
-        v-list(dense)
-            template(v-for="item in tabItems")
+        v-list(dense subheader)
+            template(v-for="item, index in items" )
                 v-subheader(v-if="item.header") {{item.header}}
-                v-list-item-group(v-if="!item.header")
-                    v-list-item(link v-if="!item.children" :to="item.router")
-                        v-list-item-icon
-                            v-icon {{item.icon}}
+                v-list-item(v-if="!item.items && item.icon" :to="item.router")
+                    v-list-item-icon
+                        v-icon {{item.icon}}
+                    v-list-item-content
+                        v-list-item-title(v-text="item.title")
+                v-list-group(v-if="item.items" v-for="item in [items[index]]" :key="item.title" v-model="item.active" :prepend-icon="item.icon" no-action)
+                    template(v-slot:activator)
                         v-list-item-content
-                            v-list-item-title {{item.title}}
-                    v-list-group(link v-if="item.children")
-                        template(v-slot:activator)
-                            v-list-item-icon
-                                v-icon {{item.icon}}
-                            v-list-item-content
-                                v-list-item-title {{item.title}}
-                        v-list-group(v-if="child.children" no-actions sub-group value="true" v-for="child in item.children")
-                            template(v-slot:activator)
-                                v-list-item-content
-                                    v-list-item-title {{child.title}}
-                            v-list-item(v-for="i in child.children" :key="i.id" link v-if="child.children")
-                                v-list-item-icon
-                                    v-icon {{i.icon}}
-                                v-list-item-content
-                                    v-list-item-title {{i.title}}
-
-
-
+                            v-list-item-title(v-text="item.title")
+                    v-list-item.pl-8(v-for="subItem in item.items" :key="subItem.title" :to="subItem.router")
+                        v-list-item-icon
+                            v-icon {{subItem.icon}}
+                        v-list-item-content
+                            v-list-item-title(v-text="subItem.title")
 </template>
 <script>
 export default {
@@ -35,24 +25,46 @@ export default {
             type: Number
         }
     },
+    components: {},
     data() {
         return {
-            kkk: 0,
             drawer: true,
             mini: false,
             clipped: true,
             tabItems: [],
             items: [
+                // * monitoring
+                // * Lookup
+                // * Test & Analyze
+                // * Reports
+                // * --------------
+                // * Management
+                // * Administrator
                 {
-                    id: 1,
-                    menu: [
-                        { header: 'General' },
-                        // {
-                        //     title: "Dashboard",
-                        //     icon: "mdi-view-dashboard",
-                        //     children: [
-                        //     ]
-                        // },
+                    header: 'General'
+                },
+                {
+                    icon: 'mdi-magnify',
+                    title: 'Lookup',
+                    active: false,
+                    items: [
+                        {
+                            title: 'Dig',
+                            icon: 'mdi-ethernet-cable',
+                            router: '/dig'
+                        },
+                        {
+                            title: 'IP Location',
+                            icon: 'mdi-access-point',
+                            router: '/ip2location'
+                        }
+                    ]
+                },
+                {
+                    icon: 'mdi-test-tube',
+                    title: 'Test & Analyze',
+                    active: false,
+                    items: [
                         {
                             title: 'Curl & F12',
                             icon: 'mdi-check',
@@ -82,12 +94,14 @@ export default {
                             title: 'MTR',
                             icon: 'mdi-sitemap',
                             router: '/mtr'
-                        },
-                        {
-                            title: 'Dig',
-                            icon: 'mdi-ethernet-cable',
-                            router: '/dig'
-                        },
+                        }
+                    ]
+                },
+                {
+                    title: 'Monitoring',
+                    icon: 'mdi-monitor',
+                    active: false,
+                    items: [
                         {
                             title: 'JKB Availability',
                             icon: 'mdi-lumx',
@@ -97,12 +111,21 @@ export default {
                             title: 'JKB Latency',
                             icon: 'mdi-looks',
                             router: '/jkb-Latency'
-                        },
-                        {
-                            title: 'Package IP Mapping',
-                            icon: 'mdi-chart-histogram',
-                            router: '/dns-records'
-                        },
+                        }
+                    ]
+                },
+                {
+                    title: 'Reports',
+                    icon: 'mdi-file'
+                },
+                {
+                    // header: 'Administrator',
+                },
+                {
+                    icon: 'mdi-human-greeting',
+                    title: 'Management',
+                    active: false,
+                    items: [
                         {
                             title: 'Cert Management',
                             icon: 'mdi-format-align-justify',
@@ -112,43 +135,14 @@ export default {
                             title: 'FQDN Management',
                             icon: 'mdi-content-paste',
                             router: '/domain-manage'
-                        },
-                        {
-                            title: 'IP Location',
-                            icon: 'mdi-access-point',
-                            router: '/ip2location'
-                        },
-                        { header: 'Administrator' },
-
-                        // {
-                        //     title: "Users",
-                        //     icon: "mdi-account-circle",
-                        //     children: [
-                        //         {
-                        //             title: "group", 
-                        //             icon: "mdi-view-dashboard",
-                        //             children: [
-                        //                 {
-                        //                     title: "management",
-                        //                     icon: "mdi-image"
-                        //                 },
-                        //                 {
-                        //                     title: "setting",
-                        //                     icon: "mdi-help-box"
-                        //                 }
-                        //             ]
-                        //         },
-                        //         { title: "account", icon: "mdi-image" },
-                        //         { title: "block list", icon: "mdi-help-box" }
-                        //     ]
-                        // },
-                        // {
-                        //   title: "Content",
-                        //   icon: "mdi-account-circle",
-                        //   children: [
-                        //     { title: "Helper", icon: "mdi-image",router: "/dashboard" },
-                        //   ]
-                        // },
+                        }
+                    ]
+                },
+                {
+                    icon: 'mdi-account',
+                    title: 'Administrator',
+                    active: false,
+                    items: [
                         {
                             title: 'BGP Peer',
                             icon: 'mdi-call-made',
@@ -168,25 +162,14 @@ export default {
                             title: 'Customer',
                             icon: 'mdi-human-male-female',
                             router: '/customer'
+                        },
+                        {
+                            title: 'Package IP Mapping',
+                            icon: 'mdi-chart-histogram',
+                            router: '/dns-records'
                         }
                     ]
                 }
-                // {
-                //     id: 2,
-                //     menu: [
-                //         { header: "General" },
-                //         { title: "Dashboard", icon: "mdi-view-dashboard" },
-                //         { title: "Record", icon: "mdi-image" },
-                //         { title: "Log", icon: "mdi-help-box" }
-                //     ]
-                // },
-                // {
-                //     id: 3,
-                //     menu: [
-                //         { header: "General" },
-                //         { title: "Dashboard", icon: "mdi-view-dashboard" }
-                //     ]
-                // }
             ],
             admins: [
                 ['Management', 'mdi-people-outline'],
@@ -195,21 +178,21 @@ export default {
         }
     },
     watch: {
-        tabId() {
-            this.navigationControl()
-        }
+        // tabId() {
+        //     this.navigationControl()
+        // }
     },
     methods: {
-        navigationControl() {
-            this.items.forEach(o => {
-                if (o.id == this.tabId) {
-                    this.tabItems = o.menu
-                }
-            })
-        }
+        // navigationControl() {
+        //     this.items.forEach(o => {
+        //         if (o.id == this.tabId) {
+        //             this.tabItems = o.menu
+        //         }
+        //     })
+        // }
     },
     created() {
-        this.navigationControl()
+        // this.navigationControl()
     }
 }
 </script>
