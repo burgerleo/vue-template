@@ -124,16 +124,16 @@
                                                                             v-icon.mr-2(small @click="newWindowWithParams(item.url)") mdi-checkbox-multiple-blank-outline
                                                                         span {{item.url}}
                                                                 td
-                                                                    span(:style="statusStyle(item.status)") {{item.status}}
+                                                                    span.font-weight-bold.title(:style="statusStyle(item.status)") {{item.status}}
                                                                 td {{item.host}}
                                                                 td {{item.ip}}
                                                                 td {{item.method}}
                                                                 td
-                                                                    span(:style="dnsStyle(item.dnsLookup)") {{item.dnsLookup}}
+                                                                    span.font-weight-bold.title(:style="dnsStyle(item.dnsLookup)") {{item.dnsLookup}}
                                                                 td
-                                                                    span(:style="connectStyle(item.tcpConnection)") {{item.tcpConnection}}
+                                                                    span.font-weight-bold.title(:style="connectStyle(item.tcpConnection)") {{item.tcpConnection}}
                                                                 td
-                                                                    span(:style="downloadStyle(item.total)") {{item.total}}
+                                                                    span.font-weight-bold.title(:style="downloadStyle(item.total)") {{item.total}}
                                                                 td {{item.size}}
                                                                 td {{item.failure}}
 
@@ -302,7 +302,7 @@
     watch:{
       url: function(value) {
         if (value !== '' && value.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.%]+$/gm)){
-           const domain = this.originalDataFormat(value)
+          const domain = this.originalDataFormat(value)
           this.getDomainList(domain)
         }else{
           this.hostName = this.url
@@ -354,9 +354,9 @@
             "edge": this.edge,
             "second": this.second
           }
-            this.$store.dispatch("global/startLoading");
-            this.getInfo(data)
-            this.getRecursiveDate()
+          this.$store.dispatch("global/startLoading");
+          this.getInfo(data)
+          this.getRecursiveDate()
         }
       },
       getInfo: function(data) {
@@ -570,39 +570,39 @@
         return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
       },
       statusStyle: function (status) {
-          if (status.toString().substr(0,1) === '2'){
-            return 'background-color: #80CBC4;'
-          }else if (status.toString().substr(0,1) === '3'){
-            return 'background-color: #90CAF9;'
-          }else if (status.toString().substr(0,1) === '4'){
-            return 'background-color: #FFB74D;'
-          }else if (status.toString().substr(0,1) === '5'){
-            return 'background-color: #E57373;'
-          }
+        if (status.toString().substr(0,1) === '2'){
+          return 'color: #26A69A;'//green
+        }else if (status.toString().substr(0,1) === '3'){
+          return 'color: #42A5F5;'//blue
+        }else if (status.toString().substr(0,1) === '4'){
+          return 'color: #FB8C00;'//orange
+        }else if (status.toString().substr(0,1) === '5'){
+          return 'color: #E53935;'//red
+        }
       },
       dnsStyle: function (dnsTime) {
         if (dnsTime > this.configs.dnsRange){
-          return 'background-color: #E57373;'
+          return 'color: #E53935;'
         }else{
-          return 'background-color: #80CBC4;'
+          return 'color: #26A69A;'
         }
       },
       connectStyle: function (connectTime) {
         if (connectTime > this.configs.connectRange){
-          return 'background-color: #E57373;'
+          return 'color: #E53935;'
         }else{
-          return 'background-color: #80CBC4;'
+          return 'color: #26A69A;'
         }
       },
       downloadStyle: function (downloadTime) {
         if (downloadTime >= this.configs.downloadRangeSecondStage[1]){
-          return 'background-color: #E57373;'
+          return 'color: #E53935;'
         }else if(downloadTime < this.configs.downloadRangeSecondStage[1] && downloadTime >= this.configs.downloadRangeSecondStage[0]){
-          return 'background-color: #FFB74D;'
+          return 'color: #FB8C00;'
         }else if(downloadTime >= this.configs.downloadRangeFirstStage && downloadTime <= this.configs.downloadRangeSecondStage[0]){
-          return 'background-color: #90CAF9;'
+          return 'color: #42A5F5;'
         }else if(downloadTime < this.configs.downloadRangeFirstStage){
-          return 'background-color: #80CBC4;'
+          return 'color: #26A69A;'
         }
       },
       editDialog() {
