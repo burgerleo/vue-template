@@ -119,9 +119,6 @@ export default {
                     icon: 'mdi-file'
                 },
                 {
-                    // header: 'Administrator',
-                },
-                {
                     icon: 'mdi-human-greeting',
                     title: 'Management',
                     active: false,
@@ -140,7 +137,7 @@ export default {
                 },
                 {
                     icon: 'mdi-account',
-                    title: 'Administrator',
+                    title: 'Configuration MGT',
                     active: false,
                     items: [
                         {
@@ -174,6 +171,13 @@ export default {
                             router: '/h7-ip'
                         }
                     ]
+                },
+                {
+                    header: 'Platform Administrator'
+                },
+                {
+                    icon: 'mdi-account',
+                    title: 'Administrator'
                 }
             ],
             admins: [
