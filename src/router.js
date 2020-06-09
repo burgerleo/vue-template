@@ -22,7 +22,7 @@ import CrtKey from "./views/CrtKey.vue";
 import DomainManage from "./views/DomainManage.vue";
 import Ip2Location from "./views/Ip2Location.vue";
 import TableExample from "./views/TableExample.vue";
-
+import H7IP from "./views/H7IP.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -40,7 +40,9 @@ export default new Router({
                 {
                     path: "home",
                     name: "home",
-                    component: Home
+                    component: Home,
+                    meta: {
+                    }
                 },
                 {
                     path: "about",
@@ -55,109 +57,179 @@ export default new Router({
                 },
                 {
                     path: "helper/:helper_id",
-                    component: Helper
+                    component: Helper,
+                    meta: {
+                        title: 'Helper'
+                    }
                 },
                 {
                     name: "Origin Server Testing",
                     path: "curl",
-                    component: Curl
+                    component: Curl,
+                    meta: {
+                        title: 'Curl'
+                    }
                 },
                 {
                     name: "Origin Server Periodical Testing",
                     path: "periodical-curl",
-                    component: PeriodicalCurl
+                    component: PeriodicalCurl,
+                    meta: {
+                        title: 'Periodical Curl'
+                    }
                 },
                 {
                     name: "Ping",
                     path: "ping",
-                    component: Ping
+                    component: Ping,
+                    meta: {
+                        title: 'Ping'
+                    }
                 },
                 {
                     name: "Ping Realtime",
                     path: "ping-realtime",
-                    component: PingRealtime
+                    component: PingRealtime,
+                    meta: {
+                        title: 'Ping Realtime'
+                    }
                 },
                 {
                     name: "Test All Circuits",
                     path: "test-all-circuits",
-                    component: TestAllCircuits
+                    component: TestAllCircuits,
+                    meta: {
+                        title: 'Test All Circuits'
+                    }
                 },
                 {
                     name: "SSL File",
                     path: "crt-key",
-                    component: CrtKey
+                    component: CrtKey,
+                    meta: {
+                        title: 'Domain Manage'
+                    }
                 },
                 {
                     name: "Traceroute",
                     path: "traceroute",
-                    component: Traceroute
+                    component: Traceroute,
+                    meta: {
+                        title: 'Traceroute'
+                    }
                 },
                 {
                     name: "MTR",
                     path: "mtr",
-                    component: Mtr
+                    component: Mtr,
+                    meta: {
+                        title: 'MTR'
+                    }
                 },
                 {
                     name: "Dig",
                     path: "dig",
-                    component: Dig
+                    component: Dig,
+                    meta: {
+                        title: 'Dig'
+                    }
                 },
                 {
                     name: "DNS Records",
                     path: "dns-records",
-                    component: DnsRecord
+                    component: DnsRecord,
+                    meta: {
+                        title: 'Package IP Mapping'
+                    }
                 },
                 {
                     name: "Bgp",
                     path: "bgp",
-                    component: BGP
+                    component: BGP,
+                    meta: {
+                        title: 'BGP'
+                    }
                 },
                 {
                     name: "Dummy Ip",
                     path: "dummy-ip",
-                    component: Dummy
+                    component: Dummy,
+                    meta: {
+                        title: 'Dummy'
+                    }
                 },
                 {
                     name: "Edge",
                     path: "edge",
-                    component: Edge
+                    component: Edge,
+                    meta: {
+                        title: 'Edge'
+                    }
                 },
                 {
                     name: "Customer",
                     path: "customer",
-                    component: Customer
+                    component: Customer,
+                    meta: {
+                        title: 'Customer'
+                    }
                 },
                 {
                     name: "JKB-PacketLoss",
                     path: "jkb-packetloss",
-                    component: JkbPacketLoss
+                    component: JkbPacketLoss,
+                    meta: {
+                        title: 'JKB Packet Loss'
+                    }
                 },
                 {
                     name: "JKB-Latency",
                     path: "jkb-Latency",
-                    component: JkbLatency
+                    component: JkbLatency,
+                    meta: {
+                        title: 'JKB Latency'
+                    }
                 },
                 {
                     name: "DomainManage",
                     path: "domain-manage",
-                    component: DomainManage
+                    component: DomainManage,
+                    meta: {
+                        title: 'FQDN Management'
+                    }
                 },
                 {
                     name: "Ip2Location",
                     path: "ip2location",
-                    component: Ip2Location
+                    component: Ip2Location,
+                    meta: {
+                        title: 'IP2Location'
+                    }
                 },
                 {
                     name: "TableExample",
                     path: "table-example",
-                    component: TableExample
+                    component: TableExample,
+                    meta: {
+                    }
+                },
+                {
+                    name: "H7IPPrefix",
+                    path: "h7-ip",
+                    component: H7IP,
+                    meta: {
+                        title: 'H7 IP Prefix'
+                    }
                 },
             ]
         },
         {
             name: "Origin Server Periodical Testing",
             path: "/new-periodical-curl/:path?",
-            component: PeriodicalCurl
+            component: PeriodicalCurl,
+            meta: {
+                title: 'Periodical Curl'
+            }
         }
     ]
 });

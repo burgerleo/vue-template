@@ -447,8 +447,6 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Ping Realtime';
-        
         this.getBGP()
         this.getDummy()
         this.getEdges()

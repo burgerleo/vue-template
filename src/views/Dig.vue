@@ -185,8 +185,6 @@ export default {
         },
     },
     mounted() {
-        document.title = 'Dig';
-
         this.getEdges()
 
         // 刪除 Inbound / Outbound Circuit 紅藍框下巴多餘 html

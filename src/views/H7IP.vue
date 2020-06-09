@@ -6,7 +6,7 @@
                     v-data-table.elevation-1(:headers="headers" :items="desserts" :search="searchText" :dense="true" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event")
                         template(v-slot:top)
                             v-toolbar(flat white)
-                                v-toolbar-title Edge
+                                v-toolbar-title H7 IP Prefix
                                 v-divider.mx-4(inset vertical)
                                 v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details)
                                 v-divider.mx-4(inset vertical)
@@ -15,47 +15,29 @@
 
                                 v-dialog(v-model="dialog.add")
                                     template(v-slot:activator="{ on }")
-                                        v-btn.mb-2(color="primary" dark @click="newDialog") New Edge
+                                        v-btn.mb-2(color="primary" dark @click="newDialog") NEW H7 IP Prefix
                         template(v-slot:header="{item,index}")
                             tr
                                 td
                                 td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.customer" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'customer')")
+                                    v-text-field.mt-0.pt-0(v-model="searchList.prefix" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'prefix')")
                                 td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.name" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'name')")
+                                    v-text-field.mt-0.pt-0(v-model="searchList.usage" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'usage')")
                                 td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.area"  width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'area')")
+                                    v-text-field.mt-0.pt-0(v-model="searchList.owner" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'owner')")
                                 td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.edge_oob" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'edge_oob')")
+                                    v-text-field.mt-0.pt-0(v-model="searchList.route_profile" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'route_profile')")
                                 td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.edge_slb" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'edge_slb')")
-                                td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.edge_backend" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'edge_backend')")
-                                td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.os" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'os')")
-                                td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.v_cpu" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'v_cpu')")
-                                td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.v_memory" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'v_memory')")
-                                td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.disk_size" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'disk_size')")
-                                td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.status" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'status')")
+                                    v-text-field.mt-0.pt-0(v-model="searchList.remark" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'remark')")
 
                         template(v-slot:item="{item,index}")
                             tr
                                 td {{rowIndex(index)}}
-                                td {{item.customer}}
-                                td {{item.name}}
-                                td {{item.area}}
-                                td {{item.edge_oob}}
-                                td {{item.edge_slb}}
-                                td {{item.edge_backend}}
-                                td {{item.os}}
-                                td {{item.v_cpu}}
-                                td {{item.v_memory}}
-                                td {{item.disk_size}}
-                                td {{item.status}}
+                                td {{item.prefix}}
+                                td {{item.usage}}
+                                td {{item.owner}}
+                                td {{item.route_profile}}
+                                td {{item.remark}}
                                 td
                                     v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
                                     v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
@@ -72,17 +54,11 @@
                     v-card-title.title {{formTitle}}
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-select(v-model="edge.customer_id" :items="customerList" label="Customer" name="customer" item-text="name" item-value="id")
-                            v-text-field(v-model="edge.name" label="Edge Name" type="text" name="name" :rules="[rules.required]")
-                            v-select(v-model="edge.area" :items="areaList" label="Edge Area"  :rules="[rules.required]")
-                            v-text-field(v-model="edge.edge_oob" label="Edge OOB" type="text" name="edge_oob" :rules="[rules.required]")
-                            v-text-field(v-model="edge.edge_slb" label="Edge SLB" type="text" name="edge_slb")
-                            v-text-field(v-model="edge.edge_backend" label="Edge Backend" type="text" name="edge_backend" )
-                            v-text-field(v-model="edge.os" label="OS" type="text" name="os" )
-                            v-text-field(v-model="edge.v_cpu" label="vCPU" type="text" name="v_cpu")
-                            v-text-field(v-model="edge.v_memory" label="vMEM" type="text" name="v_memory")
-                            v-text-field(v-model="edge.disk_size" label="Disk size" type="text" name="disk_size")
-                            v-select(v-model="edge.status" :items="status" item-text="name" item-value="id" name="status" label="Status"  :rules="[rules.required]")
+                            v-text-field(v-model="H7Ip.prefix" label="Prefix" type="text" name="name" :rules="[rules.required, rules.mask]")
+                            v-select(v-model="H7Ip.usage" :items="usageList" label="Usage"  :rules="[rules.required]")
+                            v-select(v-model="H7Ip.owner" :items="ownerList" label="Owner"  :rules="[rules.required]")
+                            v-select(v-model="H7Ip.route_profile" :items="routeProfileList" label="Route Profile"  :rules="[rules.required]")
+                            v-text-field(v-model="H7Ip.remark" label="Remark" type="text" name="remark")
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -92,7 +68,7 @@
                 v-card
                     v-card-title.title {{formTitle}}
                     v-card-text Are you sure want to delete
-                        b.red--text {{edge.name}} ?
+                        b.red--text {{H7Ip.name}} ?
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -103,7 +79,7 @@
   import textFieldRules from '../utils/textFieldRules'
 
   export default {
-    name: 'Edge',
+    name: 'H7IP',
     mixins: [textFieldRules],
     components: {},
     data() {
@@ -114,13 +90,12 @@
         itemsPerPageList: [10, 25, 50, 100],
         searchText: '',
         formTitle: '',
-        edge: {},
+        H7Ip: {},
         editedIndex: -1,
         dialog: {
           add: false,
           delete: false
         },
-        areaList: ['TW', 'HK'],
         headers: [
           {
             text: '#',
@@ -130,78 +105,34 @@
             value: 'index'
           },
           {
-            text: 'Customer ID',
+            text: 'Prefix/24',
             align: 'left',
             sortable: true,
-            value: 'customer'
+            value: 'prefix'
           },
           {
-            text: 'Hostname',
+            text: 'Usage',
             align: 'left',
             sortable: true,
-            value: 'name'
+            value: 'usage'
           },
           {
-            text: 'Area',
+            text: 'Owner',
             align: 'left',
             sortable: true,
-            value: 'area'
+            value: 'owner'
           },
           {
-            text: 'Edge OOB',
+            text: 'Route Profile',
             align: 'left',
             sortable: true,
-            // width: '10px',
-            value: 'edge_oob'
+            value: ''
           },
           {
-            text: 'Edge SLB',
+            text: 'Remark',
             align: 'left',
             sortable: true,
-            // width: '10px',
-            value: 'edge_slb'
-          },
-          {
-            text: 'Edge Backend',
-            align: 'left',
-            sortable: true,
-            // width: '10px',
-            value: 'edge_backend'
-          },
-          {
-            text: 'OS',
-            align: 'left',
-            sortable: true,
-            // width: '10px',
-            value: 'os'
-          },
-          {
-            text: 'vCPU',
-            align: 'left',
-            sortable: true,
-            // width: '10px',
-            value: 'v_cpu'
-          },
-          {
-            text: 'vMEM',
-            align: 'left',
-            sortable: true,
-            // width: '10px',
-            value: 'v_memory'
-          },
-          {
-            text: 'Disk size',
-            align: 'left',
-            sortable: true,
-            // width: '10px',
-            value: 'disk_size'
-          },
-          {
-            text: 'Status',
-            align: 'left',
-            sortable: true,
-            // width: '10px',
-            value: 'status'
+            value: 'remark'
           },
           {
             text: 'Actions',
@@ -214,28 +145,18 @@
         desserts: [],
         searchList: {},
         copyDesserts: null,
-        customerList:[],
-        status:['spare', 'alive']
+        usageList:['uCDN', 'CDNBest', 'H7 others'],
+        ownerList:['H7', 'Cogent', 'logicweb'],
+        routeProfileList:['China', 'Global'],
       }
     },
     methods: {
       init: function() {
         this.$store.dispatch('global/startLoading')
         this.$store
-          .dispatch('edge/getInfo')
+          .dispatch('h7Ip/getInfo')
           .then(
             function(result) {
-              var arr = []
-              this.customerList.forEach((item) => {
-                arr[item.id] = item.name
-              })
-
-              result.data.forEach((item) =>
-              {
-                item.customer = arr[item.customer_id]
-                item.status = item.status===0?'spare':'alive'
-              })
-
               this.desserts = result.data
               this.copyDesserts = result.data
               this.$store.dispatch('global/finishLoading')
@@ -251,55 +172,40 @@
             }.bind(this)
           )
       },
-      getCustomerInfo: function () {
-        this.$store
-          .dispatch('edge/getCustomerInfo')
-          .then(
-            function(result) {
-              // console.log(result)
-              this.customerList = result.data
-            }.bind(this)
-          )
-          .catch(
-            function(error) {
-              this.$store.dispatch(
-                'global/showSnackbarError',
-                error.message
-              )
-            }.bind(this)
-          )
-      },
       newDialog: function() {
-        this.formTitle = 'Add Edge'
+        this.formTitle = 'Add H7 IP Prefix'
         this.dialog.add = true
+
+        this.H7Ip = {
+          id: -1,
+          usage: 'H7 others',
+          owner: 'H7',
+          route_profile: 'China'
+        }
       },
       editDialog: function(item) {
-        this.formTitle = 'Edit Edge'
+        this.formTitle = 'Edit H7 IP Prefix'
         this.dialog.add = true
         this.editedIndex = this.desserts.indexOf(item)
-        this.edge = Object.assign({}, item)
-        // this.bgp.wan = this.buildWAN(this.bgp)
+        this.H7Ip = Object.assign({}, item)
       },
       deleteDialog: function(item) {
-        this.formTitle = 'Delete Edge'
+        this.formTitle = 'Delete H7 IP Prefix'
         this.dialog.delete = true
         this.editedIndex = this.desserts.indexOf(item)
-        this.edge = item
+        this.H7Ip = item
       },
       closeDialog: function() {
         this.dialog.add = false
         this.dialog.delete = false
-        this.edge = {}
+        this.H7Ip = {}
         this.editedIndex = -1
       },
       store: function() {
         // 新增 API
-        const data = this.edge
-        data.status = data.status== 'alive' ? 1 : 0;
-
         this.$store.dispatch('global/startLoading')
         this.$store
-          .dispatch('edge/createEdge', data)
+          .dispatch('h7Ip/create', this.H7Ip)
           .then(
             function(result) {
               this.$store.dispatch(
@@ -321,12 +227,9 @@
       },
       update: function() {
         // Update API
-        const data = this.edge
-        data.status = data.status== 'alive' ? 1 : 0;
-
         this.$store.dispatch('global/startLoading')
         this.$store
-          .dispatch('edge/updateEdge', data)
+          .dispatch('h7Ip/update', this.H7Ip)
           .then(
             function(result) {
               this.$store.dispatch(
@@ -334,8 +237,6 @@
                 'Success!'
               )
               this.init()
-
-              // this.$store.dispatch('global/finishLoading')
             }.bind(this)
           )
           .catch(
@@ -347,6 +248,7 @@
               this.init()
             }.bind(this)
           )
+
       },
       save() {
         // 判斷是否執行哪一種 API
@@ -367,7 +269,7 @@
         // 刪除 API
         this.$store.dispatch('global/startLoading')
         this.$store
-          .dispatch('edge/destroyEdge', this.edge)
+          .dispatch('h7Ip/destroy', this.H7Ip)
           .then(
             function(result) {
               this.$store.dispatch(
@@ -453,7 +355,6 @@
       this.init()
     },
     created() {
-      this.getCustomerInfo()
     }
   }
 </script>

@@ -167,6 +167,11 @@ export default {
                             title: 'Package IP Mapping',
                             icon: 'mdi-chart-histogram',
                             router: '/dns-records'
+                        },
+                        {
+                            title: 'H7 IP Prefix',
+                            icon: 'mdi-white-balance-sunny',
+                            router: '/h7-ip'
                         }
                     ]
                 }

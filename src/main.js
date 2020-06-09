@@ -24,6 +24,13 @@ Vue.component("lottie", lottie);
 
 Vue.use(VueQuillEditor, /* { default global options } */)
 
+router.beforeEach((to, from, next) => {
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
+    next()
+})
+
 new Vue({
     router,
     store,

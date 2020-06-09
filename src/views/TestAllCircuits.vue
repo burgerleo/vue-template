@@ -5,6 +5,10 @@
                 v-card
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
+                            v-radio-group.mt-n2(v-model='testingOneOrAll' row)
+                                v-radio(label="Single site testing" value="one")
+                                v-radio(label="All site testing" value="all")
+                        v-form(ref="form" onsubmit="return false;" v-show="testingOneOrAll == 'one'")
                             v-layout.mt-n4.px-2
                                 v-flex(xs5 sm5 md5)
                                     v-text-field(v-model="destinationIP" label="Destination IP" type="ip" name="ip" :rules="[rules.required, rules.ip]")
@@ -112,16 +116,9 @@
                                     v-text-field(v-model="site" label="From" readonly)
                             v-layout.mt-n1
                                 v-flex(xs6 sm6 md6)
-                                    v-btn.mt-n3(color="primary" block @click="syncPing()") SEQUENTIAL ({{selectSourceIPs.length * count * interval}} s)
+                                    v-btn.mt-n3(color="primary" block @click="syncPing()") SEQUENTIAL ({{selectSourceIPs.length * count * interval}} sec)
                                 v-flex(xs6 sm6 md6)
-                                    v-btn.mt-n3(color="primary" block @click="asyncPing()") PARALLEL ({{ selectSourceIPs.length ? count * interval : 0}} s)
-                            v-layout.mt-1
-                                v-flex.mt-n4(xs8 sm8 md8)
-                                    v-textarea(v-model="cpips" solo="" label="Critical Pblic IPs: 1.1.1.1,2.2.2.2, ..." height="")
-                                v-flex(xs2 sm2 md2)
-                                    v-btn.mt-n3(color="purple lighten-2" block @click="makeReportPing()") REPORT
-                                v-flex(xs2 sm2 md2)
-                                    v-btn.mt-n3(color="purple lighten-2" block @click="downloadTwoReportsPing()") DOWNLOAD
+                                    v-btn.mt-n3(color="primary" block @click="asyncPing()") PARALLEL ({{ selectSourceIPs.length ? count * interval : 0}} sec)
                             v-layout.pt-2(v-show="cliExecuted != false")
                                 v-flex(xs8 sm8 md8)
                                     v-text-field(v-model="cliExecuted" label="CLI Executed" readonly)
@@ -135,6 +132,22 @@
                                 v-flex(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Report:
                                     DataTable2(ref="table2" :headers="headersReport" :items="pingReport" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :searchList="searchList")
+
+                        v-form(ref="form" onsubmit="return false;" v-show="testingOneOrAll == 'all'")
+                            v-card-text.font-weight-bold.pl-1(xs12 sm12 md12) Produce Analysis:
+                            v-layout.mt-1
+                                v-flex.mt-n4(xs8 sm8 md8)
+                                    v-textarea(v-model="cpips" solo="" label="Critical Public IPs: 1.1.1.1,2.2.2.2, ..." height="")
+                                v-flex(xs2 sm2 md2)
+                                    v-btn.mt-n3(color="blue lighten-3" block @click="makePingAnalysisByPromise('G')") Global
+                                v-flex(xs2 sm2 md2)
+                                    v-btn.mt-n3(color="red lighten-3" block @click="makePingAnalysisByPromise('C')") China
+                            v-card-text.font-weight-bold.pl-1 Download Latest Analysis:
+                            v-layout.mt-1
+                                v-flex(xs2 sm2 md2)
+                                    v-btn.mt-n3(color="blue lighten-3" block @click="downloadPingTwoAnalysis('G')") Global
+                                //- v-flex(xs2 sm2 md2)
+                                //-     v-btn.mt-n3(color="red lighten-3" block @click="downloadPingTwoAnalysis('C')") China
 </template>
 
 <script>
@@ -152,6 +165,9 @@ export default {
             // from apis
             bgpList: [],
             dummyList: [],
+
+            // 分頁
+            testingOneOrAll: 'one',
 
             // Critical Pblic IPs
             cpips: '',
@@ -501,7 +517,7 @@ export default {
                     }.bind(this)
                 )
         },
-        makeReportPing: function() {
+        makePingAnalysisByPromise: function(route) {
             if (! this.cpips.length) {
                 this.$store.dispatch(
                     'global/showSnackbarError',
@@ -512,8 +528,9 @@ export default {
 
             this.$store.dispatch('global/startLoading')
             this.$store
-                .dispatch('ping/makeReportPing', {
-                    "cpips" : this.cpips
+                .dispatch('ping/makePingAnalysisByPromise', {
+                    "cpips" : this.cpips,
+                    "route" : route,
                 })
                 .then(
                     function(result) {
@@ -533,14 +550,15 @@ export default {
                 )
                 this.$store.dispatch('global/finishLoading')
         },
-        downloadTwoReportsPing: function() {
-            this.downloadReportPing('packetloss')
-            this.downloadReportPing('rtt')
+        downloadPingTwoAnalysis: function(route) {
+            this.downloadPingAnalysis(route, 'packetloss')
+            this.downloadPingAnalysis(route, 'rtt')
         },
-        downloadReportPing: function(type) {
+        downloadPingAnalysis: function(route, type) {
             this.$store.dispatch('global/startLoading')
             this.$store
-                .dispatch('ping/downloadReportPing', {
+                .dispatch('ping/downloadPingAnalysis', {
+                    route: route,
                     type: type
                 })
                 .then(
@@ -567,8 +585,6 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Test All Circuits';
-
         this.getBGP()
         this.getDummy()
 

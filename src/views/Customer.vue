@@ -336,7 +336,6 @@
       }
     },
     mounted() {
-      document.title = 'Customer';
       this.init()
     },
     created() {

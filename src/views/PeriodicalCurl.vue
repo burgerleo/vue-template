@@ -390,7 +390,6 @@
       this.getCustomerInfo();
       this.getEdgeInfo();
     },mounted() {
-      document.title = 'Periodical Curl';
       this.url = this.path = this.$route.query.path ? this.$route.query.path : '';
     }
   };
