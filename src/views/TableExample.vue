@@ -13,10 +13,19 @@
                         v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") Add
                         v-btn.mb-2.mr-2(color="primary" dark @click="init")
                             v-icon mdi-refresh
+
                     DataTable2(ref="table2" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :loading="loading" @showDialog="dialogSwitch" :setUripath="jkbURI" :setLinkMethod="setLinkMethod")
-                    v-row
-                        lottie(:options="defaultOptions" :width="60" :height="60"  v-on:animCreated="handleAnimation")
-                        lottie(:options="defaultOptions" :width="60" :height="60"  v-on:animCreated="handleAnimation")
+
+                v-row.px-3.py-3
+                    v-btn.mb-2.mr-2(color="primary" dark @click="stopIcon") Icon  
+                        v-icon mdi-play-pause
+                    v-btn.mb-2.mr-2(color="primary" dark @click="playIcon") Icon 
+                        v-icon mdi-play
+                    v-btn.mb-2.mr-2(color="primary" dark @mouseover="stopIcon" @mouseleave="playIcon") hover 
+
+                v-row.px-3.py-3
+                    lottie(:options="defaultOptions" :width="60" :height="60" v-on:animCreated="handleAnimation")
+                    lottie(:options="defaultOptions2" :width="60" :height="60" v-on:animCreated="handleAnimation")
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
@@ -32,7 +41,6 @@
                             v-combobox(v-model="formData.tag" :items="['A','B','C','D']" label="Tag" hide-selected dense hide-details)
                                 template(v-slot:no-data)
                                     v-card-text No results matching 
-                            
                             v-text-field(v-model="formData.url" label="URL Search" type="search" name="path")
 
                             v-text-field(v-model="formData.remark" label="Remark" type="text" name="remark")
@@ -55,6 +63,7 @@
 import textFieldRules from '../utils/textFieldRules'
 import DataTable2 from '../components/DataTable2'
 import addJson from '../assets/icon/add/add.json'
+import toggleJson from '../assets/icon/toggle/toggle.json'
 
 export default {
     name: 'DomainManage',
@@ -148,13 +157,18 @@ export default {
                 loop: true,
                 autoplay: true
             },
-            defaultAnim:""
+            defaultOptions2: {
+                animationData: toggleJson,
+                loop: true,
+                autoplay: true
+            },
+            defaultAnim: []
         }
     },
     watch: {},
     methods: {
         handleAnimation(anim) {
-            this.defaultAnim = anim
+            this.defaultAnim.push(anim)
         },
         dialogSwitch(bool, item) {
             bool ? this.editDialog(item) : this.deleteDialog(item)
@@ -183,7 +197,6 @@ export default {
             this.dialog.add = false
             this.dialog.delete = false
             this.formData = {}
-            this.defaultAnim.play()
         },
         init() {
             // this.$store.dispatch('global/startLoading')
@@ -263,6 +276,16 @@ export default {
             this.searchList = {}
             this.searchText = ''
             this.$refs.table2.$emit('clearAllFilter')
+        },
+        stopIcon() {
+            this.defaultAnim.map(function(anim) {
+                anim.pause()
+            })
+        },
+        playIcon() {
+            this.defaultAnim.map(function(anim) {
+                anim.play()
+            })
         }
     },
     mounted() {
