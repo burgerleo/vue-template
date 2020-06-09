@@ -18,8 +18,8 @@ export default {
                 return Promise.reject(error.response.data);
             });
         },
-        makeReportPing: (context, data) => {
-            return axios.post("dummy/ping/report", data)
+        makePingAnalysisByPromise: (context, data) => {
+            return axios.post("dummy/ping/" + data.route + "/analysis", data)
             .then(function (response) {
                 return Promise.resolve(response.data);
             })
@@ -27,8 +27,8 @@ export default {
                 return Promise.reject(error.response.data);
             });
         },
-        downloadReportPing: (context, data) => {
-            return axios.get("dummy/ping/report/" + data.type, {
+        downloadPingAnalysis: (context, data) => {
+            return axios.get("dummy/ping/" + data.route + "/analysis/" + data.type, {
                 headers: {
                     'Accept': 'application/csv'
                 }
