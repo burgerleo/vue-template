@@ -145,10 +145,10 @@ export default {
                             router: '/crt-key'
                         },
                         {
-                            icon: 'mdi-content-paste',
-                            title: 'FQDN Management',
+                            icon: 'mdi-chart-histogram',
+                            title: 'Package IP Mapping',
                             display: true,
-                            router: '/domain-manage'
+                            router: '/dns-records'
                         }
                     ]
                 },
@@ -184,10 +184,10 @@ export default {
                             router: '/customer'
                         },
                         {
-                            icon: 'mdi-chart-histogram',
-                            title: 'Package IP Mapping',
+                            icon: 'mdi-content-paste',
+                            title: 'FQDN Management',
                             display: true,
-                            router: '/dns-records'
+                            router: '/domain-manage'
                         },
                         {
                             icon: 'mdi-white-balance-sunny',
