@@ -1,7 +1,9 @@
 <template lang="pug">
-    v-navigation-drawer(v-model="drawer" :clipped="clipped" fixed app :tabId="tabId")
+    v-navigation-drawer(v-model="drawer" :clipped="clipped" fixed app)
+        v-tabs.mx-0.px-0(align-with-title v-model="tabId" dense grow)
+            v-tab.ml-0.px-0.tab-width(v-for="tab in tabs") {{tab}} 
         v-list(dense subheader)
-            template(v-for="item, index in items" )
+            template(v-for="item, index in items" v-if="(item.tabId == tabId)")
                 v-subheader(v-if="item.header") {{item.header}}
                 v-list-item(v-if="!item.items && item.icon" :to="item.router")
                     v-list-item-icon
@@ -21,29 +23,27 @@
 <script>
 export default {
     props: {
-        tabId: {
-            type: Number
-        }
+        // tabId: {
+        //     type: Number
+        // }
     },
     components: {},
     data() {
         return {
-            drawer: true,
+            drawer: true, // menu open or closs
             mini: false,
             clipped: true,
             tabItems: [],
+            tab: '',
+            tabId: '',
+            tabs: ['G', 'A'],
             items: [
-                // * monitoring
-                // * Lookup
-                // * Test & Analyze
-                // * Reports
-                // * --------------
-                // * Management
-                // * Administrator
                 {
+                    tabId: 0,
                     header: 'General'
                 },
                 {
+                    tabId: 0,
                     icon: 'mdi-magnify',
                     title: 'Lookup',
                     active: false,
@@ -61,6 +61,7 @@ export default {
                     ]
                 },
                 {
+                    tabId: 0,
                     icon: 'mdi-test-tube',
                     title: 'Test & Analyze',
                     active: false,
@@ -98,6 +99,7 @@ export default {
                     ]
                 },
                 {
+                    tabId: 0,
                     title: 'Monitoring',
                     icon: 'mdi-monitor',
                     active: false,
@@ -115,10 +117,12 @@ export default {
                     ]
                 },
                 {
+                    tabId: 0,
                     title: 'Reports',
                     icon: 'mdi-file'
                 },
                 {
+                    tabId: 0,
                     icon: 'mdi-human-greeting',
                     title: 'Management',
                     active: false,
@@ -136,6 +140,7 @@ export default {
                     ]
                 },
                 {
+                    tabId: 0,
                     icon: 'mdi-account',
                     title: 'Configuration MGT',
                     active: false,
@@ -173,9 +178,11 @@ export default {
                     ]
                 },
                 {
+                    tabId: 1,
                     header: 'Platform Administrator'
                 },
                 {
+                    tabId: 1,
                     icon: 'mdi-account',
                     title: 'Administrator'
                 }
@@ -205,4 +212,9 @@ export default {
     }
 }
 </script>
+<style lang="sass" scoped>
+.tab-width
+    min-width: 30px
+    max-width: 30px
+</style>
 
