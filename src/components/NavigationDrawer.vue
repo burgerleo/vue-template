@@ -261,7 +261,7 @@ export default {
 .v-tabs {
     .v-tab {
         min-width: 30px;
-        max-width: 30px;
+        // max-width: 30px;
     }
 }
 </style>
