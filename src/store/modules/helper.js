@@ -11,7 +11,7 @@ export default {
   },
   actions: {
     getHelperInfo: (context, data) => {
-      return axios.get("helper/"+ data.path).then(function(response) {
+      return axios.post("helper/"+ data.path, {path:data.path, name:data.title}).then(function(response) {
         return Promise.resolve(response.data);
       })
         .catch(function(error) {

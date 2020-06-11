@@ -134,18 +134,24 @@
                                     DataTable2(ref="table2" :headers="headersReport" :items="pingReport" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :searchList="searchList")
 
                         v-form(ref="form" onsubmit="return false;" v-show="testingOneOrAll == 'all'")
-                            v-card-text.font-weight-bold.pl-1(xs12 sm12 md12) Produce Analysis:
+                            v-card-text.font-weight-bold.pl-1(xs12 sm12 md12) Produce Analysis through Database CPIPs:
+                            v-layout.mt-1
+                                v-flex(xs2 sm2 md2)
+                                    v-btn.mt-n3(color="blue lighten-3" block @click="makePingAnalysisByPromise('G', 0)") Global
+                                v-flex(xs2 sm2 md2)
+                                    v-btn.mt-n3(color="red lighten-3" block @click="makePingAnalysisByPromise('C', 0)") China
+                            v-card-text.font-weight-bold.pl-1(xs12 sm12 md12) Produce Analysis through Inputing CPIPs:
                             v-layout.mt-1
                                 v-flex.mt-n4(xs8 sm8 md8)
                                     v-textarea(v-model="cpips" solo="" label="Critical Public IPs: 1.1.1.1,2.2.2.2, ..." height="")
                                 v-flex(xs2 sm2 md2)
-                                    v-btn.mt-n3(color="blue lighten-3" block @click="makePingAnalysisByPromise('G')") Global
+                                    v-btn.mt-n3(color="blue lighten-3" block @click="makePingAnalysisByPromise('G', 1)") Global
                                 v-flex(xs2 sm2 md2)
-                                    v-btn.mt-n3(color="red lighten-3" block @click="makePingAnalysisByPromise('C')") China
+                                    v-btn.mt-n3(color="red lighten-3" block @click="makePingAnalysisByPromise('C', 1)") China
                             v-card-text.font-weight-bold.pl-1 Download Latest Analysis:
                             v-layout.mt-1
                                 v-flex(xs2 sm2 md2)
-                                    v-btn.mt-n3(color="blue lighten-3" block @click="downloadPingTwoAnalysis('G')") Global
+                                    v-btn.mt-n3(color="grey lighten-3" block @click="downloadPingTwoAnalysis('G')") Download
                                 //- v-flex(xs2 sm2 md2)
                                 //-     v-btn.mt-n3(color="red lighten-3" block @click="downloadPingTwoAnalysis('C')") China
 </template>
@@ -517,13 +523,15 @@ export default {
                     }.bind(this)
                 )
         },
-        makePingAnalysisByPromise: function(route) {
-            if (! this.cpips.length) {
-                this.$store.dispatch(
-                    'global/showSnackbarError',
-                    'inputs cpips error'
-                )
-                return
+        makePingAnalysisByPromise: function(route, examBool) {
+            if (examBool) {
+                if (! this.cpips.length) {
+                    this.$store.dispatch(
+                        'global/showSnackbarError',
+                        'inputs cpips error'
+                    )
+                    return
+                }
             }
 
             this.$store.dispatch('global/startLoading')
@@ -538,6 +546,7 @@ export default {
                             'global/showSnackbarSuccess',
                             'Success!'
                         )
+                        this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
                 .catch(
@@ -546,9 +555,9 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
+                        this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
-                this.$store.dispatch('global/finishLoading')
         },
         downloadPingTwoAnalysis: function(route) {
             this.downloadPingAnalysis(route, 'packetloss')
