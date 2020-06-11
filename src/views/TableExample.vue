@@ -13,6 +13,17 @@
                         v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") Add
                         v-btn.mb-2.mr-2(color="primary" dark @click="init")
                             v-icon mdi-refresh
+                        v-menu.mx-0.px-0(offset-y left) 
+                            template(v-slot:activator="{on}")
+                                v-btn.mx-0.px-0.mb-2(icon v-on="on")
+                                    v-icon mdi-dots-vertical
+                            v-list
+                                v-list-item(@click="init")
+                                    v-list-item-title Test List 1
+                                v-list-item(@click="init")
+                                    v-list-item-title Test List 2
+                                v-list-item(@click="init")
+                                    v-list-item-title Test List 3
 
                     DataTable2(ref="table2" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :loading="loading" @showDialog="dialogSwitch" :setUripath="jkbURI" :setLinkMethod="setLinkMethod")
 
