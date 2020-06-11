@@ -103,11 +103,11 @@ export default new Router({
                     }
                 },
                 {
-                    name: "SSL File",
+                    name: "Cert Management",
                     path: "crt-key",
                     component: CrtKey,
                     meta: {
-                        title: 'Domain Manage'
+                        title: 'Cert Management'
                     }
                 },
                 {
@@ -135,7 +135,7 @@ export default new Router({
                     }
                 },
                 {
-                    name: "DNS Records",
+                    name: "Package IP Mapping",
                     path: "dns-records",
                     component: DnsRecord,
                     meta: {
@@ -175,7 +175,7 @@ export default new Router({
                     }
                 },
                 {
-                    name: "JKB-PacketLoss",
+                    name: "JKB Packet Loss",
                     path: "jkb-packetloss",
                     component: JkbPacketLoss,
                     meta: {
@@ -183,7 +183,7 @@ export default new Router({
                     }
                 },
                 {
-                    name: "JKB-Latency",
+                    name: "JKB Latency",
                     path: "jkb-Latency",
                     component: JkbLatency,
                     meta: {
@@ -191,7 +191,7 @@ export default new Router({
                     }
                 },
                 {
-                    name: "DomainManage",
+                    name: "FQDN Management",
                     path: "domain-manage",
                     component: DomainManage,
                     meta: {
@@ -214,7 +214,7 @@ export default new Router({
                     }
                 },
                 {
-                    name: "H7IPPrefix",
+                    name: "H7 IP Prefix",
                     path: "h7-ip",
                     component: H7IP,
                     meta: {

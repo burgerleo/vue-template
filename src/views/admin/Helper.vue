@@ -102,9 +102,19 @@
         this.dialog= false
       },
       getHelperInfo(){
+        const routes = this.$router.options.routes[0].children
+
+        const found = routes.find(element =>
+           element.path == this.helperId
+        )
+
+        const name = found['name']
+
         const data = {
-          path : this.helperId
+          path : this.helperId,
+          title : name
         }
+
         this.$store.dispatch("helper/getHelperInfo", data)
           .then(
             function(result) {
