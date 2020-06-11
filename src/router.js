@@ -191,7 +191,7 @@ export default new Router({
                     }
                 },
                 {
-                    name: "FQDN Management",
+                    name: "FQDN_Management",
                     path: "domain-manage",
                     component: DomainManage,
                     meta: {
