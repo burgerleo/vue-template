@@ -22,7 +22,8 @@ import CrtKey from "./views/CrtKey.vue";
 import DomainManage from "./views/DomainManage.vue";
 import Ip2Location from "./views/Ip2Location.vue";
 import TableExample from "./views/TableExample.vue";
-import H7IP from "./views/H7IP.vue";
+import H7IP from "./views/H7IP.vue";Reports
+import Reports from "./views/Reports.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -219,6 +220,14 @@ export default new Router({
                     component: H7IP,
                     meta: {
                         title: 'H7 IP Prefix'
+                    }
+                },
+                {
+                    name: "Reports",
+                    path: "reports",
+                    component: Reports,
+                    meta: {
+                        title: 'Reports'
                     }
                 },
             ]

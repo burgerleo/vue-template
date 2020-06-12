@@ -128,10 +128,6 @@
                                 v-flex(xs12 sm12 md12)
                                     v-card-text.font-weight-bold.pb-0.pl-1 Results:
                                     DataTable2(ref="table2" :headers="headers" :items="pingResult" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :searchList="searchList")
-                            v-layout.mt-n5(v-show='pingReport.length > 0')
-                                v-flex(xs12 sm12 md12)
-                                    v-card-text.font-weight-bold.pb-0.pl-1 Report:
-                                    DataTable2(ref="table2" :headers="headersReport" :items="pingReport" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :searchList="searchList")
 
                         v-form(ref="form" onsubmit="return false;" v-show="testingOneOrAll == 'all'")
                             v-card-text.font-weight-bold.pl-1(xs12 sm12 md12) Produce Analysis through Database CPIPs:
@@ -148,12 +144,6 @@
                                     v-btn.mt-n3(color="blue lighten-3" block @click="makePingAnalysisByPromise('G', 1)") Global
                                 v-flex(xs2 sm2 md2)
                                     v-btn.mt-n3(color="red lighten-3" block @click="makePingAnalysisByPromise('C', 1)") China
-                            v-card-text.font-weight-bold.pl-1 Download Latest Analysis:
-                            v-layout.mt-1
-                                v-flex(xs2 sm2 md2)
-                                    v-btn.mt-n3(color="grey lighten-3" block @click="downloadPingTwoAnalysis('G')") Download
-                                //- v-flex(xs2 sm2 md2)
-                                //-     v-btn.mt-n3(color="red lighten-3" block @click="downloadPingTwoAnalysis('C')") China
 </template>
 
 <script>
@@ -200,8 +190,8 @@ export default {
             pingReport: [],
 
             // datatable2
-            itemsPerPage: 15,
-            itemsPerPageList: [15, 50],
+            itemsPerPage: 10,
+            itemsPerPageList: [10, 50],
             searchList: {},
             headers: [
                 {
