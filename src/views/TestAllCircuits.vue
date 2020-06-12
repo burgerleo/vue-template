@@ -130,8 +130,9 @@
                                     DataTable2(ref="table2" :headers="headers" :items="pingResult" :itemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :searchList="searchList")
 
                         v-form(ref="form" onsubmit="return false;" v-show="testingOneOrAll == 'all'")
-                            v-card-text.font-weight-bold.pl-1(xs12 sm12 md12) Produce Analysis through Database CPIPs:
-                            v-layout.mt-1
+                            //- 隱藏排程功能 (依 Global 或 China 全 Ping 過一次)
+                            //- v-card-text.font-weight-bold.pl-1(xs12 sm12 md12) Produce Analysis through Database CPIPs:
+                            //- v-layout.mt-1
                                 v-flex(xs2 sm2 md2)
                                     v-btn.mt-n3(color="blue lighten-3" block @click="makePingAnalysisByPromise('G', 0)") Global
                                 v-flex(xs2 sm2 md2)
