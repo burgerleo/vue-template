@@ -16,13 +16,16 @@ import BGP from "./views/BGP.vue";
 import Edge from "./views/Edge.vue";
 import Customer from "./views/Customer.vue";
 import DnsRecord from "./views/DnsRecord.vue";
-import JkbPacketLoss from "./views/JkbPacketLoss.vue";
+import JKBAvailability from "./views/JKBAvailability.vue";
 import JkbLatency from "./views/JkbLatency.vue";
 import CrtKey from "./views/CrtKey.vue";
 import DomainManage from "./views/DomainManage.vue";
 import Ip2Location from "./views/Ip2Location.vue";
 import TableExample from "./views/TableExample.vue";
 import H7IP from "./views/H7IP.vue";
+import DummyRtt from "./views/DummyRtt.vue";
+import DummyPacketLoss from "./views/DummyPacketLoss.vue";
+
 Vue.use(Router);
 
 export default new Router({
@@ -175,15 +178,15 @@ export default new Router({
                     }
                 },
                 {
-                    name: "JKB_Availability",
+                    name: "jkb_availability",
                     path: "jkb-availability",
-                    component: JkbPacketLoss,
+                    component: JKBAvailability,
                     meta: {
                         title: 'JKB Availability'
                     }
                 },
                 {
-                    name: "JKB Latency",
+                    name: "jkb_latency",
                     path: "jkb-Latency",
                     component: JkbLatency,
                     meta: {
@@ -219,6 +222,20 @@ export default new Router({
                     component: H7IP,
                     meta: {
                         title: 'H7 IP Prefix'
+                    }
+                }, {
+                    name: "dummy_rtt",
+                    path: "dummy-rtt",
+                    component: DummyRtt,
+                    meta: {
+                        title: 'Dummy Rtt'
+                    }
+                }, {
+                    name: "dummy_packet_loss",
+                    path: "dummy-packet-loss",
+                    component: DummyPacketLoss,
+                    meta: {
+                        title: 'Dummy Packet Loss'
                     }
                 },
             ]

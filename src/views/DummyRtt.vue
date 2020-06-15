@@ -2,47 +2,50 @@
     v-container.ma-0.pa-0.fill-height.fluid
         v-row
             v-col.pb-1.pt-1(cols="12")
-                v-toolbar(flat white)
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "%≥"}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "%~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10)) + "%"}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']+"%"}}
-                    v-divider.mx-1(inset vertical)
-                    v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
-                    v-divider.mx-1(inset vertical)
-
-                    v-radio-group.mx-0(v-model='isp' row hide-details)
-                        v-radio.mx-0.mr-1(v-for="site,index in ispList" :label="site" :value="index" :key="index")
-
+                v-toolbar(flat white dense)
+                    v-toolbar-title.pl-1 Dummy RTT
                     v-spacer
-
-                    v-toolbar-title.my-0.mx-0(:class="!jkbAPIStatus ? 'blink' : 'black--text'") Latest form JKB:{{lastDataTime}}
-                    v-divider.mb-0.mx-1(inset vertical)
                     v-toolbar-title.my-0.mr-2 {{totalTime}}s
                     v-btn.mb-2.mr-2(v-if="timer" color="red darken-1" dark @click="stopTimer") Stop
-                    v-btn.mb-2.mr-2(v-if="!timer" color="primary" dark @click="getAllPacketLoss") Start
+                    v-btn.mb-2.mr-2(v-if="!timer" color="primary" dark @click="getAllNetworkFlow") Start
                     v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
                     v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
                         v-icon mdi-refresh
-        v-row
-            v-col.ml-0.pa-0.pl-6.pb-3(cols="8")
-                NxnCirclesTable(class="table_border" title="HK" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
-            v-col.ml-0.pa-0.pb-2.pl-3.pr-6(cols="4")
-                NxnCirclesTable(class="table_border" title="HK" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
-                //- PH 是舊的格式
-                NxnCirclesTable.mt-4(class="table_border" title="PH" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
+                v-toolbar.py-0.my-0(flat white dense)
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[5]") China
+                    v-divider.mx-1(inset vertical)
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMinByType('china')['min'] + "≤"}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMinByType('china')['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMinByType('china')['max'] - 1).toFixed(10))}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('china')['max']}}
+                    v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
+                    v-spacer
+                    
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[4]") Global
+                    v-divider.mx-1(inset vertical)
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMinByType('global')['min'] + "≤"}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMinByType('global')['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMinByType('global')['max'] - 1).toFixed(10))}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('global')['max']}}
+                    v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
         v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
-                NxnCirclesTable(class="table_border" title="TW" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
-            v-col.ml-0.pa-0.pl-2.pr-6(cols="6")
-                NxnCirclesTable(class="table_border" title="TW" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']"  :range="range.china" :loading="loading" :typeList="typeList")
+            v-col.ml-0.pa-0.pl-2(cols="6")
+                NxnCirclesTable.table_border(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']"  :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3.table_border(title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
+                
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
                 v-card-title.title Setting
                 v-card-text.pt-6 Color Range
                     v-form(ref="form" onsubmit="return false;")
-                        v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='0.01')
-                        v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly)
-                        v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly)
+                        v-subheader China
+                            v-range-slider.align-center(v-model="range.china" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='1')
+                        v-subheader Global
+                            v-range-slider.align-center(v-model="range.global" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='1')
+                        v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
+                        v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
                         v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Hours)" type="number" name="hour" max="30" min="1" :rules="[rules.required, rules.hours]")
                         v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
                 v-card-actions
@@ -55,11 +58,12 @@
 import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
 import checkPage from '../utils/checkPage'
+import fakeData from '../assets/bgp.json'
 
 import NxnCirclesTable from '../components/NxnCirclesTable'
 
 export default {
-    name: 'JKB_Availability',
+    name: 'dummy_rtt',
     mixins: [textFieldRules, dateFormat, checkPage],
 
     components: {
@@ -93,14 +97,15 @@ export default {
                 TW: {},
                 PH: {}
             },
-            ispList: this.$store.getters['isp/ispList'](),
-            isp: 0,
             loading: true,
-            min: 95,
-            max: 100,
-            range: [97, 99.5],
+            min: 0,
+            max: 300,
+            range: {
+                china: [130, 200],
+                global: [150, 200]
+            },
             dialog: false,
-            pageName: 'packet-loss',
+            pageName: this.$route.name,
             typeList: ['outside', 'intermediate', 'inside'],
             colorList: [
                 'green lighten-2',
@@ -114,13 +119,19 @@ export default {
             totalTime: 60,
             configs: {
                 rankbar: {
-                    max: 99.5,
-                    min: 97
+                    china: {
+                        max: 130,
+                        min: 200
+                    },
+                    global: {
+                        max: 150,
+                        min: 200
+                    }
                 },
                 timeinterval: {
-                    inside: 1,
-                    outside: 5,
-                    intermediate: 1
+                    outside: 60, //最外圈 分鐘
+                    intermediate: 120, //中間 分鐘
+                    inside: 5 //最內圈 小時
                 },
                 countdownMinute: {
                     countdownMinute: 1
@@ -128,21 +139,65 @@ export default {
             },
             copyConfigs: {},
             jkbAPIStatus: true, // true 表示正常
-            lastDataTime: null
+            lastDataTime: null,
+            fakeData: fakeData
         }
     },
-    watch: {
-        isp() {
-            this.getConfig()
-        }
-    },
+    watch: {},
     methods: {
-        getIsp() {
+        getDummy() {
             this.$store
-                .dispatch('isp/getISPList')
+                .dispatch('dummy/getInfo')
                 .then(
                     function(result) {
-                        this.ispList = this.$store.getters['isp/ispList']()
+                        var tableData = Object.assign({}, this.tableData)
+
+                        var bgpList = Object.assign({}, this.bgpList)
+
+                        // 第一步 將資料稍微整理一次
+                        var dummy = result.data
+                            .map(function(item, index) {
+                                item.site = item.in_bgp.site
+                                item.inBgpName = item.in_bgp.name
+                                item.outBgpName = item.out_bgp.name
+
+                                delete item.in_bgp
+                                delete item.out_bgp
+                                return item
+                            })
+                            .filter(item => item)
+
+                        // 第二步 將資料排序，按照 Site
+                        // bgpList[site][]
+                        dummy.forEach(function(item) {
+                            var site = item.site
+                            var inLine = item.inBgpName
+                            var outLine = item.outBgpName
+
+                            bgpList[site].push(inLine)
+                            bgpList[site].push(outLine)
+
+                            // 移除重複 Line Name
+                            bgpList[site] = bgpList[site].filter(
+                                (line, index) =>
+                                    bgpList[site].indexOf(line) === index
+                            )
+
+                            if (!tableData[site][inLine]) {
+                                tableData[site][inLine] = {}
+                            }
+
+                            if (!tableData[site][inLine][outLine]) {
+                                tableData[site][inLine][outLine] = {}
+                            }
+                        })
+
+                        // 送進排序中心
+                        this.$store.dispatch('dummy/bgpListReorder', bgpList)
+                        this.bgpList = this.$store.state.dummy.bgpList
+                        this.bgpList2 = this.$store.state.dummy.bgpListPartition
+
+                        this.getConfig()
                     }.bind(this)
                 )
                 .catch(
@@ -156,7 +211,6 @@ export default {
         },
         getConfig() {
             this.stopTimer()
-            // this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('jkb/getConfig', { page: this.pageName })
                 .then(
@@ -168,9 +222,7 @@ export default {
                         }
                         this.setMaxAndMin()
 
-                        this.getAllPacketLoss()
-
-                        // this.$store.dispatch('global/finishLoading')
+                        this.getAllNetworkFlow()
                     }.bind(this)
                 )
                 .catch(
@@ -179,13 +231,11 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
         },
         editDialog() {
             this.dialog = true
-
             this.copyConfigs = {}
 
             // Deep copy
@@ -200,7 +250,7 @@ export default {
 
             this.dialog = false
         },
-        validateForm: function() {
+        validateForm() {
             // 驗證表單資料
             return this.$refs.form.validate()
         },
@@ -218,10 +268,8 @@ export default {
             this.closeDialog()
         },
         batchSaveConfig() {
-            var configs = {}
+            var configs = this.configs
             var data = {}
-
-            configs = this.configs
 
             const configList = Object.keys(configs)
 
@@ -234,7 +282,6 @@ export default {
 
             data.page = this.pageName
 
-            // this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('jkb/batchSetConfig', data)
                 .then(
@@ -243,7 +290,6 @@ export default {
                             'global/showSnackbarSuccess',
                             'Success!'
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
                 .catch(
@@ -252,21 +298,33 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
         },
         setMaxAndMin() {
-            var rankbar = this.configs.rankbar
-
-            this.range = []
-
-            this.range[0] = rankbar.min
-            this.range[1] = rankbar.max
+            this.range.china = [
+                this.configs.rankbar.china.min,
+                this.configs.rankbar.china.max
+            ]
+            this.range.global = [
+                this.configs.rankbar.global.min,
+                this.configs.rankbar.global.max
+            ]
         },
         setConfigByRankbar() {
-            var rankbar = this.getMaxAndMin()
-            this.configs.rankbar = rankbar
+            this.configs.rankbar.china = this.getMaxAndMinByType('china')
+            this.configs.rankbar.global = this.getMaxAndMinByType('global')
+        },
+        getMaxAndMinByType(type = 'china') {
+            var range = this.range[type]
+
+            const max = range[0] >= range[1] ? range[0] : range[1]
+            const min = range[0] <= range[1] ? range[0] : range[1]
+
+            return {
+                max: max,
+                min: min
+            }
         },
         getMaxAndMin() {
             var range = this.range
@@ -279,15 +337,13 @@ export default {
                 min: min
             }
         },
-        getAllPacketLoss() {
+        getAllNetworkFlow() {
             this.resetTimer()
             this.startTimer()
-
-            for (var type of this.typeList) {
-                this.getPacketLoss(type)
-            }
+            this.getNetworkFlowByTypeId()
         },
-        getPacketLoss(type) {
+        getNetworkFlowByTypeId(typeId = 0) {
+            var type = this.typeList[typeId]
             var minute = this.configs.timeinterval[type]
             var startTime = new Date()
 
@@ -297,39 +353,47 @@ export default {
                     break
                 case this.typeList[1]:
                     startTime.setMinutes(startTime.getMinutes() - minute)
-                    // startTime.setHours(startTime.getHours() - minute) // 原本計算小時
                     break
                 case this.typeList[2]:
                     startTime.setHours(startTime.getHours() - minute)
-                    // startTime.setDate(startTime.getDate() - minute) // 原本計算 天
                     break
             }
 
             this.loading = true
-            // this.$store.dispatch('global/startLoading')
-            var endTime = new Date()
-
             this.$store
                 .dispatch('traffic/getTrafficFlow', {
                     start_time: this.dateFormat(startTime),
-                    end_time: this.dateFormat(endTime),
-                    isp_id: this.isp
+                    end_time: this.dateFormat(new Date())
                 })
                 .then(
                     function(result) {
-                        this.jkbAPIStatus = result.data.jkb_api_status
+                        var bgpIoMapping = result.data.bgpIoMapping
+                        var tableData = Object.assign({}, this.tableData)
 
-                        var lastDataTime = new Date(result.data.lastDataTime)
+                        bgpIoMapping.forEach(function(item) {
+                            var site = item.site
+                            var inLine = item.inBgpName
+                            var outLine = item.outBgpName
 
-                        var hours = this.getDateHour(lastDataTime)
-                        var minutes = this.getDateMinute(lastDataTime)
-                        this.lastDataTime = hours + ':' + minutes
+                            tableData[site][inLine][outLine][type] = {
+                                availability: item.availability,
+                                latency: item.latency
+                            }
+                        })
 
-                        this.transforToTableData(
-                            this.typeList.indexOf(type),
-                            result.data.bgpIoMapping
+                        this.tableData = tableData
+
+                        typeId++
+
+                        if (typeId < 3) {
+                            this.getNetworkFlowByTypeId(typeId)
+                        }
+
+                        this.loading = false
+
+                        this.bgpList2 = JSON.parse(
+                            JSON.stringify(this.bgpList2)
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
                 .catch(
@@ -338,94 +402,8 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
-        },
-        transforToTableData(typeId, data) {
-            var latency = data.length > 0 ? data : []
-
-            var type = this.typeList[typeId]
-
-            var bgpList = Object.assign({}, this.bgpList)
-            var headerList = Object.assign({}, this.headers)
-            var tableData = Object.assign({}, this.tableData)
-
-            var header1 = {
-                text: 'in/out',
-                width: '30px',
-                sortable: false,
-                align: 'center'
-            }
-
-            var header2 = {
-                width: '30px',
-                sortable: false,
-                align: 'center'
-            }
-
-            latency.forEach(function(item) {
-                var site = item.site
-                var inLine = item.inBgpName
-                var outLine = item.outBgpName
-
-                if (headerList[site].length <= 0) {
-                    headerList[site].push(header1)
-                }
-
-                if (!tableData[site][inLine]) {
-                    tableData[site][inLine] = {}
-
-                    headerList[site].push(header2)
-                }
-
-                bgpList[site].push(inLine)
-                bgpList[site].push(outLine)
-
-                // 移除重複 Line Name
-                bgpList[site] = bgpList[site].filter(
-                    (line, index) => bgpList[site].indexOf(line) === index
-                )
-
-                if (!tableData[site][inLine][outLine]) {
-                    tableData[site][inLine][outLine] = {}
-                }
-
-                tableData[site][inLine][outLine][type] = {
-                    availability: item.availability,
-                    latency: item.latency
-                }
-            })
-
-            this.tableData = tableData
-            this.headers = headerList
-
-            this.$store.dispatch('dummy/bgpListReorder', bgpList)
-            this.bgpList = this.$store.getters['dummy/bgpList']()
-            this.bgpList2 = this.$store.getters['dummy/bgpListPartition']()
-            this.loading = false
-        },
-        getSource(inLine, outLine, type) {
-            if (!this.tableData[inLine][outLine]) {
-                return null
-            }
-
-            if (this.tableData[inLine][outLine][type]) {
-                return this.tableData[inLine][outLine][type]['availability']
-            }
-
-            return null
-        },
-        getColor(packetloss) {
-            const range = this.getMaxAndMin()
-            if (packetloss == null || packetloss == 0) {
-                return this.colorList[3]
-            } else if (packetloss >= range['max']) {
-                return this.colorList[0]
-            } else if (packetloss > range['min']) {
-                return this.colorList[1]
-            }
-            return this.colorList[2]
         },
         startTimer() {
             // 計時器開始
@@ -445,7 +423,7 @@ export default {
             } else {
                 this.totalTime = 0
                 this.resetTimer()
-                this.getAllPacketLoss()
+                this.getAllNetworkFlow()
             }
         },
         resetTimer() {
@@ -455,17 +433,11 @@ export default {
             clearInterval(this.timer)
             this.timer = false
             this.resetTimer()
-        },
-        setPageName() {
-            const path = this.$route
-            this.pageName = path.name
         }
     },
     created() {},
     mounted() {
-        this.setPageName()
-        this.getIsp()
-        this.getConfig()
+        this.getDummy()
     }
 }
 </script>

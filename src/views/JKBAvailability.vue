@@ -5,51 +5,38 @@
                 v-toolbar(flat white dense)
                     v-radio-group.mx-0(v-model='isp' row hide-details)
                         v-radio.mx-0.mr-1(v-for="site,index in ispList" :label="site" :value="index" :key="index")
+
                     v-spacer
 
                     v-toolbar-title.my-0.mx-0(:class="!jkbAPIStatus ? 'blink' : 'black--text'") Latest form JKB:{{lastDataTime}}
                     v-divider.mb-0.mx-1(inset vertical)
                     v-toolbar-title.my-0.mr-2 {{totalTime}}s
                     v-btn.mb-2.mr-2(v-if="timer" color="red darken-1" dark @click="stopTimer") Stop
-                    v-btn.mb-2.mr-2(v-if="!timer" color="primary" dark @click="getAllNetworkFlow") Start
+                    v-btn.mb-2.mr-2(v-if="!timer" color="primary" dark @click="getAllPacketLoss") Start
                     v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
                     v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
                         v-icon mdi-refresh
-                v-toolbar.py-0.my-0(flat white dense)
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[5]") China
+                v-toolbar(flat white dense)
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "%≥"}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "%~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10)) + "%"}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']+"%"}}
                     v-divider.mx-1(inset vertical)
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMinByType('china')['min'] + "≤"}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMinByType('china')['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMinByType('china')['max'] - 1).toFixed(10))}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('china')['max']}}
-                    v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
-                    v-spacer
-                    
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[4]") Global
-                    v-divider.mx-1(inset vertical)
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMinByType('global')['min'] + "≤"}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMinByType('global')['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMinByType('global')['max'] - 1).toFixed(10))}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('global')['max']}}
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
         v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
-                NxnCirclesTable(class="table_border" title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3(class="table_border" title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range.china" :loading="loading" :typeList="typeList")
-
+                NxnCirclesTable(class="table_border" title="HK" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3(class="table_border" title="TW" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
             v-col.ml-0.pa-0.pl-2(cols="6")
-                NxnCirclesTable(class="table_border" title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
-
-                NxnCirclesTable.mt-3(class="table_border" title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range.global" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3(class="table_border" title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable(class="table_border" title="HK" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3(class="table_border" title="TW" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3(class="table_border" title="PH" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
 
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
                 v-card-title.title Setting
                 v-card-text.pt-6 Color Range
                     v-form(ref="form" onsubmit="return false;")
-                        v-subheader China
-                            v-range-slider.align-center(v-model="range.china" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='1')
-                        v-subheader Global
-                            v-range-slider.align-center(v-model="range.global" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='1')
+                        v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='0.01')
                         v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly)
                         v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly)
                         v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Hours)" type="number" name="hour" max="30" min="1" :rules="[rules.required, rules.hours]")
@@ -63,11 +50,12 @@
 <script>
 import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
-import NxnCirclesTable from '../components/NxnCirclesTable'
 import checkPage from '../utils/checkPage'
 
+import NxnCirclesTable from '../components/NxnCirclesTable'
+
 export default {
-    name: 'jkb_latency',
+    name: 'jkb_availability',
     mixins: [textFieldRules, dateFormat, checkPage],
 
     components: {
@@ -104,12 +92,9 @@ export default {
             ispList: this.$store.getters['isp/ispList'](),
             isp: 0,
             loading: true,
-            min: 0,
-            max: 300,
-            range: {
-                china: [130, 200],
-                global: [150, 200]
-            },
+            min: 95,
+            max: 100,
+            range: [97, 99.5],
             dialog: false,
             pageName: this.$route.name,
             typeList: ['outside', 'intermediate', 'inside'],
@@ -121,23 +106,17 @@ export default {
                 'blue lighten-2',
                 'pink lighten-4'
             ],
-            timer: false,
+            timer: null,
             totalTime: 60,
             configs: {
                 rankbar: {
-                    china: {
-                        max: 150,
-                        min: 200
-                    },
-                    global: {
-                        max: 150,
-                        min: 200
-                    }
+                    max: 99.5,
+                    min: 97
                 },
                 timeinterval: {
+                    inside: 1,
                     outside: 5,
-                    intermediate: 10,
-                    inside: 1
+                    intermediate: 1
                 },
                 countdownMinute: {
                     countdownMinute: 1
@@ -224,7 +203,6 @@ export default {
                         this.$store.dispatch('dummy/bgpListReorder', bgpList)
                         this.bgpList = this.$store.state.dummy.bgpList
                         this.bgpList2 = this.$store.state.dummy.bgpListPartition
-
                         this.getConfig()
                     }.bind(this)
                 )
@@ -245,14 +223,11 @@ export default {
                     function(result) {
                         for (var config of result.data) {
                             if (config.attributes) {
-                                this.configs[config.attributes] = Object.assign(
-                                    {},
-                                    config.actions
-                                )
+                                this.configs[config.attributes] = config.actions
                             }
                         }
                         this.setMaxAndMin()
-                        this.getAllNetworkFlow()
+                        this.getAllPacketLoss()
                     }.bind(this)
                 )
                 .catch(
@@ -281,7 +256,7 @@ export default {
 
             this.dialog = false
         },
-        validateForm: function() {
+        validateForm() {
             // 驗證表單資料
             return this.$refs.form.validate()
         },
@@ -289,6 +264,7 @@ export default {
             if (!this.validateForm()) {
                 return
             }
+
             this.setConfigByRankbar()
 
             this.batchSaveConfig()
@@ -334,29 +310,16 @@ export default {
                 )
         },
         setMaxAndMin() {
-            this.range.china = [
-                this.configs.rankbar.china.min,
-                this.configs.rankbar.china.max
-            ]
-            this.range.global = [
-                this.configs.rankbar.global.min,
-                this.configs.rankbar.global.max
-            ]
+            var rankbar = this.configs.rankbar
+
+            this.range = []
+
+            this.range[0] = rankbar.min
+            this.range[1] = rankbar.max
         },
         setConfigByRankbar() {
-            this.configs.rankbar.china = this.getMaxAndMinByType('china')
-            this.configs.rankbar.global = this.getMaxAndMinByType('global')
-        },
-        getMaxAndMinByType(type = 'china') {
-            var range = this.range[type]
-
-            const max = range[0] >= range[1] ? range[0] : range[1]
-            const min = range[0] <= range[1] ? range[0] : range[1]
-
-            return {
-                max: max,
-                min: min
-            }
+            var rankbar = this.getMaxAndMin()
+            this.configs.rankbar = rankbar
         },
         getMaxAndMin() {
             var range = this.range
@@ -369,8 +332,8 @@ export default {
                 min: min
             }
         },
-        getAllNetworkFlow() {
-            this.stopTimer()
+        getAllPacketLoss() {
+            this.resetTimer()
             this.startTimer()
             this.getNetworkFlowByTypeId()
         },
@@ -445,32 +408,26 @@ export default {
                     }.bind(this)
                 )
         },
-        getSource(site, inLine, outLine, type) {
-            if (!this.tableData[site][inLine]) {
+        getSource(inLine, outLine, type) {
+            if (!this.tableData[inLine][outLine]) {
                 return null
             }
 
-            if (!this.tableData[site][inLine][outLine]) {
-                return null
-            }
-
-            if (this.tableData[site][inLine][outLine][type]) {
-                return this.tableData[site][inLine][outLine][type]['latency']
+            if (this.tableData[inLine][outLine][type]) {
+                return this.tableData[inLine][outLine][type]['availability']
             }
 
             return null
         },
-        getColor(Latency) {
+        getColor(packetloss) {
             const range = this.getMaxAndMin()
-
-            if (Latency == null || Latency == 0) {
+            if (packetloss == null || packetloss == 0) {
                 return this.colorList[3]
-            } else if (Latency <= range['min']) {
+            } else if (packetloss >= range['max']) {
                 return this.colorList[0]
-            } else if (Latency < range['max']) {
+            } else if (packetloss > range['min']) {
                 return this.colorList[1]
             }
-
             return this.colorList[2]
         },
         startTimer() {
@@ -479,7 +436,6 @@ export default {
             this.timer = setInterval(() => this.countdown(), 1000)
         },
         countdown() {
-            // 檢查 網址路徑是否正確
             if (!this.checkCurrentPage()) {
                 this.stopTimer()
                 return
@@ -492,7 +448,7 @@ export default {
             } else {
                 this.totalTime = 0
                 this.resetTimer()
-                this.getAllNetworkFlow()
+                this.getAllPacketLoss()
             }
         },
         resetTimer() {
@@ -508,7 +464,6 @@ export default {
     mounted() {
         this.getIsp()
         this.getDummy()
-        console.log(this.pageName)
     }
 }
 </script>

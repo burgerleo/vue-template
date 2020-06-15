@@ -43,9 +43,15 @@ export default {
         }
     },
     actions: {
+        /*
+         * 針對 bgp List 重新排序
+         * 需要輸入的格式 請參照 state.bgpList
+         * 
+         * 會調整 R1 R2 順序
+         * 分開 China Global
+        */
         bgpListReorder: (context, items) => {
             var newItems = {}
-
             const itemsKeyList = Object.keys(items)
 
             itemsKeyList.map(function (sites) {

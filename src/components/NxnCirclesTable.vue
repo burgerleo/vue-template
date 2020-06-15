@@ -79,8 +79,8 @@ export default {
                 'yellow lighten-2',
                 'red lighten-2',
                 'grey lighten-2',
-                'blue lighten-2',
-                'pink lighten-4'
+                'blue lighten-2', // Global
+                'pink lighten-4'  // China
             ]
         }
     },
@@ -113,6 +113,7 @@ export default {
             }
 
             switch (this.networkFlowType) {
+                // 越高越好
                 case 'availability':
                     if (flow >= range['max']) {
                         return this.colorList[0]
@@ -121,6 +122,8 @@ export default {
                     }
                     break
 
+                // 越低越好
+                case 'pcaketloss':
                 case 'latency':
                     if (flow <= range['min']) {
                         return this.colorList[0]
@@ -155,8 +158,8 @@ export default {
 .v-data-table {
     th {
         user-select: auto;
-        min-width: 80px;
-        max-width: 80px;
+        min-width: 100px;
+        max-width: 100px;
     }
 }
 </style>

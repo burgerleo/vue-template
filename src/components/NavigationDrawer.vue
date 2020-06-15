@@ -121,6 +121,18 @@ export default {
                             title: 'JKB Latency',
                             display: true,
                             router: '/jkb-Latency'
+                        },
+                        {
+                            icon: 'mdi-gesture',
+                            title: 'Dummy Packet Loss',
+                            display: true,
+                            router: '/dummy-packet-loss'
+                        },
+                        {
+                            icon: 'mdi-gauge',
+                            title: 'Dummy RTT',
+                            display: true,
+                            router: '/dummy-rtt'
                         }
                     ]
                 },
