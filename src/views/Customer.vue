@@ -6,7 +6,7 @@
                     v-data-table.elevation-1(:headers="headers" :items="desserts" :search="searchText" :dense="true" hide-default-footer :items-per-page="itemsPerPage" :page.sync="page" @page-count="pageCount = $event")
                         template(v-slot:top)
                             v-toolbar(flat white)
-                                v-toolbar-title Customer
+                                v-toolbar-title Customer Information
                                 v-divider.mx-4(inset vertical)
                                 v-text-field(v-model="searchText" append-icon="mdi-magnify" label="Search" single-line hide-details)
                                 v-divider.mx-4(inset vertical)
@@ -20,12 +20,29 @@
                             tr
                                 td
                                 td
-                                    v-text-field.mt-0.pt-0(v-model="searchList.name" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'name')")
-
+                                    v-text-field.mt-0.pt-0(v-model="searchList.customer_id" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'customer_id')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.customer_property" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'customer_property')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.am" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'am')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.authorization" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'authorization')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.skype_account" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'skype_account')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.login_account" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'login_account')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.subscription_service_list" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'subscription_service_list')")
                         template(v-slot:item="{item,index}")
                             tr
                                 td {{rowIndex(index)}}
-                                td {{item.name}}
+                                td {{item.customer_id}}
+                                td {{item.customer_property}}
+                                td {{item.am}}
+                                td(v-html='(item.authorization)?item.authorization.join().replace(/,/g,"<br>"):""')
+                                td(v-html='(item.skype_account)?item.skype_account.join().replace(/,/g,"<br>"):""')
+                                td(v-html='(item.login_account)?item.login_account.join().replace(/,/g,"<br>"):""')
+                                td
                                 td
                                     v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
                                     v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
@@ -42,7 +59,41 @@
                     v-card-title.title {{formTitle}}
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-text-field(v-model="customer.name" label="Customer Name" type="text" name="name" :rules="[rules.required]")
+                            v-text-field(v-model="customer.customer_id" label="Customer Id" type="text" name="customer_id" :rules="[rules.required, rules.number, rules.length, rules.customerType]")
+                            v-select(v-model="customer.customer_property" :items="customerPropertyList" label="Customer Property" name="customer_property" :rules="[rules.required]")
+                            v-combobox(multiple v-model="customer.authorization"
+                                name="authorization"
+                                label="Authorization"
+                                append-icon
+                                chips
+                                deletable-chips
+                                class="tag-input"
+                                :search-input.sync="authorizationSearch"
+                                :delimiters="[',', ';', ' ']"
+                                @change="pasted('authorization')"
+                                :rules="[rules.emailCountLimit]")
+                            v-combobox(multiple v-model="customer.skype_account"
+                                name="skype_account"
+                                label="Skype Account"
+                                append-icon
+                                chips
+                                deletable-chips
+                                class="tag-input"
+                                :search-input.sync="skype_accountSearch"
+                                :delimiters="[',', ';', ' ']"
+                                @change="pasted('skype_account')"
+                                :rules="[rules.emailCountLimit]")
+                            v-combobox(multiple v-model="customer.login_account"
+                                name="login_account"
+                                label="H7CDN Login Account"
+                                append-icon
+                                chips
+                                deletable-chips
+                                class="tag-input"
+                                :search-input.sync="login_accountSearch"
+                                :delimiters="[',', ';', ' ']"
+                                @change="pasted('login_account')"
+                                :rules="[rules.emailCountLimit]")
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -74,7 +125,12 @@
         itemsPerPageList: [10, 25, 50, 100],
         searchText: '',
         formTitle: '',
-        customer: {},
+        customer: {
+          authorization:[],
+          skype_account:[],
+          login_account:[]
+        },
+        customerPropertyList: ['Presales', 'Existing', 'Terminated'],
         editedIndex: -1,
         dialog: {
           add: false,
@@ -89,10 +145,46 @@
             value: 'index'
           },
           {
-            text: 'Name',
+            text: 'Customer Id',
             align: 'left',
             sortable: true,
-            value: 'name'
+            value: 'customer_id'
+          },
+          {
+            text: 'Customer Property',
+            align: 'left',
+            sortable: true,
+            value: 'customer_property'
+          },
+          {
+            text: 'AM',
+            align: 'left',
+            sortable: true,
+            value: 'am'
+          },
+          {
+            text: 'Authorization List',
+            align: 'left',
+            sortable: true,
+            value: 'authorization'
+          },
+          {
+            text: 'Skype Account',
+            align: 'left',
+            sortable: true,
+            value: 'skype_account'
+          },
+          {
+            text: 'H7CDN Login Account',
+            align: 'left',
+            sortable: true,
+            value: 'login_account'
+          },
+          {
+            text: 'Subscription Service List',
+            align: 'left',
+            sortable: true,
+            value: ''
           },
           {
             text: 'Actions',
@@ -105,7 +197,11 @@
         desserts: [],
         searchList: {},
         copyDesserts: null,
-        customerList:[]
+        customerList:[],
+        authorizationSearch: "",
+        select:[],
+        skype_accountSearch:"",
+        login_accountSearch:""
       }
     },
     methods: {
@@ -116,15 +212,14 @@
           .then(
             function(result) {
               var arr = []
-              this.customerList.forEach((item) => {
-                arr[item.id] = item.name
-              })
 
               result.data.forEach((item) =>
               {
-                item.customer = arr[item.customer_id]
+                item.authorization = (item.authorization)?JSON.parse(item.authorization).data:''
+                item['login_account'] = (item['login_account'])?JSON.parse(item['login_account']).data:''
+                item['skype_account'] = (item['skype_account'])?JSON.parse(item['skype_account']).data:''
               })
-
+console.log(result.data)
               this.desserts = result.data
               this.copyDesserts = result.data
               this.$store.dispatch('global/finishLoading')
@@ -144,22 +239,18 @@
         this.formTitle = 'Add Customer'
         this.dialog.add = true
 
-        // this.bgp = {
-        //   id: -1,
-        //   site: 'HK',
-        //   isp: 'TWG',
-        //   routes: 'G',
-        //   br: 'R1'
-        // }
-        //
-        // this.shortName()
+        this.customer = {
+          id: -1,
+          customer_property: 'Presales',
+          authorization:[],
+        }
       },
       editDialog: function(item) {
         this.formTitle = 'Edit Customer'
         this.dialog.add = true
         this.editedIndex = this.desserts.indexOf(item)
         this.customer = Object.assign({}, item)
-        // this.bgp.wan = this.buildWAN(this.bgp)
+
       },
       deleteDialog: function(item) {
         this.formTitle = 'Delete Customer'
@@ -175,6 +266,18 @@
       },
       store: function() {
         // 新增 API
+        const authorization = new Object();
+        authorization.data = this.customer.authorization
+        this.customer.authorization = JSON.stringify(authorization)
+
+        const skype_account = new Object();
+        skype_account.data = this.customer.skype_account
+        this.customer.skype_account = JSON.stringify(skype_account)
+
+        const login_account = new Object();
+        login_account.data = this.customer.login_account
+        this.customer.login_account = JSON.stringify(login_account)
+
         this.$store.dispatch('global/startLoading')
         this.$store
           .dispatch('customer/createCustomer', this.customer)
@@ -201,6 +304,18 @@
       },
       update: function() {
         // Update API
+        const authorization = new Object();
+        authorization.data = this.customer.authorization
+        this.customer.authorization = JSON.stringify(authorization)
+
+        const skype_account = new Object();
+        skype_account.data = this.customer.skype_account
+        this.customer.skype_account = JSON.stringify(skype_account)
+
+        const login_account = new Object();
+        login_account.data = this.customer.login_account
+        this.customer.login_account = JSON.stringify(login_account)
+
         this.$store.dispatch('global/startLoading')
         this.$store
           .dispatch('customer/updateCustomer', this.customer)
@@ -333,6 +448,27 @@
           var list = this.copyDesserts
           this.desserts = list
         }
+      },
+      pasted(type) {
+        const searchType = type+'Search';
+        if (this[searchType]){
+          const search = this[searchType].split(",");
+          const field = this.customer[type]
+
+          if (field[field.length - 1]== this[searchType]){
+            field.splice(field.length - 1, 1);
+          }
+
+          if (search.length>1) {
+            this[searchType] = ''
+          }
+
+          search.forEach(element => {
+            if(field.indexOf(element)==-1){
+              field.push(element);
+            }
+          });
+        }
       }
     },
     mounted() {
@@ -342,3 +478,7 @@
     }
   }
 </script>
+<style lang="sass" scoped>
+    td
+        word-break: break-all
+</style>

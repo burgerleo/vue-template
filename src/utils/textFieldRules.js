@@ -44,7 +44,25 @@ export default {
                         return true
                     }
                     return "1~30";
-                }
+                },
+                number: value => {
+                    const pattern = /^[0-9\s]*$/;
+                    return pattern.test(value) || "Must be a number.";
+                },
+                length: value => {
+                    const pattern = /^.{4}$/;
+                    return pattern.test(value) || "Length must be 4.";
+                },
+                customerType: value => {
+                    const pattern = /^([1-5]*)$/;
+                    return pattern.test(value) || "Invalid customer type.";
+                },
+                emailCountLimit: value =>{
+                    if (value ==null || value.length <= 20) {
+                        return true
+                    }
+                    return "The number of emails cannot exceed 20.";
+                },
             }
         }
     }
