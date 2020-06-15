@@ -71,7 +71,7 @@
                                 :search-input.sync="authorizationSearch"
                                 :delimiters="[',', ';', ' ']"
                                 @change="pasted('authorization')"
-                                :rules="[rules.emailCountLimit]")
+                                :rules="[rules.emailCountLimit, rules.emailList]")
                             v-combobox(multiple v-model="customer.skype_account"
                                 name="skype_account"
                                 label="Skype Account"
@@ -82,7 +82,7 @@
                                 :search-input.sync="skype_accountSearch"
                                 :delimiters="[',', ';', ' ']"
                                 @change="pasted('skype_account')"
-                                :rules="[rules.emailCountLimit]")
+                                :rules="[rules.emailCountLimit, rules.emailList]")
                             v-combobox(multiple v-model="customer.login_account"
                                 name="login_account"
                                 label="H7CDN Login Account"
@@ -93,7 +93,7 @@
                                 :search-input.sync="login_accountSearch"
                                 :delimiters="[',', ';', ' ']"
                                 @change="pasted('login_account')"
-                                :rules="[rules.emailCountLimit]")
+                                :rules="[rules.emailCountLimit, rules.emailList]")
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -213,13 +213,14 @@
             function(result) {
               var arr = []
 
+
               result.data.forEach((item) =>
               {
                 item.authorization = (item.authorization)?JSON.parse(item.authorization).data:''
                 item['login_account'] = (item['login_account'])?JSON.parse(item['login_account']).data:''
                 item['skype_account'] = (item['skype_account'])?JSON.parse(item['skype_account']).data:''
               })
-console.log(result.data)
+
               this.desserts = result.data
               this.copyDesserts = result.data
               this.$store.dispatch('global/finishLoading')
@@ -423,8 +424,9 @@ console.log(result.data)
 
           searchResult = this.desserts.filter(function(item) {
             if (item[searchKey]) {
+              const itemList = (typeof item[searchKey] =="object")?item[searchKey].join():item[searchKey]
               return (
-                item[searchKey]
+                itemList
                   .toLocaleUpperCase()
                   .indexOf(searchString) !== -1
               )

@@ -63,6 +63,22 @@ export default {
                     }
                     return "The number of emails cannot exceed 20.";
                 },
+                emailList: value => {
+                    var result = true
+                    const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                    if (value) {
+                        value.every(element => {
+                            if (pattern.test(element) == true) {
+                                return result = true
+                            }else{
+                                result = 'Invalid email exists.';
+                            }
+                        });
+                    }
+                    return result
+
+                },
             }
         }
     }
