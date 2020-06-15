@@ -114,7 +114,7 @@ export default {
                             icon: 'mdi-lumx',
                             title: 'JKB Availability',
                             display: true,
-                            router: '/jkb-packetloss'
+                            router: '/jkb-availability'
                         },
                         {
                             icon: 'mdi-looks',

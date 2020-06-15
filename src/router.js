@@ -175,11 +175,11 @@ export default new Router({
                     }
                 },
                 {
-                    name: "JKB Packet Loss",
-                    path: "jkb-packetloss",
+                    name: "JKB_Availability",
+                    path: "jkb-availability",
                     component: JkbPacketLoss,
                     meta: {
-                        title: 'JKB Packet Loss'
+                        title: 'JKB Availability'
                     }
                 },
                 {

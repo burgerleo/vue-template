@@ -54,11 +54,13 @@
 <script>
 import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
+import checkPage from '../utils/checkPage'
+
 import NxnCirclesTable from '../components/NxnCirclesTable'
 
 export default {
-    name: 'JKB-Packet-Loss',
-    mixins: [textFieldRules, dateFormat],
+    name: 'JKB_Availability',
+    mixins: [textFieldRules, dateFormat, checkPage],
 
     components: {
         NxnCirclesTable
@@ -285,12 +287,6 @@ export default {
                 this.getPacketLoss(type)
             }
         },
-        checkIsRightPath() {
-            const path = this.$route
-
-            return path.name === this.pageName
-        },
-
         getPacketLoss(type) {
             var minute = this.configs.timeinterval[type]
             var startTime = new Date()
@@ -437,7 +433,7 @@ export default {
             this.timer = setInterval(() => this.countdown(), 1000)
         },
         countdown() {
-            if (!this.checkIsRightPath()) {
+            if (!this.checkCurrentPage()) {
                 this.stopTimer()
                 return
             }
