@@ -467,7 +467,7 @@
 
           search.forEach(element => {
             if(field.indexOf(element)==-1){
-              field.push(element);
+              field.push(element.replace(/\s+/g, ""));
             }
           });
         }
