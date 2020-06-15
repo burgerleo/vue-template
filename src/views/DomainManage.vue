@@ -46,11 +46,12 @@
 
 <script>
 import textFieldRules from '../utils/textFieldRules'
+import checkPage from '../utils/checkPage'
 import DataTable2 from '../components/DataTable2'
 
 export default {
-    name: 'DomainManage',
-    mixins: [textFieldRules],
+    name: 'FQDN_Management',
+    mixins: [textFieldRules, checkPage],
 
     components: {
         DataTable2
@@ -195,9 +196,14 @@ export default {
         },
         getDomains(page, per_page, loop = 0) {
             var domains = []
+            if (!this.checkCurrentPage()) {
+                return
+            }
+
             if (this.loop.length > 1 && !this.loop[loop - 1]) {
                 return
             }
+
             this.$store
                 .dispatch('domain/getDomains', {
                     page: page,
@@ -205,6 +211,10 @@ export default {
                 })
                 .then(
                     function(result) {
+                        if (!this.checkCurrentPage()) {
+                            return
+                        }
+
                         if (this.loop.length > 1 && !this.loop[loop - 1]) {
                             return
                         }

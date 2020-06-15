@@ -40,11 +40,12 @@
 
 <script>
 import textFieldRules from '../utils/textFieldRules'
+import checkPage from '../utils/checkPage'
 import DataTable2 from '../components/DataTable2'
 
 export default {
     name: 'IP2Location',
-    mixins: [textFieldRules],
+    mixins: [textFieldRules, checkPage],
 
     components: {
         DataTable2
@@ -287,6 +288,10 @@ export default {
             this.getItemsAction(page, this.perPageCount, this.loop.length)
         },
         getItemsAction(page, per_page, loop = 0) {
+            if (!this.checkCurrentPage()) {
+                return
+            }
+
             if (this.loop.length > 1 && !this.loop[loop - 1]) {
                 return
             }
@@ -304,6 +309,10 @@ export default {
                 .dispatch('ip2LocationRawData/getIpLocation', data)
                 .then(
                     function(result) {
+                        if (!this.checkCurrentPage()) {
+                            return
+                        }
+
                         if (this.loop.length > 1 && !this.loop[loop - 1]) {
                             return
                         }

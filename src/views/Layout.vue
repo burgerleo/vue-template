@@ -1,7 +1,7 @@
 <template lang="pug">
     #layout
         Loading
-        NavigationDrawer(ref="drawer" :tabId="tabId")
+        NavigationDrawer(ref="drawer")
         v-app-bar(fixed :clipped-left="clipped" app color="primary" dark)
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
             v-toolbar-title H7 Operation Portal

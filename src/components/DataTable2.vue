@@ -61,11 +61,11 @@ export default {
         },
         itemsPerPageList: {
             type: Array,
-            default: () => [5, 15, 25, 50, 100]
+            default: () => [5, 10, 15, 25, 50, 100]
         },
         defaultItemsPerPage: {
             type: Number,
-            default: 5
+            default: 10
         },
         setUripath: {
             type: String,
