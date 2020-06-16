@@ -79,6 +79,19 @@ export default {
                     return result
 
                 },
+                max: value => {
+                    var result = true
+                    if (value) {
+                        value.every(element => {
+                            if (element != null && element.length <= 64) {
+                                return result = true
+                            }else{
+                                result = 'Please enter up to 64 characters.';
+                            }
+                        });
+                    }
+                    return result
+                }
             }
         }
     }

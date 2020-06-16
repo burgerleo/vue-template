@@ -71,7 +71,7 @@
                                 :search-input.sync="authorizationSearch"
                                 :delimiters="[',', ';', ' ']"
                                 @change="pasted('authorization')"
-                                :rules="[rules.emailCountLimit, rules.emailList]")
+                                :rules="[rules.emailCountLimit, rules.emailList, rules.max]")
                             v-combobox(multiple v-model="customer.skype_account"
                                 name="skype_account"
                                 label="Skype Account"
@@ -82,7 +82,7 @@
                                 :search-input.sync="skype_accountSearch"
                                 :delimiters="[',', ';', ' ']"
                                 @change="pasted('skype_account')"
-                                :rules="[rules.emailCountLimit, rules.emailList]")
+                                :rules="[rules.emailCountLimit, rules.max]")
                             v-combobox(multiple v-model="customer.login_account"
                                 name="login_account"
                                 label="H7CDN Login Account"
@@ -93,7 +93,7 @@
                                 :search-input.sync="login_accountSearch"
                                 :delimiters="[',', ';', ' ']"
                                 @change="pasted('login_account')"
-                                :rules="[rules.emailCountLimit, rules.emailList]")
+                                :rules="[rules.emailCountLimit, rules.emailList, rules.max]")
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
