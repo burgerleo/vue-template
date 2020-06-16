@@ -80,7 +80,7 @@ export default {
                 'red lighten-2',
                 'grey lighten-2',
                 'blue lighten-2', // Global
-                'pink lighten-4'  // China
+                'pink lighten-4' // China
             ]
         }
     },
@@ -88,7 +88,7 @@ export default {
         linetext(line) {
             return line
                 .substring(0, line.length - 1) // 移除最後一個字
-                .replace('-' + this.title, '-') // 移除 Site
+                .replace('-' + this.title, '\n') // 移除 Site
         },
         getMaxAndMin() {
             var range = this.range
@@ -108,7 +108,7 @@ export default {
         },
         getColor(flow) {
             const range = this.getMaxAndMin()
-            if (flow == null || flow == 0) {
+            if (flow === null || flow === undefined ) {
                 return this.colorList[3]
             }
 
@@ -123,7 +123,8 @@ export default {
                     break
 
                 // 越低越好
-                case 'pcaketloss':
+                case 'rtt':
+                case 'packetloss':
                 case 'latency':
                     if (flow <= range['min']) {
                         return this.colorList[0]
@@ -160,6 +161,8 @@ export default {
         user-select: auto;
         min-width: 100px;
         max-width: 100px;
+        width: 100px;
+        white-space: pre; //辨認換行符
     }
 }
 </style>

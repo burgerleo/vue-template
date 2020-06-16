@@ -17,6 +17,7 @@
                     v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMinByType('china')['min'] + "≤"}}
                     v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMinByType('china')['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMinByType('china')['max'] - 1).toFixed(10))}}
                     v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('china')['max']}}
+                    v-divider.mx-1(inset vertical)
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
                     v-spacer
                     
@@ -25,16 +26,17 @@
                     v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMinByType('global')['min'] + "≤"}}
                     v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMinByType('global')['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMinByType('global')['max'] - 1).toFixed(10))}}
                     v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('global')['max']}}
+                    v-divider.mx-1(inset vertical)
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
         v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
-                NxnCirclesTable.table_border(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']"  :range="range.china" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border(title="HK" networkFlowType="rtt" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="rtt" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']"  :range="range.china" :loading="loading" :typeList="typeList")
             v-col.ml-0.pa-0.pl-2(cols="6")
-                NxnCirclesTable.table_border(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']"  :range="range.global" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3.table_border(title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
-                
+                NxnCirclesTable.table_border(title="HK" networkFlowType="rtt" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="rtt" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']"  :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3.table_border(title="PH" networkFlowType="rtt" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
+
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
                 v-card-title.title Setting
@@ -375,9 +377,20 @@ export default {
                             var inLine = item.inBgpName
                             var outLine = item.outBgpName
 
+                            var max = 180
+                            var min = 50
+
+                            // max - 期望的最大值
+                            // min - 期望的最小值
+                            parseInt(Math.random() * (max - min + 1) + min, 10)
+                            var rtt = Math.floor(
+                                Math.random() * (max - min + 1) + min
+                            )
+
                             tableData[site][inLine][outLine][type] = {
                                 availability: item.availability,
-                                latency: item.latency
+                                latency: item.latency,
+                                rtt: rtt
                             }
                         })
 

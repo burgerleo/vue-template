@@ -3,6 +3,9 @@
         v-row
             v-col.pb-1.pt-1(cols="12")
                 v-toolbar(flat white dense)
+                    v-toolbar-title.pl-1 JKB Latency
+                    v-divider.mx-1(inset vertical)
+
                     v-radio-group.mx-0(v-model='isp' row hide-details)
                         v-radio.mx-0.mr-1(v-for="site,index in ispList" :label="site" :value="index" :key="index")
                     v-spacer
@@ -21,14 +24,16 @@
                     v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMinByType('china')['min'] + "≤"}}
                     v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMinByType('china')['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMinByType('china')['max'] - 1).toFixed(10))}}
                     v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('china')['max']}}
+                    v-divider.mx-1(inset vertical)
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
                     v-spacer
-                    
+
                     v-toolbar-title.pl-1.pr-1(:class="colorList[4]") Global
                     v-divider.mx-1(inset vertical)
                     v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMinByType('global')['min'] + "≤"}}
                     v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMinByType('global')['min'] + 1).toFixed(10)) + "~" + parseFloat((getMaxAndMinByType('global')['max'] - 1).toFixed(10))}}
                     v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('global')['max']}}
+                    v-divider.mx-1(inset vertical)
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
         v-row
             v-col.ml-0.pa-0.pl-6(cols="6")

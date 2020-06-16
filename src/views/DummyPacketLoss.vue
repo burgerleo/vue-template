@@ -4,7 +4,7 @@
             v-col.pb-1.pt-1(cols="12")
                 v-toolbar(flat white dense)
                     v-toolbar-title.pl-1 Dummy Packet Loss
-                    
+
                     v-spacer
 
                     v-toolbar-title.my-0.mr-2 {{totalTime}}s
@@ -14,20 +14,19 @@
                     v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
                         v-icon mdi-refresh
                 v-toolbar(flat white dense)
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "≥"}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10))}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']+""}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['min'] + "≤"}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10)) + "~" + parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10))}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMin()['max']}}
                     v-divider.mx-1(inset vertical)
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
-
         v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
                 NxnCirclesTable.table_border(title="HK" networkFlowType="packetloss" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3.table_border(title="TW" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="packetloss" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
             v-col.ml-0.pa-0.pl-2(cols="6")
-                NxnCirclesTable.table_border(title="HK" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3.table_border(title="TW" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3.table_border(title="PH" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border(title="HK" networkFlowType="packetloss" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="packetloss" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3.table_border(title="PH" networkFlowType="packetloss" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
 
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
@@ -35,8 +34,8 @@
                 v-card-text.pt-6 Color Range
                     v-form(ref="form" onsubmit="return false;")
                         v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='0.01')
-                        v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly)
-                        v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly)
+                        v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
+                        v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
                         v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Hours)" type="number" name="hour" max="30" min="1" :rules="[rules.required, rules.hours]")
                         v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
                 v-card-actions
@@ -89,8 +88,8 @@ export default {
                 PH: {}
             },
             loading: true,
-            min: 95,
-            max: 100,
+            min: 10,
+            max: 50,
             range: [97, 99.5],
             dialog: false,
             pageName: this.$route.name,
@@ -347,7 +346,8 @@ export default {
                             tableData[site][inLine][outLine][type] = {
                                 availability: item.availability,
                                 latency: item.latency,
-                                pcaketloss: 10,
+                                packetloss: Math.floor(Math.random()*80),
+                                // packetloss: 0,
                             }
                         })
 
