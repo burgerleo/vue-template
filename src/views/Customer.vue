@@ -149,17 +149,20 @@
             text: 'Customer Id',
             align: 'left',
             sortable: true,
+            width: '50px',
             value: 'customer_id'
           },
           {
             text: 'Customer Property',
             align: 'left',
             sortable: true,
+            width: '100px',
             value: 'customer_property'
           },
           {
             text: 'AM',
             align: 'left',
+            width: '150px',
             sortable: true,
             value: 'am'
           },
