@@ -140,9 +140,9 @@ export default {
                     }
                 },
                 timeinterval: {
-                    outside: 5,
-                    intermediate: 10,
-                    inside: 1
+                    outside: 5, //最外圈 分鐘
+                    intermediate: 10, //中間 分鐘
+                    inside: 1 //最內圈 小時
                 },
                 countdownMinute: {
                     countdownMinute: 1

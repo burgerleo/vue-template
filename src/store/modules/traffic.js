@@ -19,5 +19,14 @@ export default {
                 return Promise.reject(error.response.data);
             });
         },
+        getDummyTrafficFlow: (context, data) => {
+            return axios.get("traffic_flows_h7", {
+                params: data
+            }).then(function (response) {
+                return Promise.resolve(response.data);
+            }).catch(function (error) {
+                return Promise.reject(error.response.data);
+            });
+        },
     }
 }

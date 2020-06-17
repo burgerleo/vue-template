@@ -34,9 +34,9 @@
                 v-card-text.pt-6 Color Range
                     v-form(ref="form" onsubmit="return false;")
                         v-range-slider.align-center(v-model="range" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='0.01')
-                        v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
-                        v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
-                        v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Hours)" type="number" name="hour" max="30" min="1" :rules="[rules.required, rules.hours]")
+                        //- v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
+                        //- v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
+                        //- v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Hours)" type="number" name="hour" max="30" min="1" :rules="[rules.required, rules.hours]")
                         v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
                 v-card-actions
                     v-spacer
@@ -48,7 +48,6 @@
 import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
 import checkPage from '../utils/checkPage'
-import fakeData from '../assets/bgp.json'
 
 import NxnCirclesTable from '../components/NxnCirclesTable'
 
@@ -109,19 +108,16 @@ export default {
                     max: 99.5,
                     min: 97
                 },
-                timeinterval: {
-                    outside: 120,
-                    intermediate: 180,
-                    inside: 5,
-                },
+                // timeinterval: {
+                //     outside: 120,
+                //     intermediate: 180,
+                //     inside: 5
+                // },
                 countdownMinute: {
                     countdownMinute: 1
                 }
             },
             copyConfigs: {},
-            jkbAPIStatus: true, // true 表示正常
-            lastDataTime: null,
-            fakeData: fakeData
         }
     },
     watch: {},
@@ -312,42 +308,25 @@ export default {
         },
         getNetworkFlowByTypeId(typeId = 0) {
             var type = this.typeList[typeId]
-            var minute = this.configs.timeinterval[type]
-            var startTime = new Date()
-
-            switch (type) {
-                case this.typeList[0]:
-                    startTime.setMinutes(startTime.getMinutes() - minute)
-                    break
-                case this.typeList[1]:
-                    startTime.setMinutes(startTime.getMinutes() - minute)
-                    break
-                case this.typeList[2]:
-                    startTime.setHours(startTime.getHours() - minute)
-                    break
-            }
 
             this.loading = true
             this.$store
-                .dispatch('traffic/getTrafficFlow', {
-                    start_time: this.dateFormat(startTime),
-                    end_time: this.dateFormat(new Date())
+                .dispatch('traffic/getDummyTrafficFlow', {
+                    type: typeId
                 })
                 .then(
                     function(result) {
-                        var bgpIoMapping = result.data.bgpIoMapping
+                        var bgpIoMapping = result.data.bgpList
                         var tableData = Object.assign({}, this.tableData)
 
                         bgpIoMapping.forEach(function(item) {
-                            var site = item.site
-                            var inLine = item.inBgpName
-                            var outLine = item.outBgpName
+                            var site = item.country
+                            var inLine = item.in_bgp_name
+                            var outLine = item.out_bgp_name
 
                             tableData[site][inLine][outLine][type] = {
-                                availability: item.availability,
-                                latency: item.latency,
-                                packetloss: Math.floor(Math.random()*80),
-                                // packetloss: 0,
+                                rtt: item.rtt,
+                                packetloss: item.packet_loss
                             }
                         })
 

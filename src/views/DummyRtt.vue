@@ -46,9 +46,9 @@
                             v-range-slider.align-center(v-model="range.china" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='1')
                         v-subheader Global
                             v-range-slider.align-center(v-model="range.global" :max="max" :min="min" hide-details thumb-label="always" thumb-size="36" step='1')
-                        v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
-                        v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
-                        v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Hours)" type="number" name="hour" max="30" min="1" :rules="[rules.required, rules.hours]")
+                        //- v-text-field(v-model="configs.timeinterval.outside" label="Outside (latest Minutes)" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
+                        //- v-text-field(v-model="configs.timeinterval.intermediate" label="Intermediate (latest Minutes)" type="number" name="minute" max="14" min="1" :rules="[rules.required, rules.minutes]" readonly=false)
+                        //- v-text-field(v-model="configs.timeinterval.inside" label="Inside (latest Hours)" type="number" name="hour" max="30" min="1" :rules="[rules.required, rules.hours]")
                         v-text-field(v-model="configs.countdownMinute.countdownMinute" label="Countdown Mintes" type="number" name="minute" max="60" min="1" :rules="[rules.required, rules.minutes]")
                 v-card-actions
                     v-spacer
@@ -60,7 +60,6 @@
 import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
 import checkPage from '../utils/checkPage'
-import fakeData from '../assets/bgp.json'
 
 import NxnCirclesTable from '../components/NxnCirclesTable'
 
@@ -130,19 +129,16 @@ export default {
                         min: 200
                     }
                 },
-                timeinterval: {
-                    outside: 60, //最外圈 分鐘
-                    intermediate: 120, //中間 分鐘
-                    inside: 5 //最內圈 小時
-                },
+                // timeinterval: {
+                //     outside: 60, //最外圈 分鐘
+                //     intermediate: 120, //中間 分鐘
+                //     inside: 5 //最內圈 小時
+                // },
                 countdownMinute: {
                     countdownMinute: 1
                 }
             },
-            copyConfigs: {},
-            jkbAPIStatus: true, // true 表示正常
-            lastDataTime: null,
-            fakeData: fakeData
+            copyConfigs: {}
         }
     },
     watch: {},
@@ -346,51 +342,25 @@ export default {
         },
         getNetworkFlowByTypeId(typeId = 0) {
             var type = this.typeList[typeId]
-            var minute = this.configs.timeinterval[type]
-            var startTime = new Date()
-
-            switch (type) {
-                case this.typeList[0]:
-                    startTime.setMinutes(startTime.getMinutes() - minute)
-                    break
-                case this.typeList[1]:
-                    startTime.setMinutes(startTime.getMinutes() - minute)
-                    break
-                case this.typeList[2]:
-                    startTime.setHours(startTime.getHours() - minute)
-                    break
-            }
 
             this.loading = true
             this.$store
-                .dispatch('traffic/getTrafficFlow', {
-                    start_time: this.dateFormat(startTime),
-                    end_time: this.dateFormat(new Date())
+                .dispatch('traffic/getDummyTrafficFlow', {
+                    type: typeId
                 })
                 .then(
                     function(result) {
-                        var bgpIoMapping = result.data.bgpIoMapping
+                        var bgpIoMapping = result.data.bgpList
                         var tableData = Object.assign({}, this.tableData)
 
                         bgpIoMapping.forEach(function(item) {
-                            var site = item.site
-                            var inLine = item.inBgpName
-                            var outLine = item.outBgpName
-
-                            var max = 180
-                            var min = 50
-
-                            // max - 期望的最大值
-                            // min - 期望的最小值
-                            parseInt(Math.random() * (max - min + 1) + min, 10)
-                            var rtt = Math.floor(
-                                Math.random() * (max - min + 1) + min
-                            )
+                            var site = item.country
+                            var inLine = item.in_bgp_name
+                            var outLine = item.out_bgp_name
 
                             tableData[site][inLine][outLine][type] = {
-                                availability: item.availability,
-                                latency: item.latency,
-                                rtt: rtt
+                                rtt: item.rtt,
+                                packetloss: item.packet_loss
                             }
                         })
 
