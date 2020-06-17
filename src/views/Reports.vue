@@ -26,12 +26,12 @@
                                             v-col(cols='4' md='4')
                                                 v-sheet.d-flex(color='blue lighten-3')
                                                     v-radio-group.mt-0.mb-0(v-model='csvSelected' row)
-                                                        v-radio(v-for="g in pingCsvListGlobal" :label="getFormattedDate(g.unix) + ' (CPIP\\'s quantity: '+ g[0].cpip_rows +')'" :value="g.unix + ',G'" :key="g.unix + ',G'")
+                                                        v-radio(v-for="g in pingCsvListGlobal" :label="g.label" :value="g.unix + ',G'" :key="g.unix + ',G'")
                                             v-col(cols='1' md='1')
                                             v-col(cols='4' md='4')
                                                 v-sheet.d-flex(color='red lighten-3')
                                                     v-radio-group.mt-0.mb-0(v-model='csvSelected' row)
-                                                        v-radio(v-for="c in pingCsvListChina" :label="getFormattedDate(c.unix) + ' (CPIP\\'s quantity: '+ c[0].cpip_rows +')'" :value="c.unix + ',C'" :key="c.unix + ',C'")
+                                                        v-radio(v-for="c in pingCsvListChina" :label="c.label" :value="c.unix + ',C'" :key="c.unix + ',C'")
                                             v-col(cols='1' md='1')
                                             v-col(cols='2' md='2')
                                                 v-btn.mt-n3(color="grey lighten-3" block @click="downloadPingTwoAnalysis()") Download
@@ -78,15 +78,23 @@ export default {
                         let chinasKeys = Object.keys(chinas)
                         // console.log(globalsKeys, globals)
                         for(let i=0; i<globalsKeys.length; i++){
-                            globals[globalsKeys[i]]['unix']=globalsKeys[i]
+                            let g = globals[globalsKeys[i]][0]
+                            if (g['start_time'] === undefined) {
+                                continue
+                            }
+                            globals[globalsKeys[i]]['unix'] = globalsKeys[i]
+                            globals[globalsKeys[i]]['label'] = (g['start_time']+'').slice(5, -3).replace(/-/g, "/") + ' ~ ' + (g['end_time']+'').slice(0, -3) + ' (CPIPs:' + g['cpip_rows'] + ')'
                             this.pingCsvListGlobal.unshift(globals[globalsKeys[i]])
                         }
                         for(let i=0; i<chinasKeys.length; i++){
-                            chinas[chinasKeys[i]]['unix']=chinasKeys[i]
+                            let c = chinas[chinasKeys[i]][0];
+                            if (c['start_time'] === undefined) {
+                                continue
+                            }
+                            chinas[chinasKeys[i]]['unix'] = chinasKeys[i]
+                            chinas[chinasKeys[i]]['label'] = (c['start_time']+'').slice(5, -3).replace(/-/g, "/") + ' ~ ' + (c['end_time']+'').slice(0, -3) + ' (CPIPs:' + c['cpip_rows'] + ')'
                             this.pingCsvListChina.unshift(chinas[chinasKeys[i]])
                         }
-
-                            console.log(this.pingCsvListGlobal)
                     }.bind(this)
                 )
                 .catch(
