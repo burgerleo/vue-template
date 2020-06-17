@@ -44,6 +44,60 @@ export default {
                         return true
                     }
                     return "1~30";
+                },
+                number: value => {
+                    const pattern = /^[0-9\s]*$/;
+                    return pattern.test(value) || "Must be a number.";
+                },
+                length: value => {
+                    const pattern = /^.{4}$/;
+                    return pattern.test(value) || "Length must be 4.";
+                },
+                customerType: value => {
+                    const pattern = /^([1-5]*)$/;
+                    return pattern.test(value) || "Invalid customer type.";
+                },
+                emailCountLimit: value =>{
+                    if (value ==null || value.length <= 20) {
+                        return true
+                    }
+                    return "The number of emails cannot exceed 20.";
+                },
+                emailList: value => {
+                    var result = true
+                    const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                    if (value) {
+                        value.every(element => {
+                            if (pattern.test(element) == true) {
+                                return result = true
+                            }else{
+                                result = 'Invalid email exists.';
+                            }
+                        });
+                    }
+                    return result
+
+                },
+                max: value => {
+                    var result = true
+                    if (value) {
+                        value.every(element => {
+                            if (element != null && element.length <= 64) {
+                                return result = true
+                            }else{
+                                result = 'Please enter up to 64 characters.';
+                            }
+                        });
+                    }
+                    return result
+                },
+                maxChart: value =>
+                  (value != null && value.length <= 20) ||
+                  "Please use at least 20 characters.",
+                checkChart: value => {
+                    const pattern = /^[\d|a-zA-Z]+$/;
+                    return pattern.test(value) || "Invalid character input.";
                 }
             }
         }

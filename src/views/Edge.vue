@@ -72,7 +72,7 @@
                     v-card-title.title {{formTitle}}
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-select(v-model="edge.customer_id" :items="customerList" label="Customer" name="customer" item-text="name" item-value="id")
+                            v-select(v-model="edge.customer_id" :items="customerList" label="Customer" name="customer" item-text="customer_id" item-value="id")
                             v-text-field(v-model="edge.name" label="Edge Name" type="text" name="name" :rules="[rules.required]")
                             v-select(v-model="edge.area" :items="areaList" label="Edge Area"  :rules="[rules.required]")
                             v-text-field(v-model="edge.edge_oob" label="Edge OOB" type="text" name="edge_oob" :rules="[rules.required]")
@@ -226,8 +226,9 @@
           .then(
             function(result) {
               var arr = []
+
               this.customerList.forEach((item) => {
-                arr[item.id] = item.name
+                arr[item.id] = item.customer_id
               })
 
               result.data.forEach((item) =>

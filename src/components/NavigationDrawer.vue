@@ -140,8 +140,8 @@ export default {
                     tabId: 0,
                     icon: 'mdi-file',
                     title: 'Reports',
-                    display: true
-                    // router: '/reports'
+                    display: true,
+                    router: '/reports'
                 },
                 {
                     tabId: 0,

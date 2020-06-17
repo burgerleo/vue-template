@@ -25,6 +25,7 @@ import TableExample from "./views/TableExample.vue";
 import H7IP from "./views/H7IP.vue";
 import DummyRtt from "./views/DummyRtt.vue";
 import DummyPacketLoss from "./views/DummyPacketLoss.vue";
+import Reports from "./views/Reports.vue";
 
 Vue.use(Router);
 
@@ -236,6 +237,14 @@ export default new Router({
                     component: DummyPacketLoss,
                     meta: {
                         title: 'Dummy Packet Loss'
+                    }
+                },
+                {
+                    name: "Reports",
+                    path: "reports",
+                    component: Reports,
+                    meta: {
+                        title: 'Reports'
                     }
                 },
             ]
