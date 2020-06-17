@@ -61,6 +61,7 @@
                         v-form(ref="form" onsubmit="return false;")
                             v-text-field(v-model="customer.customer_id" label="Customer Id" type="text" name="customer_id" :rules="[rules.required, rules.number, rules.length, rules.customerType]")
                             v-select(v-model="customer.customer_property" :items="customerPropertyList" label="Customer Property" name="customer_property" :rules="[rules.required]")
+                            v-text-field(v-model="customer.am" label="AM" type="text" name="customer_am" :rules="[rules.maxChart, rules.checkChart]")
                             v-combobox(multiple v-model="customer.authorization"
                                 name="authorization"
                                 label="Authorization"

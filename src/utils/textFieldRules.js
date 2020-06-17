@@ -91,6 +91,13 @@ export default {
                         });
                     }
                     return result
+                },
+                maxChart: value =>
+                  (value != null && value.length <= 20) ||
+                  "Please use at least 20 characters.",
+                checkChart: value => {
+                    const pattern = /^[\d|a-zA-Z]+$/;
+                    return pattern.test(value) || "Invalid character input.";
                 }
             }
         }
