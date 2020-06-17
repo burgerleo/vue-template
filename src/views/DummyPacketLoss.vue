@@ -87,9 +87,9 @@ export default {
                 PH: {}
             },
             loading: true,
-            min: 10,
-            max: 50,
-            range: [97, 99.5],
+            min: 0.2,
+            max: 10,
+            range: [1, 5],
             dialog: false,
             pageName: this.$route.name,
             typeList: ['outside', 'intermediate', 'inside'],
@@ -105,8 +105,8 @@ export default {
             totalTime: 60,
             configs: {
                 rankbar: {
-                    max: 99.5,
-                    min: 97
+                    max: 5,
+                    min: 1
                 },
                 // timeinterval: {
                 //     outside: 120,
@@ -117,7 +117,7 @@ export default {
                     countdownMinute: 1
                 }
             },
-            copyConfigs: {},
+            copyConfigs: {}
         }
     },
     watch: {},
