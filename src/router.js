@@ -22,7 +22,7 @@ import CrtKey from "./views/CrtKey.vue";
 import DomainManage from "./views/DomainManage.vue";
 import Ip2Location from "./views/Ip2Location.vue";
 import TableExample from "./views/TableExample.vue";
-import H7IP from "./views/H7IP.vue";Reports
+import H7IP from "./views/H7IP.vue";
 import Reports from "./views/Reports.vue";
 Vue.use(Router);
 
