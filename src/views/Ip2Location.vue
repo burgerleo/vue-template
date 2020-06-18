@@ -8,7 +8,7 @@
                     v-text-field(v-model="searchIP" append-icon="mdi-magnify" label='Search IP (press key "enter")' single-line hide-details @keydown.enter="toSearchCIDR")
                     v-divider.mx-4(inset vertical)
                     v-spacer
-                    v-btn.mb-2.mr-2(color="primary" dark @click="toSearch") Search
+                    v-btn.mb-2.mr-2(color="primary" @click="toSearch" disabled) Search
                     v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
                     v-btn.mb-2.mr-2(color="primary" dark @click="init")
                         v-icon mdi-refresh
