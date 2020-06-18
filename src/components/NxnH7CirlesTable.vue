@@ -18,17 +18,17 @@
                                 h2 {{linetext(outLine)}}
                 tbody
                     tr(v-for="(inLine,key) in columns") 
-                        th(v-if="(key == 0)" :rowspan="r1" :height="columnHeight*r1") 
+                        th(v-if="(key == 0)" :rowspan="r1" :height="columnHeight*r1")
                             v-avatar(tile width="100%" height="100%" :color="colorList[6]" dark) 
                                 h2 {{"R1"}}
-                        th(v-if="(key == r1)" :rowspan="r2" :height="columnHeight*r2") 
+                        th(v-if="(key == r1)" :rowspan="r2" :height="columnHeight*r2")
                             v-avatar(tile width="100%" height="100%" :color="colorList[7]" dark) 
                                 h2 {{"R2"}}
                         th 
-                            v-avatar(tile width="100%" :height="columnHeight" :color="getCorGColor(inLine)" dark) 
+                            v-avatar(tile width="100%" :height="columnHeight" :color="getCorGColor(inLine)" dark)
                                 h2 {{linetext(inLine)}}
                         
-                        td(v-for="(outLine,key2) in columns" :height="columnHeight") 
+                        td(v-for="(outLine,key2) in columns" :height="columnHeight")
                             v-avatar(tile width="100%" height="100%" :color="getColor(getSource(inLine, outLine, typeList[0]))" dark)
                                 v-tooltip(top)
                                     template(v-slot:activator="{on}")
@@ -43,8 +43,9 @@
                                                                         v-avatar(:size="circleSize2-4" :color="getColor(getSource(inLine, outLine, typeList[2]))" dark v-on="on")
                                                                     span {{getSource(inLine, outLine, typeList[2])}}       
                                                     span {{getSource(inLine, outLine, typeList[1])}}
-                                    //- span {{inLine + ":" + outLine + "\n" + getSource(inLine, outLine, typeList[0])}} 
                                     span {{getSource(inLine, outLine, typeList[0])}} 
+                                    //- span {{inLine + ":" + outLine + "\n" + getSource(inLine, outLine, typeList[0])}} 
+
             //- template 
                 h3 R1:{{r1}} R2::{{r2}}
                 h3 {{range}}
@@ -214,14 +215,14 @@ export default {
     th {
         user-select: auto;
         text-align: center !important;
-        width: 60px;
-        min-width: 60px;
+        width: 70px;
+        min-width: 70px;
         white-space: pre; //辨認換行符
     }
     td {
         text-align: center !important;
-        width: 60px;
-        min-width: 60px;
+        width: 70px;
+        min-width: 70px;
     }
 }
 </style>
