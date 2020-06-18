@@ -9,11 +9,12 @@
                                 v-radio-group.pt-0.pb-0.mb-0.mt-0(v-model="testType" :mondatory="true" row)
                                     v-radio(label="Single Testing" :value="0")
                                     v-radio(label="Periodical Testing" :value="1")
+                                    v-radio(label="F12" :value="2")
                                     v-flex.pb-0(v-if="testType==1" xs12 sm3 md3)
                                         v-btn.mb-2.mr-2(x-small color="primary" dark @click="newWindow()") New Window
                                         v-btn.mb-2.mr-2(x-small color="primary" dark @click="newTabWindow()") New Tab
                                 v-spacer
-                                v-btn.mb-2.mr-2(color="primary" dark @click="editDialog()") Setting
+                                v-btn.mb-2.mr-2(color="blue-grey" dark @click="editDialog()" v-if="testType==2") Setting
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
                                 v-layout.ml-auto.mr-auto(wrap)
@@ -51,9 +52,9 @@
                                             v-flex(xs12 sm6 md6)
                                                 v-text-field(label="Value" v-model="header.value")
                                             v-flex(xs12 sm3 md3)
-                                                v-btn( color="primary" dark @click="deleteRow(index)") X
+                                                v-btn( color="indigo" dark @click="deleteRow(index)") X
                                     v-flex.pt-0.pb-0.ml-1(row align-center xs12 sm12 md12)
-                                        v-btn( color="primary" dark @click="addRow") Add Headers
+                                        v-btn( color="indigo" dark @click="addRow") Add Headers
 
                                     v-layout.px-2.pt-0.pb-0(row v-if="method=='POST'")
                                         v-flex(xs12 sm12 md12)
@@ -64,30 +65,30 @@
                                                     v-flex(xs12 sm6 md6)
                                                         v-text-field(label="Value" v-model="parameter.value")
                                                     v-flex(xs12 sm3 md3)
-                                                        v-btn( color="primary" dark @click="deleteParameter(index)") X
+                                                        v-btn( color="indigo" dark @click="deleteParameter(index)") X
                                         v-flex.pt-0.pb-0(xs12 sm6 md3)
                                             v-select(v-model="postInput" :items="selectPostInput" label="Data Input Method" @change="defaultParameters")
                                         v-flex.pt-0.pb-0.ml-1(row align-center xs12 sm12 md3 v-if="postInput=='Parameters'")
-                                            v-btn(color="primary" dark @click="addParameter") Add Parameters
+                                            v-btn(color="indigo" dark @click="addParameter") Add Parameters
                                         v-flex.pt-0.pb-0.ml-1(xs12 sm12 md8 v-if="postInput!='Parameters'")
                                             v-text-field(label="Post Body" v-model="postBody")
 
-                                    v-flex.pb-0(xs12 sm3 md2)
-                                        v-btn(color="primary" block @click="send('nameForm')") SEND
+                                    v-flex.pb-0(xs12 sm3 md10)
+                                        v-btn(color="primary" dark @click="send('nameForm')") Testing once
                                     v-flex.pt-0.pb-0(xs12)
 
                                         v-card-text.pb-0.pl-0
                                             .subheading.font-weight-black Response:
                                             .subheading.text-right {{timestamp}}
                                         v-divider
-                                        v-card-text.font-weight-bold.pb-0 CURL Command:
-                                        pre(v-highlightjs="commandData")
+                                        v-card-text.font-weight-bold.pb-0(v-if="testType==0") CURL Command:
+                                        pre(v-highlightjs="commandData")(v-if="testType==0")
                                             code.bash
-                                        v-card-text.font-weight-bold.pb-0 Response Code & Download Time:
-                                        pre(v-highlightjs="responseCodeAndTimeTotal")
+                                        v-card-text.font-weight-bold.pb-0(v-if="testType==0") Response Code & Download Time:
+                                        pre(v-highlightjs="responseCodeAndTimeTotal")(v-if="testType==0")
                                             code.java.display-1.font-weight-black
 
-                                        v-card-text.font-weight-bold Header:
+                                        v-card-text.font-weight-bold(v-if="testType==0") Header:
                                             v-expansion-panels
                                                 v-expansion-panel
                                                     v-expansion-panel-header
@@ -95,7 +96,7 @@
                                                             pre(v-highlightjs="headerData")
                                                                 code.bash
 
-                                        v-card-text.font-weight-bold.pt-0 Body:
+                                        v-card-text.font-weight-bold.pt-0(v-if="testType==0") Body:
                                             v-expansion-panels
                                                 v-expansion-panel
                                                     v-expansion-panel-header
@@ -103,7 +104,7 @@
                                                             pre(v-highlightjs="bodyData")
                                                                 code.bash
 
-                                        v-card-text.font-weight-bold Requests:
+                                        v-card-text.font-weight-bold(v-if="testType==2") Requests:
                                             v-flex(xs12 sm12 md12)
                                                 v-card
                                                     v-data-table.elevation-1(:headers="tableHeaders" :items="desserts" :dense="true" :loading="loading" disable-pagination hide-default-footer fixed-header)
@@ -353,12 +354,15 @@
             "edge": this.edge,
             "second": this.second
           }
-          this.$store.dispatch("global/startLoading");
-          this.getInfo(data)
-          this.getRecursiveDate()
+          if (this.testType == 0) {
+            this.getInfo(data)
+          }else if(this.testType == 2) {
+            this.getRecursiveDate()
+          }
         }
       },
       getInfo: function(data) {
+        this.$store.dispatch("global/startLoading");
         this.$store
           .dispatch("curl/getCurlInfo", data)
           .then(
@@ -528,6 +532,7 @@
           "edge": self.edge
         }
         this.loading= true;
+        this.$store.dispatch('global/startLoading')
         this.$store
           .dispatch('curl/getRecursive', data)
           .then(
@@ -539,12 +544,13 @@
               })
 
               this.loading= false;
+              this.$store.dispatch('global/finishLoading')
             }.bind(this)
           )
           .catch(
             function(error) {
               this.loading= false;
-              console.log(error)
+              this.$store.dispatch('global/finishLoading')
             }.bind(this)
           )
       },
