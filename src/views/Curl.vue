@@ -5,16 +5,15 @@
                 v-card
                     v-card-text
                         v-row
-                            v-col.pt-0.pb-0.mb-0.mt-0(cols="12")
-                                v-toolbar(flat white)
-                                    v-radio-group.pt-0.pb-0.mb-0.mt-0(v-model="testType" :mondatory="true" row)
-                                        v-radio(label="Single Testing" :value="0")
-                                        v-radio(label="Periodical Testing" :value="1")
-                                        v-flex.pb-0(v-if="testType==1" xs12 sm3 md3)
-                                            v-btn.mb-2.mr-2(x-small color="primary" dark @click="newWindow()") New Window
-                                            v-btn.mb-2.mr-2(x-small color="primary" dark @click="newTabWindow()") New Tab
-                                    v-spacer
-                                    v-btn.mb-2.mr-2(color="primary" dark @click="editDialog()") Setting
+                            v-toolbar(flat white)
+                                v-radio-group.pt-0.pb-0.mb-0.mt-0(v-model="testType" :mondatory="true" row)
+                                    v-radio(label="Single Testing" :value="0")
+                                    v-radio(label="Periodical Testing" :value="1")
+                                    v-flex.pb-0(v-if="testType==1" xs12 sm3 md3)
+                                        v-btn.mb-2.mr-2(x-small color="primary" dark @click="newWindow()") New Window
+                                        v-btn.mb-2.mr-2(x-small color="primary" dark @click="newTabWindow()") New Tab
+                                v-spacer
+                                v-btn.mb-2.mr-2(color="primary" dark @click="editDialog()") Setting
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
                                 v-layout.ml-auto.mr-auto(wrap)
@@ -51,7 +50,7 @@
                                                 v-text-field(label="Value" v-model="header.value")
                                             v-flex(xs12 sm3 md3)
                                                 v-btn( color="primary" dark @click="deleteRow(index)") X
-                                    v-flex.pt-0.pb-0.ml-auto(row align-center xs12 sm12 md12)
+                                    v-flex.pt-0.pb-0.ml-1(row align-center xs12 sm12 md12)
                                         v-btn( color="primary" dark @click="addRow") Add Headers
 
                                     v-layout.px-2.pt-0.pb-0(row v-if="method=='POST'")
@@ -369,7 +368,7 @@
               this.commandData = result.data.command;
               this.responseCode = result.data.responseCode;
               this.timeTotal = result.data.timeTotal
-              this.responseCodeAndTimeTotal = result.data.responseCode+' '+result.data.timeTotal
+              this.responseCodeAndTimeTotal = result.data.responseCode+' '+result.data.timeTotal + 'Sec'
               this.$store.dispatch("global/finishLoading");
             }.bind(this)
           )
