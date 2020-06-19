@@ -39,12 +39,12 @@
 
         v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
-                DataTable3.table_border(site='HK' networkFlowType="rtt" :bgpList="bgpList2['HK']['C']" :tableData="tableData['HK']" :range="range.china" :loading="loading" )
-                DataTable3.mt-3.table_border(site="TW" networkFlowType="rtt" :bgpList="bgpList2['TW']['C']" :tableData="tableData['TW']" :range="range.china" :loading="loading" )
+                DataTable3.table_border(site='HK' networkFlowType="rtt" :bgpList="bgpList2['HK']['C']" :tableData="tableData['HK']" :range="range.china" :loading="loading")
+                DataTable3.mt-3.table_border(site="TW" networkFlowType="rtt" :bgpList="bgpList2['TW']['C']" :tableData="tableData['TW']" :range="range.china" :loading="loading")
             v-col.ml-0.pa-0.pl-2(cols="6")
-                DataTable3.table_border(site='HK' networkFlowType="rtt" :bgpList="bgpList2['HK']['G']" :tableData="tableData['HK']" :range="range.global" :loading="loading" )
-                DataTable3.mt-3.table_border(site='TW' networkFlowType="rtt" :bgpList="bgpList2['TW']['G']" :tableData="tableData['TW']" :range="range.global" :loading="loading" )
-                DataTable3.mt-3.table_border(site='PH' networkFlowType="rtt" :bgpList="bgpList2['PH']['G']" :tableData="tableData['PH']" :range="range.global" :loading="loading" )
+                DataTable3.table_border(site='HK' networkFlowType="rtt" :bgpList="bgpList2['HK']['G']" :tableData="tableData['HK']" :range="range.global" :loading="loading")
+                DataTable3.mt-3.table_border(site='TW' networkFlowType="rtt" :bgpList="bgpList2['TW']['G']" :tableData="tableData['TW']" :range="range.global" :loading="loading")
+                DataTable3.mt-3.table_border(site='PH' networkFlowType="rtt" :bgpList="bgpList2['PH']['G']" :tableData="tableData['PH']" :range="range.global" :loading="loading")
 
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
