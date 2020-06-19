@@ -37,14 +37,14 @@
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
         v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
-                NxnCirclesTable(class="table_border" title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3(class="table_border" title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range.china" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border.mt-3(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range.china" :loading="loading" :typeList="typeList")
 
             v-col.ml-0.pa-0.pl-2(cols="6")
-                NxnCirclesTable(class="table_border" title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
 
-                NxnCirclesTable.mt-3(class="table_border" title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range.global" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3(class="table_border" title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border.mt-3(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border.mt-3(title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
         //- v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
                 DataTable3.table_border(site='HK' networkFlowType="latency" :bgpList="bgpList2['HK']['C']" :tableData="tableData['HK']" :range="range.china" :loading="loading" )
