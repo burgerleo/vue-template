@@ -17,7 +17,10 @@ export default {
                 C: [],
                 G: []
             },
-            PH: []
+            PH: {
+                C: [],
+                G: []
+            }
         },
     },
     getters: {

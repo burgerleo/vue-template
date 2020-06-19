@@ -35,10 +35,11 @@
                 NxnCirclesTable.mt-3(class="table_border" title="PH" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
 
         v-row
-            v-col.ml-0.pa-0.pl-6(cols="6")
+            v-col.ml-0.pa-0.pl-6(cols="auto")
                 DataTable3.table_border(site='HK' networkFlowType="availability" :bgpList="bgpList2['HK']['C']" :tableData="tableData['HK']" :range="range" :loading="loading")
                 DataTable3.mt-3.table_border(site="TW" networkFlowType="availability" :bgpList="bgpList2['TW']['C']" :tableData="tableData['TW']" :range="range" :loading="loading")
-            v-col.ml-0.pa-0.pl-2(cols="6")
+            v-col.px-0(cols="auto")
+            v-col.ml-0.pa-0.pl-6(cols="auto")
                 DataTable3.table_border(site='HK' networkFlowType="availability" :bgpList="bgpList2['HK']['G']" :tableData="tableData['HK']" :range="range" :loading="loading")
                 DataTable3.mt-3.table_border(site='TW' networkFlowType="availability" :bgpList="bgpList2['TW']['G']" :tableData="tableData['TW']" :range="range" :loading="loading")
                 DataTable3.mt-3.table_border(site='PH' networkFlowType="availability" :bgpList="bgpList2['PH']['G']" :tableData="tableData['PH']" :range="range" :loading="loading")
