@@ -79,23 +79,8 @@
                                         code.bash
                                     v-card-text.font-weight-bold.pb-0 Response Code & Download Time:
                                     pre(v-highlightjs="responseCodeAndTimeTotal")
-                                        code.python.headline.font-weight-black
+                                        code.python.title.font-weight-medium
 
-                                    v-card-text.font-weight-bold Header:
-                                        v-expansion-panels
-                                            v-expansion-panel
-                                                v-expansion-panel-header
-                                                    v-expansion-panel-content
-                                                        pre(v-highlightjs="headerData")
-                                                            code.bash
-
-                                    v-card-text.font-weight-bold.pt-0 Body:
-                                        v-expansion-panels
-                                            v-expansion-panel
-                                                v-expansion-panel-header
-                                                    v-expansion-panel-content
-                                                        pre(v-highlightjs="bodyData")
-                                                            code.bash
                     v-divider
 </template>
 <script>
@@ -133,6 +118,7 @@
         date:'',
         time:'',
         responseCodeAndTimeTotal:'',
+        TempResponseCodeAndTimeTotal:[],
         domainList:[],
         hostIpList: [],
         multiHostIp: false,
@@ -150,12 +136,6 @@
       };
     },
     watch:{
-      // url: function(value) {
-      //   this.originalDataFormat(value)
-      //   if (value !== '' && value.match(/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/)){
-      //     this.getDomainList(value)
-      //   }
-      // },
       url: function(value) {
         if (value !== '' && value.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.%]+$/gm)){
           const domain = this.originalDataFormat(value)
@@ -217,18 +197,25 @@
               this.commandData = result.data.command;
               this.responseCode = result.data.responseCode;
               this.timeTotal = result.data.timeTotal
-              this.responseCodeAndTimeTotal = (this.responseCodeAndTimeTotal === '')
-                ? this.date+ '   ' + this.time
-                + '   '
-                + result.data.responseCode
-                + '   '
-                + result.data.timeTotal
-                : this.responseCodeAndTimeTotal
-                + "\r\n " + this.date+ '   ' + this.time
-                + '   '
-                + result.data.responseCode
-                + '   '
-                + result.data.timeTotal
+              // this.responseCodeAndTimeTotal = (this.responseCodeAndTimeTotal === '')
+              //   ? this.date+ '   ' + this.time
+              //   + '   '
+              //   + result.data.responseCode
+              //   + '   '
+              //   + result.data.timeTotal
+              //   : this.responseCodeAndTimeTotal
+              //   + "\r\n " + this.date+ '   ' + this.time
+              //   + '   '
+              //   + result.data.responseCode
+              //   + '   '
+              //   + result.data.timeTotal
+
+              this.TempResponseCodeAndTimeTotal.push(this.date+ '   ' + this.time+'  '+result.data.responseCode+ '   ' + result.data.timeTotal + 'Sec')
+              if (this.TempResponseCodeAndTimeTotal.length>20) {
+                this.TempResponseCodeAndTimeTotal.shift()
+              }
+              this.responseCodeAndTimeTotal = this.TempResponseCodeAndTimeTotal.join("\r\n ")
+
               this.$store.dispatch("global/finishLoading");
             }.bind(this)
           )

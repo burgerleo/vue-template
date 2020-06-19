@@ -10,9 +10,6 @@
                                     v-radio(label="Single Testing" :value="0")
                                     v-radio(label="Periodical Testing" :value="1")
                                     v-radio(label="F12" :value="2")
-                                    v-flex.pb-0(v-if="testType==1" xs12 sm3 md3)
-                                        v-btn.mb-2.mr-2(x-small color="primary" dark @click="newWindow()") New Window
-                                        v-btn.mb-2.mr-2(x-small color="primary" dark @click="newTabWindow()") New Tab
                                 v-spacer
                                 v-btn.mb-2.mr-2(color="blue-grey" dark @click="editDialog()" v-if="testType==2") Setting
                         v-form(ref="form" onsubmit="return false;")
@@ -25,11 +22,11 @@
                                             v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm6 md3)
                                                 v-select(v-if="area==0" :disabled="area==1" v-model="edge" :items="twEdge" label="TW Edge" name="tw_edge" item-text="text" item-value="id")
                                                 v-select(v-if="area==1" :disabled="area==0" v-model="edge" :items="hkEdge" label="HK Edge" name="hk_edge" item-text="text" item-value="id")
-                                    v-flex.pt-0.pb-0(xs12 sm6 md1)
+                                    v-flex.pt-0.pb-0(xs12 sm6 md2)
                                         v-select(v-model="method" :items="selectMethod" label="HTTP Method" item-text="name" item-value="id" :rules="[rules.required]" @change="defaultParameters")
                                     v-flex.pt-0.pb-0(xs12 sm6 md2)
                                         v-select(v-model="redirect" :items="selectRedir" label="Max Num. of Redirects" item-text="name" item-value="id" )
-                                    v-flex.py-6.pt-0.pb-0(xs12 sm6 md5)
+                                    v-flex.py-6.pt-0.pb-0(xs12 sm6 md4)
                                         v-text-field(v-model="url" label="URL" type="" name="url" :rules="[rules.required, rules.url]")
                                     v-flex.py-6.pt-0.pb-0(xs12 sm6 md2)
                                         v-checkbox(v-model="original" label="Origin" @change="clearOriginal")
@@ -73,8 +70,11 @@
                                         v-flex.pt-0.pb-0.ml-1(xs12 sm12 md8 v-if="postInput!='Parameters'")
                                             v-text-field(label="Post Body" v-model="postBody")
 
-                                    v-flex.pb-0(xs12 sm3 md10)
+                                    v-flex.pb-0(v-if="testType!=1" xs12 sm3 md10)
                                         v-btn(color="primary" dark @click="send('nameForm')") Testing once
+                                    v-flex.pb-0(v-if="testType==1" xs12 sm3 md10)
+                                        v-btn.mr-2.mt-2(color="primary" dark @click="newWindow()") Testing on New Window
+                                        v-btn.mt-2(color="primary" dark @click="newTabWindow()") Testing on New Tab
                                     v-flex.pt-0.pb-0(xs12)
 
                                         v-card-text.pb-0.pl-0
