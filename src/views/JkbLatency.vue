@@ -45,6 +45,14 @@
 
                 NxnCirclesTable.mt-3(class="table_border" title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range.global" :loading="loading" :typeList="typeList")
                 NxnCirclesTable.mt-3(class="table_border" title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
+        //- v-row
+            v-col.ml-0.pa-0.pl-6(cols="6")
+                DataTable3.table_border(site='HK' networkFlowType="latency" :bgpList="bgpList2['HK']['C']" :tableData="tableData['HK']" :range="range.china" :loading="loading" )
+                DataTable3.mt-3.table_border(site="TW" networkFlowType="latency" :bgpList="bgpList2['TW']['C']" :tableData="tableData['TW']" :range="range.china" :loading="loading" )
+            v-col.ml-0.pa-0.pl-2(cols="6")
+                DataTable3.table_border(site='HK' networkFlowType="latency" :bgpList="bgpList2['HK']['G']" :tableData="tableData['HK']" :range="range.global" :loading="loading" )
+                DataTable3.mt-3.table_border(site='TW' networkFlowType="latency" :bgpList="bgpList2['TW']['G']" :tableData="tableData['TW']" :range="range.global" :loading="loading" )
+                DataTable3.mt-3.table_border(site='PH' networkFlowType="latency" :bgpList="bgpList2['PH']['G']" :tableData="tableData['PH']" :range="range.global" :loading="loading" )
 
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
@@ -70,13 +78,15 @@ import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
 import NxnCirclesTable from '../components/NxnCirclesTable'
 import checkPage from '../utils/checkPage'
+import DataTable3 from '../components/NxnH7CirlesTable'
 
 export default {
     name: 'jkb_latency',
     mixins: [textFieldRules, dateFormat, checkPage],
 
     components: {
-        NxnCirclesTable
+        NxnCirclesTable,
+        DataTable3
     },
     data() {
         return {
@@ -513,7 +523,6 @@ export default {
     mounted() {
         this.getIsp()
         this.getDummy()
-        console.log(this.pageName)
     }
 }
 </script>

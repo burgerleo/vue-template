@@ -9,6 +9,7 @@
                         v-text-field(v-model="searchText" append-icon="mdi-magnify" label='Search' single-line hide-details )
                         v-divider.mx-4(inset vertical)
                         v-spacer
+                        v-btn.mb-2.mr-2(color="primary" dark @click="loading = !loading") Loading Switch
                         v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
                         v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") Add
                         v-btn.mb-2.mr-2(color="primary" dark @click="init")
@@ -33,10 +34,19 @@
                     v-btn.mb-2.mr-2(color="primary" dark @click="playIcon") Icon 
                         v-icon mdi-play
                     v-btn.mb-2.mr-2(color="primary" dark @mouseover="stopIcon" @mouseleave="playIcon") hover 
-
-                v-row.px-3.py-3
                     lottie(:options="defaultOptions" :width="60" :height="60" v-on:animCreated="handleAnimation")
                     lottie(:options="defaultOptions2" :width="60" :height="60" v-on:animCreated="handleAnimation")
+                v-row.px-1.py-1
+                    v-col(cols="6")
+                        DataTable3(:bgpList="bgpList" :tableData="tableData" :loading="loading2")
+                    v-col(cols="6")
+                        v-btn.mb-2.mr-2(color="primary" dark @click="setTableData") Reset Data  
+
+                        v-btn.mb-2.mr-2(color="primary" dark @click="addBgplist") Add BGP List
+                        v-btn.mb-2.mr-2(color="primary" dark @click="loading2 = !loading2") Loading Switch
+
+                        div bgpList({{bgpList.length}}):
+                        pre {{bgpList}}
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
@@ -73,6 +83,7 @@
 <script>
 import textFieldRules from '../utils/textFieldRules'
 import DataTable2 from '../components/DataTable2'
+import DataTable3 from '../components/NxnH7CirlesTable'
 import addJson from '../assets/icon/add/add.json'
 import toggleJson from '../assets/icon/toggle/toggle.json'
 
@@ -81,10 +92,12 @@ export default {
     mixins: [textFieldRules],
 
     components: {
-        DataTable2
+        DataTable2,
+        DataTable3
     },
     data() {
         return {
+            // DataTable2 使用的參數 start
             searchText: '',
             searchList: {},
             page: 1,
@@ -163,17 +176,34 @@ export default {
             setLinkMethod: (uri, value = null) => {
                 return uri + 'search?q=' + value
             },
+            // DataTable2 使用的參數 end
+
+            // 動態 icon 1 預設值
             defaultOptions: {
                 animationData: addJson,
                 loop: true,
                 autoplay: true
             },
+            // 動態 icon 2 預設值
             defaultOptions2: {
                 animationData: toggleJson,
                 loop: true,
                 autoplay: true
             },
-            defaultAnim: []
+            // 動態 icon 建立後存放
+            defaultAnim: [], 
+
+            bgpList: [
+                'CUG-HKR2C',
+                'CUG-HKR1C',
+                'CMI-HKR2C',
+                'CMI-HKR1C',
+                'TWG-HKR1C',
+                'TWG-HKR2C'
+            ],
+            tableData: {},
+            loading2: false,
+
         }
     },
     watch: {},
@@ -297,11 +327,64 @@ export default {
             this.defaultAnim.map(function(anim) {
                 anim.play()
             })
+        },
+
+        addBgplist() {
+            var bgpList = [...this.bgpList]
+            var bgp =
+                this.makerandomletter(3).toLocaleUpperCase() +
+                '-HKR' +
+                this.getRandomByMinMax(1, 2) +
+                'C'
+
+            bgpList.push(bgp)
+
+            this.bgpList = [...new Set(bgpList)]
+            this.setTableData()
+        },
+        setTableData() {
+            var tableData = {}
+            var bgpList = [...this.bgpList]
+            var getRandomByMinMax = function(min = 0, max = 100) {
+                // max - 期望的最大值
+                // min - 期望的最小值
+                parseInt(Math.random() * (max - min + 1) + min, 10)
+                return Math.floor(Math.random() * (max - min + 1) + min)
+            }
+
+            bgpList.map(function(inLine) {
+                if (!tableData[inLine]) {
+                    tableData[inLine] = {}
+                }
+
+                bgpList.map(function(outLine) {
+                    if (!tableData[inLine][outLine]) {
+                        tableData[inLine][outLine] = {}
+                    }
+
+                    tableData[inLine][outLine] = {
+                        outside: {
+                            rtt: getRandomByMinMax(10, 250)
+                        },
+                        intermediate: {
+                            rtt: getRandomByMinMax(80, 220)
+                        },
+                        inside: {
+                            rtt: getRandomByMinMax(50, 250)
+                        }
+                    }
+                })
+            })
+
+            this.tableData = tableData
+
+            this.bgpList = JSON.parse(JSON.stringify(bgpList))
         }
     },
     mounted() {
         document.title = 'Table Example'
         this.init()
+        this.setTableData()
     }
 }
 </script>

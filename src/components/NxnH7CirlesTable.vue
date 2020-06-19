@@ -4,8 +4,12 @@
             table.v-nxn-table
                 thead.v-data-table-header
                     tr
+                        th(:colspan="(r1 + r2 + 2)") 
+                            v-progress-linear(:active="loading" height="2px" indeterminate :color="colorList[4]")
+                thead.v-data-table-header
+                    tr
                         th(rowspan="2" colspan="2" :class="colorList[3]") 
-                            h2 {{ site+ "\nIn  \\  Out"}} 
+                            h2 {{ site + "\nIn   \\   Out"}} 
                         th(:colspan="r1")
                             v-avatar(tile width="100%" :height="columnHeight" :color="colorList[6]" dark) 
                                 h2 {{"R1"}}
@@ -44,27 +48,23 @@
                                                                     span {{getSource(inLine, outLine, typeList[2])}}       
                                                     span {{getSource(inLine, outLine, typeList[1])}}
                                     span {{getSource(inLine, outLine, typeList[0])}} 
-                                    //- span {{inLine + ":" + outLine + "\n" + getSource(inLine, outLine, typeList[0])}} 
-
-            //- template 
-                h3 R1:{{r1}} R2::{{r2}}
-                h3 {{range}}
-                h3 columns: {{columns}}
-                h3 bgplist: {{bgplist}}
-                //- h3 {{tableData}}
 </template>
 <script>
 export default {
     props: {
-        bgplist: {
-            type: Array,
-        },
-        tableData: {
-            type: Object,
+        networkFlowType: {
+            type: String,
+            default: 'rtt'
         },
         site: {
             type: String,
             default: 'HK'
+        },
+        bgpList: {
+            type: Array
+        },
+        tableData: {
+            type: Object
         },
         range: {
             type: Array,
@@ -74,9 +74,9 @@ export default {
             type: Array,
             default: () => ['outside', 'intermediate', 'inside']
         },
-        networkFlowType: {
-            type: String,
-            default: 'rtt'
+        loading: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -100,7 +100,7 @@ export default {
         }
     },
     watch: {
-        bgplist() {
+        bgpList() {
             this.sortColums()
         }
     },
@@ -111,7 +111,7 @@ export default {
             var r1 = []
             var r2 = []
 
-            this.bgplist.map(function(bgp) {
+            this.bgpList.map(function(bgp) {
                 if (bgp.indexOf('R1') >= 0) {
                     r1.push(bgp)
                 } else {
