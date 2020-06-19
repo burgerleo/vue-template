@@ -378,6 +378,7 @@ export default {
             this.loading = true
             this.$store
                 .dispatch('traffic/getTrafficFlow', {
+                    isp_id: this.isp,
                     start_time: this.dateFormat(startTime),
                     end_time: this.dateFormat(new Date())
                 })
