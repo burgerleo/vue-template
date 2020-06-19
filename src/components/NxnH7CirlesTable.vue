@@ -11,10 +11,10 @@
                         th(rowspan="2" colspan="2" :class="colorList[3]") 
                             h2 {{ site + "\nIn   \\   Out"}} 
                         th(:colspan="r1")
-                            v-avatar(tile width="100%" :height="columnHeight" :color="colorList[6]" dark) 
+                            v-avatar(v-if="r1>0" tile width="100%" :height="columnHeight" :color="colorList[6]" dark) 
                                 h2 {{"R1"}}
                         th(:colspan="r2") 
-                            v-avatar(tile width="100%" :height="columnHeight" :color="colorList[7]" dark) 
+                            v-avatar(v-if="r2>0" tile width="100%" :height="columnHeight" :color="colorList[7]" dark) 
                                 h2 {{"R2"}}
                     tr
                         th(v-for="outLine in columns")

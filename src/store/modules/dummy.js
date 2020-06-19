@@ -81,6 +81,11 @@ export default {
 
             context.commit("updateBGPList", items)
             context.commit("updateBGPListPartition", newItems)
+
+            return {
+                bgpList: items,
+                bgpListPartition: newItems
+            }
         },
         getInfo: (context, data) => {
             return axios.get("bgp_io_mapping").then(function (response) {
