@@ -70,25 +70,26 @@
                                         v-flex.pt-0.pb-0.ml-1(xs12 sm12 md8 v-if="postInput!='Parameters'")
                                             v-text-field(label="Post Body" v-model="postBody")
 
-                                    v-flex.pb-0(v-if="testType!=1" xs12 sm3 md10)
+                                    v-flex.pb-2(v-if="testType!=1" xs12 sm3 md10)
                                         v-btn(color="primary" dark @click="send('nameForm')") Testing once
-                                    v-flex.pb-0(v-if="testType==1" xs12 sm3 md10)
+                                    v-flex.pb-2(v-if="testType==1" xs12 sm3 md10)
                                         v-btn.mr-2.mt-2(color="primary" dark @click="newWindow()") Testing on New Window
                                         v-btn.mt-2(color="primary" dark @click="newTabWindow()") Testing on New Tab
                                     v-flex.pt-0.pb-0(xs12)
 
                                         v-card-text.pb-0.pl-0
                                             .subheading.font-weight-black Response:
-                                            .subheading.text-right {{timestamp}}
+                                            .subheading.text-right(v-if="testType==0" ) {{timestamp.singleTesting}}
+                                            .subheading.text-right(v-if="testType==2" ) {{timestamp.F12}}
                                         v-divider
-                                        v-card-text.font-weight-bold.pb-0(v-if="testType==0") CURL Command:
-                                        pre(v-highlightjs="commandData")(v-if="testType==0")
+                                        v-card-text.font-weight-bold.pb-0(v-if="testType==0 && timestamp.singleTesting !=''") CURL Command:
+                                        pre(v-highlightjs="commandData")(v-if="testType==0 && timestamp.singleTesting !=''")
                                             code.bash
-                                        v-card-text.font-weight-bold.pb-0(v-if="testType==0") Response Code & Download Time:
-                                        pre(v-highlightjs="responseCodeAndTimeTotal")(v-if="testType==0")
+                                        v-card-text.font-weight-bold.pb-0(v-if="testType==0 && timestamp.singleTesting !=''") Response Code & Download Time:
+                                        pre(v-highlightjs="responseCodeAndTimeTotal")(v-if="testType==0 && timestamp.singleTesting !=''")
                                             code.java.display-1.font-weight-black
 
-                                        v-card-text.font-weight-bold(v-if="testType==0") Header:
+                                        v-card-text.font-weight-bold(v-if="testType==0 && timestamp.singleTesting !=''") Header:
                                             v-expansion-panels
                                                 v-expansion-panel
                                                     v-expansion-panel-header
@@ -96,7 +97,7 @@
                                                             pre(v-highlightjs="headerData")
                                                                 code.bash
 
-                                        v-card-text.font-weight-bold.pt-0(v-if="testType==0") Body:
+                                        v-card-text.font-weight-bold.pt-0(v-if="testType==0 && timestamp.singleTesting !=''") Body:
                                             v-expansion-panels
                                                 v-expansion-panel
                                                     v-expansion-panel-header
@@ -104,7 +105,7 @@
                                                             pre(v-highlightjs="bodyData")
                                                                 code.bash
 
-                                        v-card-text.font-weight-bold(v-if="testType==2") Requests:
+                                        v-card-text.font-weight-bold(v-if="testType==2 && timestamp.F12 !=''") Requests:
                                             v-flex(xs12 sm12 md12)
                                                 v-card
                                                     v-data-table.elevation-1(:headers="tableHeaders" :items="desserts" :dense="true" :loading="loading" disable-pagination hide-default-footer fixed-header)
@@ -183,7 +184,11 @@
         parameters: [],
         headers: [],
         area: 0,
-        timestamp:'',
+        timestamp:{
+          singleTesting: '',
+          PeriodicalTesting: '',
+          F12: ''
+        },
         responseCodeAndTimeTotal:'',
         domainList:[],
         hostIpList: [],
@@ -316,7 +321,7 @@
         }
       },
       newWin(){
-        let routeData = this.$router.resolve({path: '/new-periodical-curl'});
+        let routeData = this.$router.resolve({path: '/new-periodical-curl', query:{id:123}});
         window.open(routeData.href,'','height=900,width=1200,resizable=yes,scrollbars=yes,toolbar=yes,status=yes')
       },
       newTab(){
@@ -334,9 +339,7 @@
         const headerOnly = (this.headerOnly == true ? 1 : 0)
         const header = this.headers
         const parameters = this.parameters
-        const time = new Date();
         if (this.$refs.form.validate()) {
-          this.timestamp = time;
           var data = {
             "url" : this.url,
             "method" : method,
@@ -363,6 +366,8 @@
       },
       getInfo: function(data) {
         this.$store.dispatch("global/startLoading");
+        const time = new Date();
+        this.timestamp.singleTesting = time;
         this.$store
           .dispatch("curl/getCurlInfo", data)
           .then(
@@ -519,6 +524,7 @@
       },
       getRecursiveDate: function () {
         const self = this;
+        const time = new Date();
         let url = '';
         this.desserts = [];
         if(/(http(s?)):\/\//i.test(this.url)) {
@@ -533,6 +539,7 @@
         }
         this.loading= true;
         this.$store.dispatch('global/startLoading')
+        this.timestamp.F12 = time;
         this.$store
           .dispatch('curl/getRecursive', data)
           .then(
