@@ -26,6 +26,7 @@ import H7IP from "./views/H7IP.vue";
 import DummyRtt from "./views/DummyRtt.vue";
 import DummyPacketLoss from "./views/DummyPacketLoss.vue";
 import Reports from "./views/Reports.vue";
+import CPIP from "./views/CPIP.vue";
 
 Vue.use(Router);
 
@@ -168,6 +169,14 @@ export default new Router({
                     component: Edge,
                     meta: {
                         title: 'Edge'
+                    }
+                },
+                {
+                    name: "CPIP",
+                    path: "cpip",
+                    component: CPIP,
+                    meta: {
+                        title: 'CPIP'
                     }
                 },
                 {
