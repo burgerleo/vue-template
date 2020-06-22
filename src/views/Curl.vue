@@ -16,6 +16,9 @@
                             v-layout(wrap)
                                 v-layout.ml-auto.mr-auto(wrap)
                                     v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm12 md12)
+                                        v-layout.px-2(row v-if="testType==1")
+                                            v-flex.pt-0.pb-0(xs12 sm3 md3)
+                                                v-text-field(v-model="second" label="Second" type="number" min="5" max="100")
                                         v-radio-group.pt-0.pb-0.mt-0.mb-0(v-model="area" :mondatory="true" row)
                                             v-radio(label="TW" :value="0")
                                             v-radio(label="HK" :value="1")
@@ -204,7 +207,6 @@
         tabItems: [],
         tab: null,
         newWin:'',
-        newWinWithParams:'',
         newTab:'',
         page: 1,
         pageCount: 0,
@@ -321,44 +323,43 @@
         }
       },
       newWin(){
-        let routeData = this.$router.resolve({path: '/new-periodical-curl', query:{id:123}});
+        let routeData = this.$router.resolve({path: '/new-periodical-curl', query:this.getData()});
         window.open(routeData.href,'','height=900,width=1200,resizable=yes,scrollbars=yes,toolbar=yes,status=yes')
       },
       newTab(){
-        let routeData = this.$router.resolve({path: '/periodical-curl'});
+        let routeData = this.$router.resolve({path: '/periodical-curl', query: this.getData()});
         window.open(routeData.href,'',)
-      },
-      newWinWithParams(){
-        let routeData = this.$router.resolve({path: '/new-periodical-curl'});
-        window.open(routeData.href,'','height=900,width=1200,resizable=yes,scrollbars=yes,toolbar=yes,status=yes')
-      },
+      }
     },
     methods: {
-      send: function() {
+      getData:function () {
         const method = (this.method == "GET" ? "get" : "post")
         const headerOnly = (this.headerOnly == true ? 1 : 0)
         const header = this.headers
         const parameters = this.parameters
+        const data = {
+          "url" : this.url,
+          "method" : method,
+          "redirect" : this.redirect,
+          "headerOnly" : headerOnly,
+          "original": this.original,
+          "hostName": this.hostName,
+          "port": this.port,
+          "hostIp": this.hostIp,
+          "header": header,
+          "parameters": parameters,
+          "postInput": this.postInput,
+          "postBody": this.postBody,
+          "area": this.area,
+          "edge": this.edge,
+          "second": this.second
+        }
+        return data
+      },
+      send: function() {
         if (this.$refs.form.validate()) {
-          var data = {
-            "url" : this.url,
-            "method" : method,
-            "redirect" : this.redirect,
-            "headerOnly" : headerOnly,
-            "original": this.original,
-            "hostName": this.hostName,
-            "port": this.port,
-            "hostIp": this.hostIp,
-            "header": header,
-            "parameters": parameters,
-            "postInput": this.postInput,
-            "postBody": this.postBody,
-            "area": this.area,
-            "edge": this.edge,
-            "second": this.second
-          }
           if (this.testType == 0) {
-            this.getInfo(data)
+            this.getInfo(this.getData())
           }else if(this.testType == 2) {
             this.getRecursiveDate()
           }
