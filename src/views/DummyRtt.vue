@@ -28,7 +28,7 @@
                     v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('global')['max']}}
                     v-divider.mx-1(inset vertical)
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
-        v-row
+        //- v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
                 NxnCirclesTable.table_border(title="HK" networkFlowType="rtt" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
                 NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="rtt" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']"  :range="range.china" :loading="loading" :typeList="typeList")
@@ -36,6 +36,17 @@
                 NxnCirclesTable.table_border(title="HK" networkFlowType="rtt" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
                 NxnCirclesTable.mt-3.table_border(title="TW" networkFlowType="rtt" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']"  :range="range.global" :loading="loading" :typeList="typeList")
                 NxnCirclesTable.mt-3.table_border(title="PH" networkFlowType="rtt" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
+
+        v-row
+            v-col.ml-0.pa-0.pl-6(cols="auto")
+                DataTable3.table_border(site='HK' networkFlowType="rtt" :bgpList="bgpList2['HK']['C']" :tableData="tableData['HK']" :range="range.china" :loading="loading")
+                DataTable3.mt-3.table_border(site="TW" networkFlowType="rtt" :bgpList="bgpList2['TW']['C']" :tableData="tableData['TW']" :range="range.china" :loading="loading")
+            v-col.px-0(cols="auto")
+            
+            v-col.ml-0.pa-0.pl-6(cols="auto")
+                DataTable3.table_border(site='HK' networkFlowType="rtt" :bgpList="bgpList2['HK']['G']" :tableData="tableData['HK']" :range="range.global" :loading="loading")
+                DataTable3.mt-3.table_border(site='TW' networkFlowType="rtt" :bgpList="bgpList2['TW']['G']" :tableData="tableData['TW']" :range="range.global" :loading="loading")
+                DataTable3.mt-3.table_border(site='PH' networkFlowType="rtt" :bgpList="bgpList2['PH']['G']" :tableData="tableData['PH']" :range="range.global" :loading="loading")
 
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
@@ -60,7 +71,7 @@
 import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
 import checkPage from '../utils/checkPage'
-
+import DataTable3 from '../components/NxnH7CirlesTable'
 import NxnCirclesTable from '../components/NxnCirclesTable'
 
 export default {
@@ -68,7 +79,8 @@ export default {
     mixins: [textFieldRules, dateFormat, checkPage],
 
     components: {
-        NxnCirclesTable
+        NxnCirclesTable,
+        DataTable3
     },
     data() {
         return {
@@ -91,7 +103,10 @@ export default {
                     C: [],
                     G: []
                 },
-                PH: []
+                PH: {
+                    C: [],
+                    G: []
+                }
             },
             tableData: {
                 HK: {},
@@ -191,10 +206,14 @@ export default {
                         })
 
                         // 送進排序中心
-                        this.$store.dispatch('dummy/bgpListReorder', bgpList)
-                        this.bgpList = this.$store.state.dummy.bgpList
-                        this.bgpList2 = this.$store.state.dummy.bgpListPartition
-
+                        this.$store
+                            .dispatch('dummy/bgpListReorder', bgpList)
+                            .then(
+                                function(result) {
+                                    this.bgpList = result.bgpList
+                                    this.bgpList2 = result.bgpListPartition
+                                }.bind(this)
+                            )
                         this.getConfig()
                     }.bind(this)
                 )

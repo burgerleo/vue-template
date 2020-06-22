@@ -35,16 +35,25 @@
                     v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≤" + getMaxAndMinByType('global')['max']}}
                     v-divider.mx-1(inset vertical)
                     v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
-        v-row
+        //- v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
-                NxnCirclesTable(class="table_border" title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3(class="table_border" title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range.china" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range.china" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border.mt-3(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range.china" :loading="loading" :typeList="typeList")
 
             v-col.ml-0.pa-0.pl-2(cols="6")
-                NxnCirclesTable(class="table_border" title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border(title="HK" networkFlowType="latency" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range.global" :loading="loading" :typeList="typeList")
 
-                NxnCirclesTable.mt-3(class="table_border" title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range.global" :loading="loading" :typeList="typeList")
-                NxnCirclesTable.mt-3(class="table_border" title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border.mt-3(title="TW" networkFlowType="latency" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range.global" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.table_border.mt-3(title="PH" networkFlowType="latency" :headers="headers['PH']" :items="bgpList2['PH']['G']" :nxn="tableData['PH']" :range="range.global" :loading="loading" :typeList="typeList")
+        v-row
+            v-col.ml-0.pa-0.pl-6(cols="auto")
+                DataTable3.table_border(site='HK' networkFlowType="latency" :bgpList="bgpList2['HK']['C']" :tableData="tableData['HK']" :range="range.china" :loading="loading")
+                DataTable3.mt-3.table_border(site="TW" networkFlowType="latency" :bgpList="bgpList2['TW']['C']" :tableData="tableData['TW']" :range="range.china" :loading="loading")
+            v-col.px-0(cols="auto")
+            v-col.ml-0.pa-0.pl-6(cols="auto")
+                DataTable3.table_border(site='HK' networkFlowType="latency" :bgpList="bgpList2['HK']['G']" :tableData="tableData['HK']" :range="range.global" :loading="loading")
+                DataTable3.mt-3.table_border(site='TW' networkFlowType="latency" :bgpList="bgpList2['TW']['G']" :tableData="tableData['TW']" :range="range.global" :loading="loading")
+                DataTable3.mt-3.table_border(site='PH' networkFlowType="latency" :bgpList="bgpList2['PH']['G']" :tableData="tableData['PH']" :range="range.global" :loading="loading")
 
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
@@ -70,13 +79,15 @@ import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
 import NxnCirclesTable from '../components/NxnCirclesTable'
 import checkPage from '../utils/checkPage'
+import DataTable3 from '../components/NxnH7CirlesTable'
 
 export default {
     name: 'jkb_latency',
     mixins: [textFieldRules, dateFormat, checkPage],
 
     components: {
-        NxnCirclesTable
+        NxnCirclesTable,
+        DataTable3
     },
     data() {
         return {
@@ -99,7 +110,10 @@ export default {
                     C: [],
                     G: []
                 },
-                PH: []
+                PH: {
+                    C: [],
+                    G: []
+                }
             },
             tableData: {
                 HK: {},
@@ -224,12 +238,15 @@ export default {
                                 tableData[site][inLine][outLine] = {}
                             }
                         })
-
                         // 送進排序中心
-                        this.$store.dispatch('dummy/bgpListReorder', bgpList)
-                        this.bgpList = this.$store.state.dummy.bgpList
-                        this.bgpList2 = this.$store.state.dummy.bgpListPartition
-
+                        this.$store
+                            .dispatch('dummy/bgpListReorder', bgpList)
+                            .then(
+                                function(result) {
+                                    this.bgpList = result.bgpList
+                                    this.bgpList2 = result.bgpListPartition
+                                }.bind(this)
+                            )
                         this.getConfig()
                     }.bind(this)
                 )
@@ -399,6 +416,7 @@ export default {
             this.loading = true
             this.$store
                 .dispatch('traffic/getTrafficFlow', {
+                    isp_id: this.isp,
                     start_time: this.dateFormat(startTime),
                     end_time: this.dateFormat(new Date())
                 })
@@ -513,7 +531,6 @@ export default {
     mounted() {
         this.getIsp()
         this.getDummy()
-        console.log(this.pageName)
     }
 }
 </script>
