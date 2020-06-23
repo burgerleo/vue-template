@@ -74,7 +74,7 @@
                             v-select(v-model="cpip.routes" :items="routesList" label="routes" :rules="[rules.required]")
                             v-text-field(v-model="cpip.remark" label="Remark" type="text" name="remark")
                             v-switch(v-model="cpip.is_origin" label="Is Origin" name="is_origin")
-                            v-switch(v-if="editedIndex > 0" v-model="cpip.is_reachable" label="Is Reachable" name="is_reachable")
+                            v-switch(v-if="editedIndex > -1" v-model="cpip.is_reachable" label="Is Reachable" name="is_reachable")
                     v-card-actions  
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
