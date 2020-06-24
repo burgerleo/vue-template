@@ -74,7 +74,8 @@
                                             v-text-field(label="Post Body" v-model="postBody")
 
                                     v-flex.pb-2(v-if="testType!=1" xs12 sm3 md10)
-                                        v-btn(color="primary" dark @click="send('nameForm')") Testing once
+                                        v-btn(color="primary" dark @click="send('nameForm')" v-if="testType==0") Testing once
+                                        v-btn(color="primary" dark @click="send('nameForm')" v-if="testType==2") Testing
                                     v-flex.pb-2(v-if="testType==1" xs12 sm3 md10)
                                         v-btn.mr-2.mt-2(color="primary" dark @click="newWindow()") Testing on New Window
                                         v-btn.mt-2(color="primary" dark @click="newTabWindow()") Testing on New Tab
@@ -566,7 +567,9 @@
         this.newWin = [];
       },
       newWindowWithParams: function (path) {
-        let routeData = this.$router.resolve({path: '/new-periodical-curl', query: {  path: path }});
+        const data = this.getData()
+        data.url = path
+        let routeData = this.$router.resolve({path: '/new-periodical-curl', query: data});
         window.open(routeData.href,'','height=900,width=1200,resizable=yes,scrollbars=yes,toolbar=yes,status=yes')
       },
       newTabWindow: function () {
