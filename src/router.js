@@ -26,6 +26,8 @@ import H7IP from "./views/H7IP.vue";
 import DummyRtt from "./views/DummyRtt.vue";
 import DummyPacketLoss from "./views/DummyPacketLoss.vue";
 import Reports from "./views/Reports.vue";
+import iRouteChangeLog from "./views/iRouteChangeLog.vue"
+
 
 Vue.use(Router);
 
@@ -245,6 +247,14 @@ export default new Router({
                     component: Reports,
                     meta: {
                         title: 'Reports'
+                    }
+                },
+                {
+                    name: "fqdnChange",
+                    path: "fqdnChange",
+                    component: iRouteChangeLog,
+                    meta: {
+                        title: 'FQDN Change'
                     }
                 },
             ]

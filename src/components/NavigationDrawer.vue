@@ -133,6 +133,12 @@ export default {
                             title: 'Dummy RTT',
                             display: true,
                             router: '/dummy-rtt'
+                        },
+                        {
+                            icon: 'mdi-nfc-tap',
+                            title: 'FQDN Change',
+                            display: true,
+                            router: '/fqdnChange'
                         }
                     ]
                 },

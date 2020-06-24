@@ -1,0 +1,216 @@
+<template lang="pug">
+    v-container
+        v-row
+            v-tabs.pt-0(v-model="tab" background-color="primary" dark dense )
+                v-tab(v-for="tab in tabs" :key="tab.name") {{ tab.name }}
+            v-radio-group(v-show="tab==0" v-model="pageCount" row hide-details dense) {{"&nbsp"}} Maximum items displayed: {{"&nbsp"}}
+                v-radio(v-for="count in countList" :label="count + ' items' " :value="count")
+
+            v-radio-group(v-show="tab==1" v-model="day" row hide-details dense) {{"&nbsp"}} History Day: {{"&nbsp"}}
+                v-radio(v-for="day in dayList" :label="day +' Days' " :value="day")
+            
+            v-spacer
+
+            div.pt-2.pr-4 {{totalTime}}s
+
+            
+        v-row
+            v-col(cols="12")
+                h3.pd-0 Logs : 
+                table(v-show="tab == 0")
+                    tbody(v-if="key < pageCount" v-for="(log,key) in logList")
+                        td {{log.created_at}}
+                        td.source {{log.source}}
+                        td <b>{{log.domain}}</b>
+                        td {{log.changed_from_cname + "("}} <b> {{log.changed_from_provider_name}} </b> {{")"}}
+                        td {{"->"}}
+                        td {{log.changed_to_cname + "("}} <b> {{log.changed_to_provider_name}} </b> {{")"}}
+                
+                table(v-show="tab == 1")
+                    tbody(v-for="(log,key) in logList2")
+                        td {{log.created_at}}
+                        td.source {{log.source}}
+                        td <b>{{log.domain}}</b>
+                        td {{log.changed_from_cname + "("}} <b> {{log.changed_from_provider_name}} </b> {{")"}}
+                        td {{"->"}}
+                        td {{log.changed_to_cname + "("}} <b> {{log.changed_to_provider_name}} </b> {{")"}}
+</template>
+
+<script>
+import textFieldRules from '../utils/textFieldRules'
+import dateFormat from '../utils/dateFormat'
+import checkPage from '../utils/checkPage'
+
+export default {
+    name: 'fqdnChange',
+    mixins: [textFieldRules, dateFormat, checkPage],
+
+    components: {},
+    data() {
+        return {
+            tab: 0,
+            tabs: [{ name: 'Real Time' }, { name: 'History' }],
+            pageCount: '20',
+            countList: ['20', '50'],
+            day: 1,
+            dayList: [1, 2],
+            logList: [],
+            logList2: [],
+            timer: null,
+            totalTime: 60,
+        }
+    },
+    watch: {
+        tab(value) {
+            value == 0 ? this.getLogByLatest() : this.getLogByDay()
+        },
+        day() {
+            this.getLogByDay()
+        }
+    },
+    methods: {
+        setTime() {
+            var startTime = new Date()
+            startTime.setDate(startTime.getDate() - this.day)
+            var endTime = new Date()
+
+            return {
+                start_time: this.dateFormat2(startTime),
+                end_time: this.dateFormat2(endTime)
+            }
+        },
+        getLogByDay() {
+            var time = this.setTime()
+            this.getLog(time, 1)
+        },
+        getLogByLatest() {
+            this.getLog({ lastCount: 50 }, 0)
+        },
+        getLog(data, type = 0) {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('changeLog/getLog', data)
+                .then(
+                    function(result) {
+                        console.log(result.data)
+                        this.transformLog(result.data, type)
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        transformLog(changeLogs, type = 0) {
+            // var changeLogs = this.fakeData.data
+            var logList = []
+
+            // 轉換資料數量
+            changeLogs.map(function(logs) {
+                logs.domains.map(function(item, index) {
+                    logList.push({
+                        domain: logs.domains[index],
+                        source: 'iRouteCDN',
+                        changed_from_cname: logs.changed_from.cdns[index],
+                        changed_from_provider_name:
+                            logs.changed_from.cdn_provider_name,
+                        changed_to_cname: logs.changed_to.cdns[index],
+                        changed_to_provider_name:
+                            logs.changed_to.cdn_provider_name,
+                        created_at: logs.created_at
+                    })
+                })
+            })
+
+            // 資料排序，按照時間大 在前面
+            logList = logList.sort(function(a, b) {
+                return a.created_at < b.created_at ? 1 : -1
+            })
+
+            switch (type) {
+                case 0:
+                    this.logList = logList
+                    // console.log(this.logList)
+
+                    break
+                default:
+                    this.logList2 = logList
+                    // console.log(this.logList2)
+                    break
+            }
+        },
+        startTimer() {
+            // 計時器開始
+            this.stopTimer()
+            this.timer = setInterval(() => this.countdown(), 1000)
+        },
+        countdown() {
+            if (!this.checkCurrentPage()) {
+                this.stopTimer()
+                return
+            }
+
+            // 計時器觸發的 function
+            // 每次觸發會檢查 totaltime
+            if (this.totalTime >= 1) {
+                this.totalTime--
+            } else {
+                this.totalTime = 0
+                this.resetTimer()
+                this.getLogByLatest()
+            }
+        },
+        resetTimer() {
+            this.totalTime = 60
+        },
+        stopTimer() {
+            clearInterval(this.timer)
+            this.timer = false
+            this.resetTimer()
+        }
+    },
+    created() {},
+    mounted() {
+        this.startTimer()
+        this.getLogByLatest()
+    }
+}
+</script>
+
+
+<style lang="scss" scoped>
+.container {
+    min-width: 98%;
+}
+.hljs {
+    display: block;
+    color: #abb2bf;
+    background: #282c34;
+    word-break: break-all;
+}
+b {
+    color: #e57373 !important;
+}
+
+.source {
+    color: #fff59d !important;
+    caret-color: #fff59d !important;
+}
+
+table {
+    // background-color: black;
+    // color: #a6aeba;
+    display: block;
+    color: #abb2bf;
+    background-color: #282c34;
+    word-break: break-all;
+    font-weight: 900;
+    font-size: 14px;
+}
+</style>
