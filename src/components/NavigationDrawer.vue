@@ -212,6 +212,12 @@ export default {
                             title: 'H7 IP Prefix',
                             display: true,
                             router: '/h7-ip'
+                        },
+                        {
+                            icon: 'mdi-blur-linear',
+                            title: 'Critical Public IP',
+                            display: true,
+                            router: '/cpip'
                         }
                     ]
                 },
