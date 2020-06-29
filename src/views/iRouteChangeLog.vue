@@ -3,17 +3,19 @@
         v-row
             v-tabs.pt-0(v-model="tab" background-color="primary" dark dense )
                 v-tab(v-for="tab in tabs" :key="tab.name") {{ tab.name }}
-            v-radio-group(v-show="tab==0" v-model="pageCount" row hide-details dense) {{"&nbsp"}} Maximum items displayed: {{"&nbsp"}}
-                v-radio(v-for="count in countList" :label="count + ' items' " :value="count")
+            v-toolbar(flat white dense)
 
-            v-radio-group(v-show="tab==1" v-model="day" row hide-details dense) {{"&nbsp"}} History Day: {{"&nbsp"}}
-                v-radio(v-for="day in dayList" :label="day +' Days' " :value="day")
-            
-            v-spacer
+                v-radio-group(v-show="tab==0" v-model="pageCount" row hide-details dense) {{"&nbsp"}} Maximum items displayed: {{"&nbsp"}}
+                    v-radio(v-for="count in countList" :label="count + ' items' " :value="count")
 
-            div.pt-2.pr-4 {{totalTime}}s
+                v-radio-group(v-show="tab==1" v-model="day" row hide-details dense) {{"&nbsp"}} History Day: {{"&nbsp"}}
+                    v-radio(v-for="day in dayList" :label="day +' Days' " :value="day")
 
-            
+                v-spacer
+
+                div.pr-4 Reflash: {{totalTime}}s
+                v-btn.mb-2.mr-2(color="primary" dark @click="init")
+                    v-icon mdi-refresh
         v-row
             v-col(cols="12")
                 h3.pd-0 Logs : 
@@ -49,7 +51,7 @@ export default {
     data() {
         return {
             tab: 0,
-            tabs: [{ name: 'Real Time' }, { name: 'History' }],
+            tabs: [{ name: 'Latest' }, { name: 'History' }],
             pageCount: '20',
             countList: ['20', '50'],
             day: 1,
@@ -57,7 +59,7 @@ export default {
             logList: [],
             logList2: [],
             timer: null,
-            totalTime: 60,
+            totalTime: 60
         }
     },
     watch: {
@@ -92,7 +94,7 @@ export default {
                 .dispatch('changeLog/getLog', data)
                 .then(
                     function(result) {
-                        console.log(result.data)
+                        // console.log(result.data)
                         this.transformLog(result.data, type)
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
@@ -172,6 +174,11 @@ export default {
         stopTimer() {
             clearInterval(this.timer)
             this.timer = false
+            this.resetTimer()
+        },
+        init() {
+            this.getLogByLatest()
+            this.getLogByDay()
             this.resetTimer()
         }
     },
