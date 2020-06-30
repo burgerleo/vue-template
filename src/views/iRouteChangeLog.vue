@@ -3,8 +3,8 @@
         v-row
             v-tabs.pt-0(v-model="tab" background-color="primary" dark dense )
                 v-tab(v-for="tab in tabs" :key="tab.name") {{ tab.name }}
-            v-toolbar(flat white dense)
 
+            v-toolbar(flat white dense)
                 v-radio-group(v-show="tab==0" v-model="pageCount" row hide-details dense) {{"&nbsp"}} Maximum items displayed: {{"&nbsp"}}
                     v-radio(v-for="count in countList" :label="count + ' items' " :value="count")
 
@@ -19,23 +19,26 @@
         v-row
             v-col(cols="12")
                 h3.pd-0 Logs : 
-                table(v-show="tab == 0")
-                    tbody(v-if="key < pageCount" v-for="(log,key) in logList")
-                        td {{log.created_at}}
-                        td.source {{log.source}}
-                        td <b>{{log.domain}}</b>
-                        td {{log.changed_from_cname}}
-                        td {{"⇨"}}
-                        td {{log.changed_to_cname}}
-                
-                table(v-show="tab == 1")
-                    tbody(v-for="(log,key) in logList2")
-                        td {{log.created_at}}
-                        td.source {{log.source}}
-                        td <b>{{log.domain}}</b>
-                        td {{log.changed_from_cname}}
-                        td {{"->"}}
-                        td {{log.changed_to_cname}}
+                div.v-data-table__wrapper.table_area
+                    table(v-show="tab == 0")
+                        tbody(v-if="key < pageCount" v-for="(log,key) in logList")
+                            td {{log.created_at}}
+                            td.source {{log.source}}
+                            td.highLight 
+                                b {{log.domain}}
+                            td {{log.changed_from_cname}}
+                            td {{"⇨"}}
+                            td {{log.changed_to_cname}}
+
+                    table(v-show="tab == 1")
+                        tbody(v-for="log in logList2")
+                            td {{log.created_at}}
+                            td.source {{log.source}}
+                            td.highLight 
+                                b {{log.domain}}
+                            td {{log.changed_from_cname}}
+                            td {{"⇨"}}
+                            td {{log.changed_to_cname}}
 </template>
 
 <script>
@@ -52,8 +55,8 @@ export default {
         return {
             tab: 0,
             tabs: [{ name: 'Latest' }, { name: 'History' }],
-            pageCount: '20',
-            countList: ['20', '50'],
+            pageCount: 20,
+            countList: [20, 50],
             day: 1,
             dayList: [1, 2],
             logList: [],
@@ -94,7 +97,6 @@ export default {
                 .dispatch('changeLog/getLog', data)
                 .then(
                     function(result) {
-                        // console.log(result.data)
                         this.transformLog(result.data, type)
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
@@ -110,7 +112,6 @@ export default {
                 )
         },
         transformLog(changeLogs, type = 0) {
-            // var changeLogs = this.fakeData.data
             var logList = []
 
             // 轉換資料數量
@@ -138,12 +139,10 @@ export default {
             switch (type) {
                 case 0:
                     this.logList = logList
-                    // console.log(this.logList)
 
                     break
                 default:
                     this.logList2 = logList
-                    // console.log(this.logList2)
                     break
             }
         },
@@ -201,23 +200,24 @@ export default {
     background: #282c34;
     word-break: break-all;
 }
-b {
+.highLight{
     color: #e57373 !important;
-}
 
+}
 .source {
     color: #fff59d !important;
     caret-color: #fff59d !important;
 }
-
+.table_area {
+    background-color: #282c34;
+}
 table {
-    // background-color: black;
-    // color: #a6aeba;
     display: block;
     color: #abb2bf;
     background-color: #282c34;
     word-break: break-all;
     font-weight: 900;
     font-size: 14px;
+    white-space: nowrap;
 }
 </style>
