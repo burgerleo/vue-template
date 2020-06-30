@@ -24,18 +24,18 @@
                         td {{log.created_at}}
                         td.source {{log.source}}
                         td <b>{{log.domain}}</b>
-                        td {{log.changed_from_cname + "("}} <b> {{log.changed_from_provider_name}} </b> {{")"}}
-                        td {{"->"}}
-                        td {{log.changed_to_cname + "("}} <b> {{log.changed_to_provider_name}} </b> {{")"}}
+                        td {{log.changed_from_cname}}
+                        td {{"⇨"}}
+                        td {{log.changed_to_cname}}
                 
                 table(v-show="tab == 1")
                     tbody(v-for="(log,key) in logList2")
                         td {{log.created_at}}
                         td.source {{log.source}}
                         td <b>{{log.domain}}</b>
-                        td {{log.changed_from_cname + "("}} <b> {{log.changed_from_provider_name}} </b> {{")"}}
+                        td {{log.changed_from_cname}}
                         td {{"->"}}
-                        td {{log.changed_to_cname + "("}} <b> {{log.changed_to_provider_name}} </b> {{")"}}
+                        td {{log.changed_to_cname}}
 </template>
 
 <script>
