@@ -218,6 +218,12 @@ export default {
                             title: 'Critical Public IP',
                             display: true,
                             router: '/cpip'
+                        },
+                        {
+                            icon: 'mdi-ticket',
+                            title: 'Country',
+                            display: true,
+                            router: '/country'
                         }
                     ]
                 },
