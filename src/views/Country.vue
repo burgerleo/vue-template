@@ -96,7 +96,7 @@ export default {
                     value: 'name_tw'
                 },
                 {
-                    text: 'Percentage (%)',
+                    text: 'Traffic Percentage (%)',
                     align: 'left',
                     sortable: true,
                     value: 'percentage'
