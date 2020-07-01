@@ -11,7 +11,7 @@
                                     v-radio(label="Periodical Testing" :value="1")
                                     v-radio(label="F12" :value="2")
                                 v-spacer
-                                v-btn.mb-2.mr-2(color="blue-grey" dark @click="editDialog()" v-if="testType==2") Setting
+                                v-btn.mb-2.mr-2(@click="editDialog()" v-if="testType==2") Setting
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
                                 v-layout.ml-auto.mr-auto(wrap)
@@ -52,9 +52,9 @@
                                             v-flex(xs12 sm6 md6)
                                                 v-text-field(label="Value" v-model="header.value")
                                             v-flex(xs12 sm3 md3)
-                                                v-btn( color="indigo" dark @click="deleteRow(index)") X
+                                                v-btn( @click="deleteRow(index)") X
                                     v-flex.pt-0.pb-0.ml-1(row align-center xs12 sm12 md12)
-                                        v-btn( color="indigo" dark @click="addRow") Add Headers
+                                        v-btn(@click="addRow") Add Headers
 
                                     v-layout.px-2.pt-0.pb-0(row v-if="method=='POST'")
                                         v-flex(xs12 sm12 md12)
@@ -65,11 +65,11 @@
                                                     v-flex(xs12 sm6 md6)
                                                         v-text-field(label="Value" v-model="parameter.value")
                                                     v-flex(xs12 sm3 md3)
-                                                        v-btn( color="indigo" dark @click="deleteParameter(index)") X
+                                                        v-btn(@click="deleteParameter(index)") X
                                         v-flex.pt-0.pb-0(xs12 sm6 md3)
                                             v-select(v-model="postInput" :items="selectPostInput" label="Data Input Method" @change="defaultParameters")
                                         v-flex.pt-0.pb-0.ml-1(row align-center xs12 sm12 md3 v-if="postInput=='Parameters'")
-                                            v-btn(color="indigo" dark @click="addParameter") Add Parameters
+                                            v-btn(@click="addParameter") Add Parameters
                                         v-flex.pt-0.pb-0.ml-1(xs12 sm12 md8 v-if="postInput!='Parameters'")
                                             v-text-field(label="Post Body" v-model="postBody")
 
