@@ -28,7 +28,7 @@
 
                     DataTable2(ref="table2" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :loading="loading" @showDialog="dialogSwitch" :setUripath="jkbURI" :setLinkMethod="setLinkMethod")
 
-                v-row.px-3.py-3
+                //- v-row.px-3.py-3
                     v-btn.mb-2.mr-2(color="primary" dark @click="stopIcon") Icon  
                         v-icon mdi-play-pause
                     v-btn.mb-2.mr-2(color="primary" dark @click="playIcon") Icon 
@@ -36,7 +36,7 @@
                     v-btn.mb-2.mr-2(color="primary" dark @mouseover="stopIcon" @mouseleave="playIcon") hover 
                     lottie(:options="defaultOptions" :width="60" :height="60" v-on:animCreated="handleAnimation")
                     lottie(:options="defaultOptions2" :width="60" :height="60" v-on:animCreated="handleAnimation")
-                v-row.px-1.py-1
+                //- v-row.px-1.py-1
                     v-col(cols="6")
                         DataTable3(:bgpList="bgpList" :tableData="tableData" :loading="loading2")
                     v-col(cols="6")
@@ -47,6 +47,13 @@
 
                         div bgpList({{bgpList.length}}):
                         pre {{bgpList}}
+
+                v-row.px-1.py-1
+                    v-col(cols="12")
+                        div
+                            v-btn.mb-2.mr-2(color="primary" dark @click="addString") Add String
+                        InstantText(ref="textbox")
+
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
@@ -84,16 +91,19 @@
 import textFieldRules from '../utils/textFieldRules'
 import DataTable2 from '../components/DataTable2'
 import DataTable3 from '../components/NxnH7CirlesTable'
+import InstantText from '../components/InstantText'
 import addJson from '../assets/icon/add/add.json'
 import toggleJson from '../assets/icon/toggle/toggle.json'
+import dateFormat from '../utils/dateFormat'
 
 export default {
     name: 'DomainManage',
-    mixins: [textFieldRules],
+    mixins: [textFieldRules,dateFormat],
 
     components: {
         DataTable2,
-        DataTable3
+        DataTable3,
+        InstantText
     },
     data() {
         return {
@@ -379,7 +389,38 @@ export default {
             this.tableData = tableData
 
             this.bgpList = JSON.parse(JSON.stringify(bgpList))
+        },
+
+
+        // string Module
+        addString(){
+            this.$refs.textbox.$emit('addString',[
+                {
+                    domain:
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.' +
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.com',
+                    source: 'iRouteCDN',
+                    changed_from_cname:
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.' +
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.cdn.com',
+                    changed_from_provider_name: '(J32-2_Mother Domain)',
+                    changed_to_cname:
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.' +
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.cdn.com',
+                    changed_to_provider_name: '(SS_J32-2)',
+                    created_at: this.dateFormat2(new Date())
+                }
+            ])
         }
+
+        // string Module
+
     },
     mounted() {
         document.title = 'Table Example'
