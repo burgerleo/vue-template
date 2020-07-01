@@ -54,7 +54,7 @@ export default {
                     return pattern.test(value) || "Length must be 4.";
                 },
                 customerType: value => {
-                    const pattern = /^([1-5]*)$/;
+                    const pattern = /^([1-5]*)/;
                     return pattern.test(value) || "Invalid customer type.";
                 },
                 emailCountLimit: value =>{
