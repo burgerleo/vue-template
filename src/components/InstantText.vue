@@ -1,17 +1,19 @@
 <template lang="pug">
     #InstantText        
         div
-            //- v-btn.mb-2.mr-2(color="primary" dark @click="addString") Add String
-            v-subheader Buffer Size
-                v-slider.align-center(v-model="maxSize" :max="bufferSize[1]" :min="bufferSize[0]" hide-details thumb-label="always" thumb-size="36" step='1')
-        div.area
+            v-subheader(v-if="!hideBufferSizeBar") Buffer Size
+                v-slider.align-center(v-model="bufferSize" :max="bufferSizeRange[1]" :min="bufferSizeRange[0]" hide-details thumb-label="always" thumb-size="36" step='1')
+            v-subheader(v-if="!hideTextSizeBar") Text Size
+                v-slider.align-center(v-model="textSize" max="24" min="10" hide-details thumb-label="always" thumb-size="36" step='1')
+        div.area(:style="`font-size: ${textSize}px;`")
             template(v-for="(string) in stringArray")
-                div <b> {{">  "}} </b>
-                    template(v-for="(key,index) in stringKey") 
+                div <b>{{">"}}&thinsp;</b>
+                    template(v-for="(key,index) in stringKeys") 
                         template {{string[key]}}
-                        template(v-if="index != keyLimit") &thinsp;
+                        template(v-if="index != (stringKeyCount - 1)") &thinsp;
                             template(v-for="(a) in getColumnDiffLength(string[key],key)") &nbsp;
-            //- div {{stringArray}}
+        //- div
+            div {{stringArray}}
 </template>
 <script>
 import dateFormat from '../utils/dateFormat'
@@ -20,23 +22,29 @@ export default {
     mixins: [dateFormat],
 
     props: {
-        maxSize: {
+        defaultBufferSize: {
             type: Number,
             default: 14
         },
-        bufferSize: {
+        defaultTextSize: {
+            type: Number,
+            default: 14
+        },
+        bufferSizeRange: {
             type: Array,
             default: () => [10, 100]
-        }
-        // loading: {
-        //     type: Boolean,
-        //     default: false
-        // }
-    },
-    data() {
-        return {
-            keyLimit: 4,
-            stringKey: [
+        },
+        hideBufferSizeBar: {
+            type: Boolean,
+            default: false
+        },
+        hideTextSizeBar: {
+            type: Boolean,
+            default: false
+        },
+        stringKeys: {
+            type: Array,
+            default: () => [
                 'created_at',
                 'source',
                 'domain',
@@ -44,54 +52,81 @@ export default {
                 // 'changed_from_provider_name',
                 'changed_to_cname'
                 // 'changed_to_provider_name'
-            ],
+            ]
+        }
+    },
+    data() {
+        return {
+            textSize: this.defaultTextSize,
+            bufferSize: this.defaultBufferSize,
+
+            stringKeyCount: 5,
+            originStringArray: [],
+            origincolumnLengthArray: [],
             stringArray: [],
             columnLengthArray: []
         }
     },
-    watch: {},
+    watch: {
+        bufferSize(value) {
+            this.setStringArray()
+        }
+    },
     methods: {
-        addString(newSrting) {
-            this.columnLength(newSrting)
-        },
         // 計算各欄位文字長度
         // 塞入新的文字 Array
-        columnLength(newStringArray = []) {
-            var list = this.columnLengthArray
-
-            var stringArray = this.stringArray
+        addStringColumnLength(newStringArray = []) {
+            var stringArray = this.originStringArray
+            var list = this.origincolumnLengthArray
 
             newStringArray.map(function(item) {
                 var keys = Object.keys(item)
 
                 keys.map(function(key) {
                     if (!list[key]) {
-                        list[key] = 0
+                        list[key] = []
                     }
 
-                    list[key] =
-                        item[key].length >= list[key]
-                            ? item[key].toString().length
-                            : list[key]
+                    list[key].unshift(item[key].toString().length)
                 })
                 stringArray.unshift(item)
             })
 
-            this.stringArray = stringArray
+            this.setStringArray()
+        },
+        // 設定真正要顯示的，文字量
+        setStringArray() {
+            var bufferSize = this.bufferSize
+            var list = {}
+            var origin = this.origincolumnLengthArray
+
+            this.stringArray = this.originStringArray.slice(0, bufferSize)
+
+            this.stringKeys.map(function(key) {
+                list[key] = origin[key].slice(0, bufferSize)
+            })
+
             this.columnLengthArray = list
         },
+
         // 計算每一個欄位後面需要追加多少個空白
         // 回傳數量的 Array
         getColumnDiffLength(string, key) {
             var len = string.toString().length
 
-            var diffLen = this.columnLengthArray[key] - len
+            var diffLen = Math.max(...this.columnLengthArray[key]) - len
 
             return [...Array(diffLen).keys()]
+        },
+
+        // 計算 Key 總數
+        setStringKeyCount() {
+            this.stringKeyCount = this.stringKeys.length
         }
     },
     created() {
-        this.columnLength([
+        this.setStringKeyCount()
+        var array = [
             {
                 domain: 'acn.gbtABcd.com',
                 source: 'iRouteCDN',
@@ -119,11 +154,41 @@ export default {
                 changed_to_provider_name: '(SS_J32-2)',
                 created_at: '2020-06-30 16:17:34'
             }
-        ])
+        ]
+
+        for (let index = 0; index < 30; index++) {
+            array.push({
+                domain:
+                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                    '.' +
+                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                    '.com',
+                source: 'iRouteCDN',
+                changed_from_cname:
+                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                    '.' +
+                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                    '.' +
+                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                    '.cdn.com',
+                changed_from_provider_name: '(J32-2_Mother Domain)',
+                changed_to_cname:
+                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                    '.' +
+                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                    '.' +
+                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                    '.cdn.com',
+                changed_to_provider_name: '(SS_J32-2)',
+                created_at: this.dateFormat2(new Date())
+            })
+        }
+
+        this.addStringColumnLength(array)
     },
     mounted() {
         this.$on('addString', function(stringArray = []) {
-            this.addString(stringArray)
+            this.addStringColumnLength(stringArray)
         })
     }
 }
