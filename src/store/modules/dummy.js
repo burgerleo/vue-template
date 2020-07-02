@@ -17,7 +17,10 @@ export default {
                 C: [],
                 G: []
             },
-            PH: []
+            PH: {
+                C: [],
+                G: []
+            }
         },
     },
     getters: {
@@ -43,9 +46,15 @@ export default {
         }
     },
     actions: {
+        /*
+         * 針對 bgp List 重新排序
+         * 需要輸入的格式 請參照 state.bgpList
+         * 
+         * 會調整 R1 R2 順序
+         * 分開 China Global
+        */
         bgpListReorder: (context, items) => {
             var newItems = {}
-
             const itemsKeyList = Object.keys(items)
 
             itemsKeyList.map(function (sites) {
@@ -75,6 +84,11 @@ export default {
 
             context.commit("updateBGPList", items)
             context.commit("updateBGPListPartition", newItems)
+
+            return {
+                bgpList: items,
+                bgpListPartition: newItems
+            }
         },
         getInfo: (context, data) => {
             return axios.get("bgp_io_mapping").then(function (response) {

@@ -19,6 +19,24 @@ export default {
                 return Promise.reject(error.response.data);
             });
         },
+        getCountryByGEC: (context, data = {}) => {
+            axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL2;
+
+            return axios.get("country/gec").then(function (response) {
+                return Promise.resolve(response.data);
+            }).catch(function (error) {
+                return Promise.reject(error.response.data);
+            });
+        },
+        updateCountry: (context, data = {}) => {
+            axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL2;
+
+            return axios.patch("country/" + data.id, data).then(function (response) {
+                return Promise.resolve(response.data);
+            }).catch(function (error) {
+                return Promise.reject(error.response.data);
+            });
+        },
         getProvince: (context, data = {}) => {
             axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL2;
 

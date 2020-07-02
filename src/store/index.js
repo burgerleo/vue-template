@@ -20,29 +20,34 @@ import domain from './modules/domain'
 import isp from './modules/isp'
 import ip2LocationRawData from './modules/ip2LocationRawData'
 import h7Ip from './modules/h7Ip'
+import changeLog from './modules/changeLog'
+import cpip from './modules/cpip'
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    modules: {
-        global,
-        curl,
-        helper,
-        ping,
-        traceroute,
-        mtr,
-        dig,
-        bgp,
-        dummy,
-        edge,
-        customer,
-        dnsRecord,
-        jkb,
-        cert,
-        traffic,
-        periodicalCurl,
-        domain,
-        isp,
-        ip2LocationRawData,
-        h7Ip
-    }
+        modules: {
+                global,
+                curl,
+                helper,
+                ping,
+                traceroute,
+                mtr,
+                dig,
+                bgp,
+                dummy,
+                edge,
+                customer,
+                dnsRecord,
+                jkb,
+                cert,
+                traffic,
+                periodicalCurl,
+                domain,
+                isp,
+                ip2LocationRawData,
+                h7Ip,
+                changeLog,
+                cpip
+        }
 });

@@ -2,12 +2,8 @@
     v-container.ma-0.pa-0.fill-height.fluid
         v-row
             v-col.pb-1.pt-1(cols="12")
-                v-toolbar(flat white)
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "%≥"}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "%~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10)) + "%"}}
-                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']+"%"}}
-                    v-divider.mx-1(inset vertical)
-                    v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
+                v-toolbar(flat white dense)
+                    v-toolbar-title.pl-1 JKB Availability
                     v-divider.mx-1(inset vertical)
 
                     v-radio-group.mx-0(v-model='isp' row hide-details)
@@ -23,18 +19,31 @@
                     v-btn.mb-2.mr-2(color="primary" dark @click="editDialog") Setting
                     v-btn.mb-2.mr-2(color="primary" dark @click="getConfig")
                         v-icon mdi-refresh
-        v-row
-            v-col.ml-0.pa-0.pl-6.pb-3(cols="8")
-                NxnCirclesTable(class="table_border" title="HK" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
-            v-col.ml-0.pa-0.pb-2.pl-3.pr-6(cols="4")
-                NxnCirclesTable(class="table_border" title="HK" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
-                //- PH 是舊的格式
-                NxnCirclesTable.mt-4(class="table_border" title="PH" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
-        v-row
+                v-toolbar(flat white dense)
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[0]") {{getMaxAndMin()['max'] + "%≥"}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[1]") {{parseFloat((getMaxAndMin()['max'] - 0.01).toFixed(10)) + "%~" + parseFloat((getMaxAndMin()['min'] + 0.01).toFixed(10)) + "%"}}
+                    v-toolbar-title.pl-1.pr-1(:class="colorList[2]") {{"≥" + getMaxAndMin()['min']+"%"}}
+                    v-divider.mx-1(inset vertical)
+                    v-toolbar-title.pl-1(:class="colorList[3]") {{"No Data"}}
+        //- v-row
             v-col.ml-0.pa-0.pl-6(cols="6")
-                NxnCirclesTable(class="table_border" title="TW" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
-            v-col.ml-0.pa-0.pl-2.pr-6(cols="6")
-                NxnCirclesTable(class="table_border" title="TW" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable(class="table_border" title="HK" :headers="headers['HK']" :items="bgpList2['HK']['C']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3(class="table_border" title="TW" :headers="headers['TW']" :items="bgpList2['TW']['C']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+            v-col.ml-0.pa-0.pl-2(cols="6")
+                NxnCirclesTable(class="table_border" title="HK" :headers="headers['HK']" :items="bgpList2['HK']['G']" :nxn="tableData['HK']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3(class="table_border" title="TW" :headers="headers['TW']" :items="bgpList2['TW']['G']" :nxn="tableData['TW']" :range="range" :loading="loading" :typeList="typeList")
+                NxnCirclesTable.mt-3(class="table_border" title="PH" :headers="headers['PH']" :items="bgpList['PH']" :nxn="tableData['PH']" :range="range" :loading="loading" :typeList="typeList")
+
+        v-row
+            v-col.ml-0.pa-0.pl-6(cols="auto")
+                DataTable3.table_border(site='HK' networkFlowType="availability" :bgpList="bgpList2['HK']['C']" :tableData="tableData['HK']" :range="range" :loading="loading")
+                DataTable3.mt-3.table_border(site="TW" networkFlowType="availability" :bgpList="bgpList2['TW']['C']" :tableData="tableData['TW']" :range="range" :loading="loading")
+            v-col.px-0(cols="auto")
+            v-col.ml-0.pa-0.pl-6(cols="auto")
+                DataTable3.table_border(site='HK' networkFlowType="availability" :bgpList="bgpList2['HK']['G']" :tableData="tableData['HK']" :range="range" :loading="loading")
+                DataTable3.mt-3.table_border(site='TW' networkFlowType="availability" :bgpList="bgpList2['TW']['G']" :tableData="tableData['TW']" :range="range" :loading="loading")
+                DataTable3.mt-3.table_border(site='PH' networkFlowType="availability" :bgpList="bgpList2['PH']['G']" :tableData="tableData['PH']" :range="range" :loading="loading")
+
         v-dialog(v-model="dialog" max-width="600" scrollable persistent)
             v-card
                 v-card-title.title Setting
@@ -54,14 +63,17 @@
 <script>
 import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
+import checkPage from '../utils/checkPage'
+import DataTable3 from '../components/NxnH7CirlesTable'
 import NxnCirclesTable from '../components/NxnCirclesTable'
 
 export default {
-    name: 'JKB-Packet-Loss',
-    mixins: [textFieldRules, dateFormat],
+    name: 'jkb_availability',
+    mixins: [textFieldRules, dateFormat, checkPage],
 
     components: {
-        NxnCirclesTable
+        NxnCirclesTable,
+        DataTable3
     },
     data() {
         return {
@@ -84,7 +96,10 @@ export default {
                     C: [],
                     G: []
                 },
-                PH: []
+                PH: {
+                    C: [],
+                    G: []
+                }
             },
             tableData: {
                 HK: {},
@@ -98,7 +113,7 @@ export default {
             max: 100,
             range: [97, 99.5],
             dialog: false,
-            pageName: 'packet-loss',
+            pageName: this.$route.name,
             typeList: ['outside', 'intermediate', 'inside'],
             colorList: [
                 'green lighten-2',
@@ -116,9 +131,9 @@ export default {
                     min: 97
                 },
                 timeinterval: {
-                    inside: 1,
-                    outside: 5,
-                    intermediate: 1
+                    outside: 5, //最外圈 分鐘
+                    intermediate: 10, //中間 分鐘
+                    inside: 1 //最內圈 小時
                 },
                 countdownMinute: {
                     countdownMinute: 1
@@ -152,9 +167,78 @@ export default {
                     }.bind(this)
                 )
         },
+        getDummy() {
+            this.$store
+                .dispatch('dummy/getInfo')
+                .then(
+                    function(result) {
+                        var tableData = Object.assign({}, this.tableData)
+
+                        var bgpList = Object.assign({}, this.bgpList)
+
+                        // 第一步 將資料稍微整理一次
+                        var dummy = result.data
+                            .map(function(item, index) {
+                                if (item.jkb_task_id) {
+                                    item.site = item.in_bgp.site
+                                    item.inBgpName = item.in_bgp.name
+                                    item.outBgpName = item.out_bgp.name
+
+                                    delete item.in_bgp
+                                    delete item.out_bgp
+                                    return item
+                                }
+                            })
+                            .filter(item => item)
+
+                        // 第二步 將資料排序，按照 Site
+                        // bgpList[site][]
+                        dummy.forEach(function(item) {
+                            var site = item.site
+                            var inLine = item.inBgpName
+                            var outLine = item.outBgpName
+
+                            bgpList[site].push(inLine)
+                            bgpList[site].push(outLine)
+
+                            // 移除重複 Line Name
+                            bgpList[site] = bgpList[site].filter(
+                                (line, index) =>
+                                    bgpList[site].indexOf(line) === index
+                            )
+
+                            if (!tableData[site][inLine]) {
+                                tableData[site][inLine] = {}
+                            }
+
+                            if (!tableData[site][inLine][outLine]) {
+                                tableData[site][inLine][outLine] = {}
+                            }
+                        })
+
+                        // 送進排序中心
+                        this.$store
+                            .dispatch('dummy/bgpListReorder', bgpList)
+                            .then(
+                                function(result) {
+                                    this.bgpList = result.bgpList
+                                    this.bgpList2 = result.bgpListPartition
+                                }.bind(this)
+                            )
+                        this.getConfig()
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                    }.bind(this)
+                )
+        },
         getConfig() {
             this.stopTimer()
-            // this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('jkb/getConfig', { page: this.pageName })
                 .then(
@@ -165,10 +249,7 @@ export default {
                             }
                         }
                         this.setMaxAndMin()
-
                         this.getAllPacketLoss()
-
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
                 .catch(
@@ -177,7 +258,6 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
         },
@@ -198,7 +278,7 @@ export default {
 
             this.dialog = false
         },
-        validateForm: function() {
+        validateForm() {
             // 驗證表單資料
             return this.$refs.form.validate()
         },
@@ -232,7 +312,6 @@ export default {
 
             data.page = this.pageName
 
-            // this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('jkb/batchSetConfig', data)
                 .then(
@@ -241,7 +320,6 @@ export default {
                             'global/showSnackbarSuccess',
                             'Success!'
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
                 .catch(
@@ -250,7 +328,6 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
         },
@@ -280,18 +357,10 @@ export default {
         getAllPacketLoss() {
             this.resetTimer()
             this.startTimer()
-
-            for (var type of this.typeList) {
-                this.getPacketLoss(type)
-            }
+            this.getNetworkFlowByTypeId()
         },
-        checkIsRightPath() {
-            const path = this.$route
-
-            return path.name === this.pageName
-        },
-
-        getPacketLoss(type) {
+        getNetworkFlowByTypeId(typeId = 0) {
+            var type = this.typeList[typeId]
             var minute = this.configs.timeinterval[type]
             var startTime = new Date()
 
@@ -301,39 +370,56 @@ export default {
                     break
                 case this.typeList[1]:
                     startTime.setMinutes(startTime.getMinutes() - minute)
-                    // startTime.setHours(startTime.getHours() - minute) // 原本計算小時
                     break
                 case this.typeList[2]:
                     startTime.setHours(startTime.getHours() - minute)
-                    // startTime.setDate(startTime.getDate() - minute) // 原本計算 天
                     break
             }
 
             this.loading = true
-            // this.$store.dispatch('global/startLoading')
-            var endTime = new Date()
-
             this.$store
                 .dispatch('traffic/getTrafficFlow', {
+                    isp_id: this.isp,
                     start_time: this.dateFormat(startTime),
-                    end_time: this.dateFormat(endTime),
-                    isp_id: this.isp
+                    end_time: this.dateFormat(new Date())
                 })
                 .then(
                     function(result) {
                         this.jkbAPIStatus = result.data.jkb_api_status
 
                         var lastDataTime = new Date(result.data.lastDataTime)
+                        var bgpIoMapping = result.data.bgpIoMapping
+                        var tableData = Object.assign({}, this.tableData)
 
-                        var hours = this.getDateHour(lastDataTime)
-                        var minutes = this.getDateMinute(lastDataTime)
-                        this.lastDataTime = hours + ':' + minutes
+                        this.lastDataTime =
+                            this.getDateHour(lastDataTime) +
+                            ':' +
+                            this.getDateMinute(lastDataTime)
 
-                        this.transforToTableData(
-                            this.typeList.indexOf(type),
-                            result.data.bgpIoMapping
+                        bgpIoMapping.forEach(function(item) {
+                            var site = item.site
+                            var inLine = item.inBgpName
+                            var outLine = item.outBgpName
+
+                            tableData[site][inLine][outLine][type] = {
+                                availability: item.availability,
+                                latency: item.latency
+                            }
+                        })
+
+                        this.tableData = tableData
+
+                        typeId++
+
+                        if (typeId < 3) {
+                            this.getNetworkFlowByTypeId(typeId)
+                        }
+
+                        this.loading = false
+
+                        this.bgpList2 = JSON.parse(
+                            JSON.stringify(this.bgpList2)
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
                 .catch(
@@ -342,72 +428,8 @@ export default {
                             'global/showSnackbarError',
                             error.message
                         )
-                        // this.$store.dispatch('global/finishLoading')
                     }.bind(this)
                 )
-        },
-        transforToTableData(typeId, data) {
-            var latency = data.length > 0 ? data : []
-
-            var type = this.typeList[typeId]
-
-            var bgpList = Object.assign({}, this.bgpList)
-            var headerList = Object.assign({}, this.headers)
-            var tableData = Object.assign({}, this.tableData)
-
-            var header1 = {
-                text: 'in/out',
-                width: '30px',
-                sortable: false,
-                align: 'center'
-            }
-
-            var header2 = {
-                width: '30px',
-                sortable: false,
-                align: 'center'
-            }
-
-            latency.forEach(function(item) {
-                var site = item.site
-                var inLine = item.inBgpName
-                var outLine = item.outBgpName
-
-                if (headerList[site].length <= 0) {
-                    headerList[site].push(header1)
-                }
-
-                if (!tableData[site][inLine]) {
-                    tableData[site][inLine] = {}
-
-                    headerList[site].push(header2)
-                }
-
-                bgpList[site].push(inLine)
-                bgpList[site].push(outLine)
-
-                // 移除重複 Line Name
-                bgpList[site] = bgpList[site].filter(
-                    (line, index) => bgpList[site].indexOf(line) === index
-                )
-
-                if (!tableData[site][inLine][outLine]) {
-                    tableData[site][inLine][outLine] = {}
-                }
-
-                tableData[site][inLine][outLine][type] = {
-                    availability: item.availability,
-                    latency: item.latency
-                }
-            })
-
-            this.tableData = tableData
-            this.headers = headerList
-
-            this.$store.dispatch('dummy/bgpListReorder', bgpList)
-            this.bgpList = this.$store.getters['dummy/bgpList']()
-            this.bgpList2 = this.$store.getters['dummy/bgpListPartition']()
-            this.loading = false
         },
         getSource(inLine, outLine, type) {
             if (!this.tableData[inLine][outLine]) {
@@ -437,7 +459,7 @@ export default {
             this.timer = setInterval(() => this.countdown(), 1000)
         },
         countdown() {
-            if (!this.checkIsRightPath()) {
+            if (!this.checkCurrentPage()) {
                 this.stopTimer()
                 return
             }
@@ -459,17 +481,12 @@ export default {
             clearInterval(this.timer)
             this.timer = false
             this.resetTimer()
-        },
-        setPageName() {
-            const path = this.$route
-            this.pageName = path.name
         }
     },
     created() {},
     mounted() {
-        this.setPageName()
         this.getIsp()
-        this.getConfig()
+        this.getDummy()
     }
 }
 </script>

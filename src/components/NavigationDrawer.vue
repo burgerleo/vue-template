@@ -114,13 +114,31 @@ export default {
                             icon: 'mdi-lumx',
                             title: 'JKB Availability',
                             display: true,
-                            router: '/jkb-packetloss'
+                            router: '/jkb-availability'
                         },
                         {
                             icon: 'mdi-looks',
                             title: 'JKB Latency',
                             display: true,
                             router: '/jkb-Latency'
+                        },
+                        {
+                            icon: 'mdi-gesture',
+                            title: 'Dummy Packet Loss',
+                            display: true,
+                            router: '/dummy-packet-loss'
+                        },
+                        {
+                            icon: 'mdi-gauge',
+                            title: 'Dummy RTT',
+                            display: true,
+                            router: '/dummy-rtt'
+                        },
+                        {
+                            icon: 'mdi-nfc-tap',
+                            title: 'FQDN Change',
+                            display: true,
+                            router: '/fqdnChange'
                         }
                     ]
                 },
@@ -194,6 +212,18 @@ export default {
                             title: 'H7 IP Prefix',
                             display: true,
                             router: '/h7-ip'
+                        },
+                        {
+                            icon: 'mdi-blur-linear',
+                            title: 'Critical Public IP',
+                            display: true,
+                            router: '/cpip'
+                        },
+                        {
+                            icon: 'mdi-ticket',
+                            title: 'Country',
+                            display: true,
+                            router: '/country'
                         }
                     ]
                 },

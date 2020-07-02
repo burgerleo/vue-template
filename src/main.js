@@ -14,6 +14,8 @@ import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
 
 import lottie from 'vue-lottie'; // lottie
+import helper from './utils/helper.js'; // helper
+Vue.mixin(helper);
 
 Vue.use(VueHighlightJS);
 Vue.config.productionTip = false;

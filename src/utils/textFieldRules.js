@@ -57,8 +57,8 @@ export default {
                     const pattern = /^([1-5]*)/;
                     return pattern.test(value) || "Invalid customer type.";
                 },
-                emailCountLimit: value =>{
-                    if (value ==null || value.length <= 20) {
+                emailCountLimit: value => {
+                    if (value == null || value.length <= 20) {
                         return true
                     }
                     return "The number of emails cannot exceed 20.";
@@ -71,7 +71,7 @@ export default {
                         value.every(element => {
                             if (pattern.test(element) == true) {
                                 return result = true
-                            }else{
+                            } else {
                                 result = 'Invalid email exists.';
                             }
                         });
@@ -85,7 +85,7 @@ export default {
                         value.every(element => {
                             if (element != null && element.length <= 64) {
                                 return result = true
-                            }else{
+                            } else {
                                 result = 'Please enter up to 64 characters.';
                             }
                         });
@@ -93,11 +93,20 @@ export default {
                     return result
                 },
                 maxChart: value =>
-                  (value != null && value.length <= 20) ||
-                  "Please use at least 20 characters.",
+                    (value != null && value.length <= 20) ||
+                    "Please use at least 20 characters.",
                 checkChart: value => {
                     const pattern = /^[\d|a-zA-Z]+$/;
                     return pattern.test(value) || "Invalid character input.";
+                },
+                percentage(value, bool = 0) {
+                    const pattern = /(^(\d|[1-9]\d)(\.\d{1,2})?$)|(^100$)/;
+
+                    if (isNaN(parseInt(value, 10)) && bool) {
+                        return true
+                    }
+
+                    return pattern.test(value) || "Please enter 0.00 ~ 100.00";
                 }
             }
         }

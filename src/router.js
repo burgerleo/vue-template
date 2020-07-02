@@ -16,14 +16,20 @@ import BGP from "./views/BGP.vue";
 import Edge from "./views/Edge.vue";
 import Customer from "./views/Customer.vue";
 import DnsRecord from "./views/DnsRecord.vue";
-import JkbPacketLoss from "./views/JkbPacketLoss.vue";
+import JKBAvailability from "./views/JKBAvailability.vue";
 import JkbLatency from "./views/JkbLatency.vue";
 import CrtKey from "./views/CrtKey.vue";
 import DomainManage from "./views/DomainManage.vue";
 import Ip2Location from "./views/Ip2Location.vue";
 import TableExample from "./views/TableExample.vue";
 import H7IP from "./views/H7IP.vue";
+import DummyRtt from "./views/DummyRtt.vue";
+import DummyPacketLoss from "./views/DummyPacketLoss.vue";
 import Reports from "./views/Reports.vue";
+import iRouteChangeLog from "./views/iRouteChangeLog.vue"
+import CPIP from "./views/CPIP.vue";
+import Country from "./views/Country.vue";
+
 Vue.use(Router);
 
 export default new Router({
@@ -168,6 +174,14 @@ export default new Router({
                     }
                 },
                 {
+                    name: "CPIP",
+                    path: "cpip",
+                    component: CPIP,
+                    meta: {
+                        title: 'CPIP'
+                    }
+                },
+                {
                     name: "Customer",
                     path: "customer",
                     component: Customer,
@@ -176,15 +190,15 @@ export default new Router({
                     }
                 },
                 {
-                    name: "JKB Packet Loss",
-                    path: "jkb-packetloss",
-                    component: JkbPacketLoss,
+                    name: "jkb_availability",
+                    path: "jkb-availability",
+                    component: JKBAvailability,
                     meta: {
-                        title: 'JKB Packet Loss'
+                        title: 'JKB Availability'
                     }
                 },
                 {
-                    name: "JKB Latency",
+                    name: "jkb_latency",
                     path: "jkb-Latency",
                     component: JkbLatency,
                     meta: {
@@ -221,6 +235,20 @@ export default new Router({
                     meta: {
                         title: 'H7 IP Prefix'
                     }
+                }, {
+                    name: "dummy_rtt",
+                    path: "dummy-rtt",
+                    component: DummyRtt,
+                    meta: {
+                        title: 'Dummy Rtt'
+                    }
+                }, {
+                    name: "dummy_packet_loss",
+                    path: "dummy-packet-loss",
+                    component: DummyPacketLoss,
+                    meta: {
+                        title: 'Dummy Packet Loss'
+                    }
                 },
                 {
                     name: "Reports",
@@ -228,6 +256,22 @@ export default new Router({
                     component: Reports,
                     meta: {
                         title: 'Reports'
+                    }
+                },
+                {
+                    name: "fqdnChange",
+                    path: "fqdnChange",
+                    component: iRouteChangeLog,
+                    meta: {
+                        title: 'FQDN Change'
+                    }
+                },
+                {
+                    name: "Country",
+                    path: "country",
+                    component: Country,
+                    meta: {
+                        title: 'Country'
                     }
                 },
             ]
