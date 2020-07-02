@@ -1,5 +1,10 @@
 <template lang="pug">
     v-container(grid-list-lg)
+        v-layout.mt-n3.px-2(v-show="unreachableCPIPs.length > 0")
+            v-flex.pt-0.pb-0.pl-0.pr-0(xs12 sm12 md12)
+                v-card-text.font-weight-bold.pb-0.pl-1 Inference of Unreachable CPIPs:
+                pre(v-highlightjs="unreachableCPIPs")
+                    code.java.display-0.font-weight-black
         v-layout
             v-flex(xs12 sm12 md12)
                 v-card
@@ -100,6 +105,9 @@ export default {
     components: {},
     data() {
         return {
+            unreachableCPIPs: '',
+
+            // table
             page: 1,
             pageCount: 0,
             itemsPerPage: 50,
@@ -192,6 +200,10 @@ export default {
     },
     methods: {
         init: function() {
+            this.getCPIPInfo()
+            this.getUnreachableCPIPs()
+        },
+        getCPIPInfo: function() {
             this.$store.dispatch('global/startLoading')
             this.$store
                 .dispatch('cpip/getInfo')
@@ -199,6 +211,27 @@ export default {
                     function(result) {
                         this.desserts = result.data
                         this.copyDesserts = result.data
+
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+                .catch(
+                    function(error) {
+                        this.$store.dispatch(
+                            'global/showSnackbarError',
+                            error.message
+                        )
+                        this.$store.dispatch('global/finishLoading')
+                    }.bind(this)
+                )
+        },
+        getUnreachableCPIPs: function() {
+            this.$store.dispatch('global/startLoading')
+            this.$store
+                .dispatch('cpip/getUnreachableCPIPs', {})
+                .then(
+                    function(result) {
+                        this.unreachableCPIPs = JSON.stringify(result.data)
 
                         this.$store.dispatch('global/finishLoading')
                     }.bind(this)
