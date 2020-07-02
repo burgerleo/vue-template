@@ -6,12 +6,14 @@
                     v-card-text
                         v-row
                             v-toolbar(flat white)
+                                header.pb-5.mr-2 Testing Mode:
                                 v-radio-group.pt-0.pb-0.mb-0.mt-0(v-model="testType" :mondatory="true" row)
                                     v-radio(label="Single Testing" :value="0")
                                     v-radio(label="Periodical Testing" :value="1")
                                     v-radio(label="F12" :value="2")
                                 v-spacer
                                 v-btn.mb-2.mr-2(@click="editDialog()" v-if="testType==2") Setting
+                        v-divider.mb-5
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
                                 v-layout.ml-auto.mr-auto(wrap)
