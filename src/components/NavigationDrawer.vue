@@ -133,6 +133,12 @@ export default {
                             title: 'Dummy RTT',
                             display: true,
                             router: '/dummy-rtt'
+                        },
+                        {
+                            icon: 'mdi-nfc-tap',
+                            title: 'FQDN Change',
+                            display: true,
+                            router: '/fqdnChange'
                         }
                     ]
                 },
@@ -212,6 +218,12 @@ export default {
                             title: 'Critical Public IP',
                             display: true,
                             router: '/cpip'
+                        },
+                        {
+                            icon: 'mdi-ticket',
+                            title: 'Country',
+                            display: true,
+                            router: '/country'
                         }
                     ]
                 },

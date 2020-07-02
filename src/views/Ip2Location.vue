@@ -214,7 +214,7 @@ export default {
         },
         getCountry() {
             this.$store
-                .dispatch('ip2LocationRawData/getCountry')
+                .dispatch('ip2LocationRawData/getCountryByGEC')
                 .then(
                     function(result) {
                         this.gec = result.data

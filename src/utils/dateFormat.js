@@ -31,6 +31,17 @@ export default {
 
             // 拼接
             return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes
+        },
+        dateFormat2(date) {
+            var year = this.getDateYear(date)
+            var month = this.getDateMonth(date)
+            var day = this.getDateDay(date)
+            var hours = this.getDateHour(date)
+            var minutes = this.getDateMinute(date)
+            var second = this.getDateSecond(date)
+
+            // 拼接
+            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + second
         }
     }
 }

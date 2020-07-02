@@ -5,16 +5,16 @@
                 thead.v-data-table-header
                     tr
                         th(:colspan="(r1 + r2 + 2)") 
-                            v-progress-linear(:active="loading" height="2px" indeterminate :color="colorList[4]")
+                            v-progress-linear.mb-n1(:active="loading" height="2px" indeterminate :color="colorList[4]")
                 thead.v-data-table-header
                     tr
-                        th(rowspan="2" colspan="2" :class="colorList[8]") 
+                        th(rowspan="2" colspan="2" :class="colorList[3]") 
                             h2 {{ site + "\nIn   \\   Out"}} 
                         th(:colspan="r1")
-                            v-avatar(v-if="r1>0" tile width="100%" :height="columnHeight" :color="colorList[8]" dark) 
+                            v-avatar(v-if="r1>0" tile width="100%" :height="columnHeight" :color="colorList[3]" dark) 
                                 h2 {{"R1"}}
                         th(:colspan="r2") 
-                            v-avatar(v-if="r2>0" tile width="100%" :height="columnHeight" :color="colorList[8]" dark) 
+                            v-avatar(v-if="r2>0" tile width="100%" :height="columnHeight" :color="colorList[3]" dark) 
                                 h2 {{"R2"}}
                     tr
                         th(v-for="outLine in columns")
@@ -23,10 +23,10 @@
                 tbody
                     tr(v-for="(inLine,key) in columns") 
                         th(v-if="(key == 0)" :rowspan="r1" :height="columnHeight*r1")
-                            v-avatar(tile width="100%" height="100%" :color="colorList[8]" dark) 
+                            v-avatar(tile width="100%" height="100%" :color="colorList[3]" dark) 
                                 h2 {{"R1"}}
                         th(v-if="(key == r1)" :rowspan="r2" :height="columnHeight*r2")
-                            v-avatar(tile width="100%" height="100%" :color="colorList[8]" dark) 
+                            v-avatar(tile width="100%" height="100%" :color="colorList[3]" dark) 
                                 h2 {{"R2"}}
                         th 
                             v-avatar(tile width="100%" :height="columnHeight" :color="getCorGColor(inLine)" dark)
