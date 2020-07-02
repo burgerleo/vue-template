@@ -332,6 +332,13 @@
       newTab(){
         let routeData = this.$router.resolve({path: '/periodical-curl', query: this.getData()});
         window.open(routeData.href,'',)
+      },
+      testType(){
+        if (this.testType==2){
+          this.original = false
+        }else{
+          this.original = true
+        }
       }
     },
     methods: {
