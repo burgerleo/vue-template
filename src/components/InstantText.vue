@@ -2,18 +2,21 @@
     #InstantText        
         div
             v-subheader(v-if="!hideBufferSizeBar") Buffer Size
-                v-slider.align-center(v-model="bufferSize" :max="bufferSizeRange[1]" :min="bufferSizeRange[0]" hide-details thumb-label="always" thumb-size="36" step='1')
+                v-slider.align-center(v-model="bufferSize" :min="bufferSizeRange[0]" :max="bufferSizeRange[1]" hide-details thumb-label="always" thumb-size="36" step='1')
             v-subheader(v-if="!hideTextSizeBar") Text Size
-                v-slider.align-center(v-model="textSize" max="24" min="10" hide-details thumb-label="always" thumb-size="36" step='1')
+                v-slider.align-center(v-model="textSize" :min="textSizeRange[0]" :max="textSizeRange[1]" hide-details thumb-label="always" thumb-size="36" step='1')
+
         div.area(:style="`font-size: ${textSize}px;`")
-            template(v-for="(string) in stringArray")
-                div <b>{{">"}}&thinsp;</b>
-                    template(v-for="(key,index) in stringKeys") 
-                        template {{string[key]}}
-                        template(v-if="index != (stringKeyCount - 1)") &thinsp;
-                            template(v-for="(a) in getColumnDiffLength(string[key],key)") &nbsp;
-        //- div
-            div {{stringArray}}
+            template(v-for="(string, line) in stringArray")
+                div
+                    b(:class="startString.color" :style="`color: ${startString.color} !important`" v-if="startString.display") {{startString.value}}&thinsp;
+                    template(v-for="(key, index) in stringKeys") 
+                        div.d-inline(:class="key.color" :style="`color: ${key.color} !important`") {{string[key.value]}}
+                            template(v-if="key.default") {{key.default}}
+                        template(v-if="index != (stringKeyCount - 1) && key.space !== false") &thinsp;
+                        template(v-if="index != (stringKeyCount - 1)")
+                            template(v-for="(a) in getColumnDiffLength(string, index)") &nbsp;
+
 </template>
 <script>
 import dateFormat from '../utils/dateFormat'
@@ -22,6 +25,17 @@ export default {
     mixins: [dateFormat],
 
     props: {
+        // 每一行的起始文字 or 符號
+        startString: {
+            type: Object,
+            default: function() {
+                return {
+                    value: '>', // 起始符號 or 文字
+                    color: 'red--text text--lighten-2', // 顏色 可接受 vuetify cass name or 色碼(開頭要有# 號)
+                    display: true // 是否需要顯示
+                }
+            }
+        },
         defaultBufferSize: {
             type: Number,
             default: 14
@@ -34,6 +48,10 @@ export default {
             type: Array,
             default: () => [10, 100]
         },
+        textSizeRange: {
+            type: Array,
+            default: () => [10, 24]
+        },
         hideBufferSizeBar: {
             type: Boolean,
             default: false
@@ -45,13 +63,12 @@ export default {
         stringKeys: {
             type: Array,
             default: () => [
-                'created_at',
-                'source',
-                'domain',
-                'changed_from_cname',
-                // 'changed_from_provider_name',
-                'changed_to_cname'
-                // 'changed_to_provider_name'
+                {
+                    value: 'example', // 要顯示的 Key
+                    color: '', // 顏色 可接受 vuetify cass name or 色碼(開頭要有# 號)
+                    space: true, //是否要保留文字後面的空白
+                    default: '' ///在文字的最後補上的字元
+                }
             ]
         }
     },
@@ -60,7 +77,7 @@ export default {
             textSize: this.defaultTextSize,
             bufferSize: this.defaultBufferSize,
 
-            stringKeyCount: 5,
+            stringKeyCount: 0,
             originStringArray: [],
             origincolumnLengthArray: [],
             stringArray: [],
@@ -94,6 +111,7 @@ export default {
 
             this.setStringArray()
         },
+
         // 設定真正要顯示的，文字量
         setStringArray() {
             var bufferSize = this.bufferSize
@@ -103,7 +121,9 @@ export default {
             this.stringArray = this.originStringArray.slice(0, bufferSize)
 
             this.stringKeys.map(function(key) {
-                list[key] = origin[key].slice(0, bufferSize)
+                if (origin[key.value]) {
+                    list[key.value] = origin[key.value].slice(0, bufferSize)
+                }
             })
 
             this.columnLengthArray = list
@@ -111,10 +131,30 @@ export default {
 
         // 計算每一個欄位後面需要追加多少個空白
         // 回傳數量的 Array
-        getColumnDiffLength(string, key) {
-            var len = string.toString().length
+        getColumnDiffLength(string, keyIndex) {
+            var stringKeys = this.stringKeys
+            var keyLen = this.stringKeyCount
+            var diffLen = 0
 
-            var diffLen = Math.max(...this.columnLengthArray[key]) - len
+            for (let index = keyIndex; index >= 0; index--) {
+                var keys = stringKeys[index]
+                var space = keys.space === false
+
+                if (space && index == keyIndex) {
+                    break
+                }
+
+                if (!space && index < keyIndex) {
+                    break
+                }
+
+                if (string[keys.value] !== undefined) {
+                    let len = string[keys.value].toString().length
+
+                    diffLen +=
+                        Math.max(...this.columnLengthArray[keys.value]) - len
+                }
+            }
 
             return [...Array(diffLen).keys()]
         },
@@ -126,65 +166,6 @@ export default {
     },
     created() {
         this.setStringKeyCount()
-        var array = [
-            {
-                domain: 'acn.gbtABcd.com',
-                source: 'iRouteCDN',
-                changed_from_cname: 'cn.mxsjbjc.com.sspeeddns.com',
-                changed_from_provider_name: '(SS_D11-CN)',
-                changed_to_cname: 'cn.mxsjbjc.com.fastliii.com',
-                changed_to_provider_name: '(H7_D11-CN)',
-                created_at: '2020-06-30 16:26:24'
-            },
-            {
-                domain: 'm.gbt0688.com',
-                source: 'iRouteCDN',
-                changed_from_cname: 'm.gbt0688.com.sspeeddns.com',
-                changed_from_provider_name: '(SS_J32-2)',
-                changed_to_cname: 's002-1050-j-0322.booster.dns.lejiashu.com',
-                changed_to_provider_name: '(J32-2_Mother Domain)',
-                created_at: '2020-06-30 16:19:23'
-            },
-            {
-                domain: 'm.gbt0688.com',
-                source: 'iRouteCDN',
-                changed_from_cname: 's002-1050-j-0322.dns.com',
-                changed_from_provider_name: '(J32-2_Mother Domain)',
-                changed_to_cname: 'm.gbt0688.com.sspeeddns.com',
-                changed_to_provider_name: '(SS_J32-2)',
-                created_at: '2020-06-30 16:17:34'
-            }
-        ]
-
-        for (let index = 0; index < 30; index++) {
-            array.push({
-                domain:
-                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
-                    '.' +
-                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
-                    '.com',
-                source: 'iRouteCDN',
-                changed_from_cname:
-                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
-                    '.' +
-                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
-                    '.' +
-                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
-                    '.cdn.com',
-                changed_from_provider_name: '(J32-2_Mother Domain)',
-                changed_to_cname:
-                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
-                    '.' +
-                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
-                    '.' +
-                    this.makerandomletter(this.getRandomByMinMax(3, 10)) +
-                    '.cdn.com',
-                changed_to_provider_name: '(SS_J32-2)',
-                created_at: this.dateFormat2(new Date())
-            })
-        }
-
-        this.addStringColumnLength(array)
     },
     mounted() {
         this.$on('addString', function(stringArray = []) {
@@ -203,5 +184,8 @@ export default {
     word-break: break-all;
     font-weight: 900;
     font-size: 14px;
+}
+.d-inline {
+    display: inline;
 }
 </style>

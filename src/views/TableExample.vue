@@ -28,7 +28,7 @@
 
                     DataTable2(ref="table2" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :loading="loading" @showDialog="dialogSwitch" :setUripath="jkbURI" :setLinkMethod="setLinkMethod")
 
-                //- v-row.px-3.py-3
+                v-row.px-3.py-3
                     v-btn.mb-2.mr-2(color="primary" dark @click="stopIcon") Icon  
                         v-icon mdi-play-pause
                     v-btn.mb-2.mr-2(color="primary" dark @click="playIcon") Icon 
@@ -36,7 +36,7 @@
                     v-btn.mb-2.mr-2(color="primary" dark @mouseover="stopIcon" @mouseleave="playIcon") hover 
                     lottie(:options="defaultOptions" :width="60" :height="60" v-on:animCreated="handleAnimation")
                     lottie(:options="defaultOptions2" :width="60" :height="60" v-on:animCreated="handleAnimation")
-                //- v-row.px-1.py-1
+                v-row.px-1.py-1
                     v-col(cols="6")
                         DataTable3(:bgpList="bgpList" :tableData="tableData" :loading="loading2")
                     v-col(cols="6")
@@ -52,8 +52,15 @@
                     v-col(cols="12")
                         div
                             v-btn.mb-2.mr-2(color="primary" dark @click="addString") Add String
-                        InstantText(ref="textbox")
-
+                            v-btn.mb-2.mr-2(color="primary" dark @click="hideBufferSizeBar = !hideBufferSizeBar") Switch BufferSizeBar
+                            v-btn.mb-2.mr-2(color="primary" dark @click="hideTextSizeBar = !hideTextSizeBar") Switch TextSizeBar
+                        InstantText(ref="textbox" :defaultBufferSize="14" :defaultTextSize="14" :hideBufferSizeBar="hideBufferSizeBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKey1")
+                
+                v-row.px-1.py-1
+                    v-col(cols="6")
+                        div
+                            v-btn.mb-2.mr-2(color="primary" dark @click="addString2") Add String2
+                        InstantText(ref="textbox2" :hideBufferSizeBar="hideBufferSizeBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKeys2" :startString="startString2")
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
@@ -98,7 +105,7 @@ import dateFormat from '../utils/dateFormat'
 
 export default {
     name: 'DomainManage',
-    mixins: [textFieldRules,dateFormat],
+    mixins: [textFieldRules, dateFormat],
 
     components: {
         DataTable2,
@@ -201,7 +208,7 @@ export default {
                 autoplay: true
             },
             // 動態 icon 建立後存放
-            defaultAnim: [], 
+            defaultAnim: [],
 
             bgpList: [
                 'CUG-HKR2C',
@@ -214,6 +221,83 @@ export default {
             tableData: {},
             loading2: false,
 
+            // string Module
+            hideBufferSizeBar: false,
+            hideTextSizeBar: false,
+
+            stringKey1: [
+                {
+                    value: 'created_at', // 要顯示的 Key
+                    color: '', // 顏色 可接受 vuetify cass name or 色碼(開頭要有# 號)
+                    space: true, //是否要保留文字後面的空白
+                    default: '' //在文字的最後補上的字元
+                },
+                {
+                    value: 'source',
+                    color: '#fff59d'
+                },
+                {
+                    value: 'domain',
+                    color: 'red--text text--lighten-1',
+                    space: true
+                },
+                {
+                    value: 'changed_from_cname',
+                    space: false
+                },
+                {
+                    value: '(',
+                    default: '(',
+                    space: false
+                },
+                {
+                    value: 'changed_from_provider_name',
+                    color: 'red--text text--lighten-1',
+                    space: false
+                },
+                {
+                    value: ')',
+                    default: ')',
+                    space: true
+                },
+                {
+                    value: 'changeIcon',
+                    default: '⇨',
+                    space: true
+                },
+                {
+                    value: 'changed_to_cname',
+                    space: false
+                },
+                {
+                    value: '(',
+                    default: '(',
+                    space: false
+                },
+                {
+                    value: 'changed_to_provider_name',
+                    color: 'red--text text--lighten-1',
+                    space: false
+                },
+                {
+                    value: ')',
+                    default: ')',
+                    space: true
+                }
+            ],
+
+            startString2: {
+                value: '●', // 起始符號 or 文字
+                color: 'blue--text text--lighten-2', // 顏色 可接受 vuetify cass name or 色碼(開頭要有# 號)
+                display: true // 是否需要顯示
+            },
+            stringKeys2: [
+                {
+                    value: 'string'
+                }
+            ]
+
+            // string Module
         }
     },
     watch: {},
@@ -391,41 +475,69 @@ export default {
             this.bgpList = JSON.parse(JSON.stringify(bgpList))
         },
 
-
         // string Module
-        addString(){
-            this.$refs.textbox.$emit('addString',[
+        addString() {
+            this.$refs.textbox.$emit('addString', [
                 {
                     domain:
                         this.makerandomletter(this.getRandomByMinMax(3, 10)) +
                         '.' +
                         this.makerandomletter(this.getRandomByMinMax(3, 10)) +
                         '.com',
-                    source: 'iRouteCDN',
+                    source: this.getRandomByMinMax(0, 1) ? 'iRouteCDN' : 'uCDN',
                     changed_from_cname:
                         this.makerandomletter(this.getRandomByMinMax(3, 10)) +
                         '.' +
                         this.makerandomletter(this.getRandomByMinMax(3, 10)) +
                         '.cdn.com',
-                    changed_from_provider_name: '(J32-2_Mother Domain)',
+                    changed_from_provider_name:
+                        this.makerandomletter(1) +
+                        this.getRandomByMinMax(10, 99) +
+                        '-' +
+                        this.getRandomByMinMax(1, 9),
                     changed_to_cname:
                         this.makerandomletter(this.getRandomByMinMax(3, 10)) +
                         '.' +
                         this.makerandomletter(this.getRandomByMinMax(3, 10)) +
                         '.cdn.com',
-                    changed_to_provider_name: '(SS_J32-2)',
+                    changed_to_provider_name:
+                        this.makerandomletter(1) +
+                        this.getRandomByMinMax(10, 99) +
+                        '-' +
+                        this.getRandomByMinMax(1, 9),
+
                     created_at: this.dateFormat2(new Date())
+                }
+            ])
+        },
+
+        addString2() {
+            this.$refs.textbox2.$emit('addString', [
+                {
+                    string:
+                        '64 bytes from 114.114.114.114: icmp_req=1 ttl=' +
+                        this.getRandomByMinMax(50, 100) +
+                        ' time=' +
+                        this.getRandomByMinMax(100, 300) +
+                        ' ms'
                 }
             ])
         }
 
         // string Module
-
     },
     mounted() {
         document.title = 'Table Example'
         this.init()
         this.setTableData()
+
+        // string Module
+        for (let index = 0; index < 30; index++) {
+            this.addString()
+            this.addString2()
+        }
+
+        // string Module
     }
 }
 </script>
