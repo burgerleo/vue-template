@@ -54,13 +54,15 @@
                             v-btn.mb-2.mr-2(color="primary" dark @click="addString") Add String
                             v-btn.mb-2.mr-2(color="primary" dark @click="hideBufferSizeBar = !hideBufferSizeBar") Switch BufferSizeBar
                             v-btn.mb-2.mr-2(color="primary" dark @click="hideTextSizeBar = !hideTextSizeBar") Switch TextSizeBar
-                        InstantText(ref="textbox" :defaultBufferSize="14" :defaultTextSize="14" :hideBufferSizeBar="hideBufferSizeBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKey1")
+                            
+                        InstantText(ref="textbox" :defaultBufferSize="defaultBufferSize1" :defaultTextSize="14" :hideBufferSizeBar="hideBufferSizeBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKey1" :bufferSizeRange="bufferSizeRange1")
                 
                 v-row.px-1.py-1
                     v-col(cols="6")
                         div
                             v-btn.mb-2.mr-2(color="primary" dark @click="addString2") Add String2
-                        InstantText(ref="textbox2" :hideBufferSizeBar="hideBufferSizeBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKeys2" :startString="startString2")
+                            v-btn.mb-2.mr-2(color="primary" dark @click="stringDisplayModule = !stringDisplayModule") Switch Display Module
+                        InstantText(ref="textbox2" :hideBufferSizeBar="hideBufferSizeBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKeys2" :startString="startString2" :stringDisplayModule="stringDisplayModule")
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
@@ -104,7 +106,7 @@ import toggleJson from '../assets/icon/toggle/toggle.json'
 import dateFormat from '../utils/dateFormat'
 
 export default {
-    name: 'DomainManage',
+    name: 'tableExample',
     mixins: [textFieldRules, dateFormat],
 
     components: {
@@ -222,8 +224,12 @@ export default {
             loading2: false,
 
             // string Module
+
             hideBufferSizeBar: false,
             hideTextSizeBar: false,
+            stringDisplayModule: false,
+            bufferSizeRange1: [1, 200],
+            defaultBufferSize1: 4,
 
             stringKey1: [
                 {
@@ -532,7 +538,7 @@ export default {
         this.setTableData()
 
         // string Module
-        for (let index = 0; index < 30; index++) {
+        for (let index = 0; index < 10; index++) {
             this.addString()
             this.addString2()
         }

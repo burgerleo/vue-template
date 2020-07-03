@@ -1,8 +1,8 @@
 <template lang="pug">
     #InstantText        
         div
-            v-subheader(v-if="!hideBufferSizeBar") Buffer Size
-                v-slider.align-center(v-model="bufferSize" :min="bufferSizeRange[0]" :max="bufferSizeRange[1]" hide-details thumb-label="always" thumb-size="36" step='1')
+            v-subheader(v-if="!hideLineCountBar") Line Count
+                v-slider.align-center(v-model="lineCount" :min="lineCountRange[0]" :max="lineCountRange[1]" hide-details thumb-label="always" thumb-size="36" step='1')
             v-subheader(v-if="!hideTextSizeBar") Text Size
                 v-slider.align-center(v-model="textSize" :min="textSizeRange[0]" :max="textSizeRange[1]" hide-details thumb-label="always" thumb-size="36" step='1')
 
@@ -36,7 +36,8 @@ export default {
                 }
             }
         },
-        defaultBufferSize: {
+
+        defaultLineCount: {
             type: Number,
             default: 14
         },
@@ -44,7 +45,7 @@ export default {
             type: Number,
             default: 14
         },
-        bufferSizeRange: {
+        lineCountRange: {
             type: Array,
             default: () => [10, 100]
         },
@@ -52,7 +53,11 @@ export default {
             type: Array,
             default: () => [10, 24]
         },
-        hideBufferSizeBar: {
+        bufferSize: {
+            type: Number,
+            default: 500
+        },
+        hideLineCountBar: {
             type: Boolean,
             default: false
         },
@@ -70,22 +75,39 @@ export default {
                     default: '' ///在文字的最後補上的字元
                 }
             ]
+        },
+
+        /**
+         * new string 顯示順序
+         * 在最上面 = False
+         * 在最下面 = true
+         */
+        stringDisplayModule: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
         return {
             textSize: this.defaultTextSize,
-            bufferSize: this.defaultBufferSize,
+            lineCount: this.defaultLineCount,
 
-            stringKeyCount: 0,
+            stringKeyCount: 0, // 要顯示字串的數量
             originStringArray: [],
-            origincolumnLengthArray: [],
+            originColumnLengthArray: [],
+
             stringArray: [],
             columnLengthArray: []
         }
     },
     watch: {
-        bufferSize(value) {
+        defaultLineCount(value) {
+            this.lineCount = value
+        },
+        defaultTextSize(value) {
+            this.textSize = value
+        },
+        lineCount(value) {
             this.setStringArray()
         }
     },
@@ -94,7 +116,13 @@ export default {
         // 塞入新的文字 Array
         addStringColumnLength(newStringArray = []) {
             var stringArray = this.originStringArray
-            var list = this.origincolumnLengthArray
+            var list = this.originColumnLengthArray
+
+            // bufferSize 最小值要大於 文字可顯示種量
+            var bufferSize =
+                this.bufferSize < this.lineCount
+                    ? this.lineCount
+                    : this.bufferSize
 
             newStringArray.map(function(item) {
                 var keys = Object.keys(item)
@@ -105,24 +133,37 @@ export default {
                     }
 
                     list[key].unshift(item[key].toString().length)
+
+                    // 保留指定數量的資料量
+                    list[key] = list[key].slice(0, bufferSize)
                 })
                 stringArray.unshift(item)
+
+                // 保留指定數量的資料量
+                stringArray = stringArray.slice(0, bufferSize)
             })
+
+            this.originStringArray = stringArray
+            this.originColumnLengthArray = list
 
             this.setStringArray()
         },
 
         // 設定真正要顯示的，文字量
         setStringArray() {
-            var bufferSize = this.bufferSize
+            var lineCount = this.lineCount
             var list = {}
-            var origin = this.origincolumnLengthArray
+            var origin = this.originColumnLengthArray
 
-            this.stringArray = this.originStringArray.slice(0, bufferSize)
+            this.stringArray = this.originStringArray.slice(0, lineCount)
+
+            if (this.stringDisplayModule) {
+                this.stringArray = this.stringArray.reverse()
+            }
 
             this.stringKeys.map(function(key) {
                 if (origin[key.value]) {
-                    list[key.value] = origin[key.value].slice(0, bufferSize)
+                    list[key.value] = origin[key.value].slice(0, lineCount)
                 }
             })
 
@@ -184,6 +225,7 @@ export default {
     word-break: break-all;
     font-weight: 900;
     font-size: 14px;
+    min-height: 100px;
 }
 .d-inline {
     display: inline;
