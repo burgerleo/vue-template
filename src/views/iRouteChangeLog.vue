@@ -19,54 +19,71 @@
         v-row
             v-col(cols="12")
                 h3.pd-0 Logs : 
-                div.v-data-table__wrapper.table_area
-                    table(v-show="tab == 0")
-                        tbody(v-if="key < pageCount" v-for="(log,key) in logList")
-                            td {{log.created_at}}
-                            td.source {{log.source}}
-                            td.highLight 
-                                b {{log.domain}}
-                            td {{log.changed_from_cname}}
-                            td {{"⇨"}}
-                            td {{log.changed_to_cname}}
-
-                    table(v-show="tab == 1")
-                        tbody(v-for="log in logList2")
-                            td {{log.created_at}}
-                            td.source {{log.source}}
-                            td.highLight 
-                                b {{log.domain}}
-                            td {{log.changed_from_cname}}
-                            td {{"⇨"}}
-                            td {{log.changed_to_cname}}
+                div(v-show="tab == 0")
+                    InstantText(ref="textbox" :hideLineCountBar="true" :hideTextSizeBar="true" :stringKeys="stringKeys" :defaultLineCount="pageCount")
+                div(v-show="tab == 1")
+                    InstantText(ref="textbox2" :hideLineCountBar="true" :hideTextSizeBar="true" :stringKeys="stringKeys" :defaultLineCount="pageCount2")
 </template>
 
 <script>
 import textFieldRules from '../utils/textFieldRules'
 import dateFormat from '../utils/dateFormat'
 import checkPage from '../utils/checkPage'
+import InstantText from '../components/InstantText'
 
 export default {
     name: 'fqdnChange',
     mixins: [textFieldRules, dateFormat, checkPage],
 
-    components: {},
+    components: { InstantText },
     data() {
         return {
             tab: 0,
             tabs: [{ name: 'Latest' }, { name: 'History' }],
             pageCount: 20,
+            pageCount2: 100,
             countList: [20, 50],
             day: 1,
             dayList: [1, 2],
-            logList: [],
-            logList2: [],
             timer: null,
-            totalTime: 60
+            totalTime: 60,
+
+            stringKeys: [
+                {
+                    value: 'created_at', // 要顯示的 Key
+                    color: '', // 顏色 可接受 vuetify cass name or 色碼(開頭要有# 號)
+                    space: true, //是否要保留文字後面的空白
+                    default: '' //在文字的最後補上的字元
+                },
+                {
+                    value: 'source',
+                    color: '#fff59d',
+                    space: true
+                },
+                {
+                    value: 'domain',
+                    color: 'red--text text--lighten-2',
+                    space: true
+                },
+                {
+                    value: 'changed_from_cname',
+                    space: true
+                },
+                {
+                    value: 'changeIcon',
+                    default: '⇨',
+                    space: true
+                },
+                {
+                    value: 'changed_to_cname',
+                    space: false
+                }
+            ]
         }
     },
     watch: {
         tab(value) {
+            this.resetTimer()
             value == 0 ? this.getLogByLatest() : this.getLogByDay()
         },
         day() {
@@ -138,11 +155,16 @@ export default {
 
             switch (type) {
                 case 0:
-                    this.logList = logList
+                    this.$refs.textbox.$emit('clearnOrigin')
 
+                    this.$refs.textbox.$emit('addString', logList.reverse())
                     break
                 default:
-                    this.logList2 = logList
+                    this.$refs.textbox2.$emit('clearnOrigin')
+
+                    this.pageCount2 = logList.length
+
+                    this.$refs.textbox2.$emit('addString', logList.reverse())
                     break
             }
         },
@@ -200,9 +222,8 @@ export default {
     background: #282c34;
     word-break: break-all;
 }
-.highLight{
+.highLight {
     color: #e57373 !important;
-
 }
 .source {
     color: #fff59d !important;

@@ -52,17 +52,17 @@
                     v-col(cols="12")
                         div
                             v-btn.mb-2.mr-2(color="primary" dark @click="addString") Add String
-                            v-btn.mb-2.mr-2(color="primary" dark @click="hideBufferSizeBar = !hideBufferSizeBar") Switch BufferSizeBar
+                            v-btn.mb-2.mr-2(color="primary" dark @click="hideLineCountBar = !hideLineCountBar") Switch LineCountBar
                             v-btn.mb-2.mr-2(color="primary" dark @click="hideTextSizeBar = !hideTextSizeBar") Switch TextSizeBar
                             
-                        InstantText(ref="textbox" :defaultBufferSize="defaultBufferSize1" :defaultTextSize="14" :hideBufferSizeBar="hideBufferSizeBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKey1" :bufferSizeRange="bufferSizeRange1")
+                        InstantText(ref="textbox" :defaultLineCount="defaultLineCount1" :defaultTextSize="14" :hideLineCountBar="hideLineCountBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKey1" :lineCountRange="lineCountRange1")
                 
                 v-row.px-1.py-1
-                    v-col(cols="6")
+                    v-col(cols="12")
                         div
                             v-btn.mb-2.mr-2(color="primary" dark @click="addString2") Add String2
                             v-btn.mb-2.mr-2(color="primary" dark @click="stringDisplayModule = !stringDisplayModule") Switch Display Module
-                        InstantText(ref="textbox2" :hideBufferSizeBar="hideBufferSizeBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKeys2" :startString="startString2" :stringDisplayModule="stringDisplayModule")
+                        InstantText(ref="textbox2" :hideLineCountBar="hideLineCountBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKeys2" :startString="startString2" :stringDisplayModule="stringDisplayModule")
 
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
@@ -225,11 +225,11 @@ export default {
 
             // string Module
 
-            hideBufferSizeBar: false,
+            hideLineCountBar: false,
             hideTextSizeBar: false,
             stringDisplayModule: false,
-            bufferSizeRange1: [1, 200],
-            defaultBufferSize1: 4,
+            lineCountRange1: [1, 200],
+            defaultLineCount1: 8,
 
             stringKey1: [
                 {

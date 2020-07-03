@@ -6,7 +6,7 @@
             v-subheader(v-if="!hideTextSizeBar") Text Size
                 v-slider.align-center(v-model="textSize" :min="textSizeRange[0]" :max="textSizeRange[1]" hide-details thumb-label="always" thumb-size="36" step='1')
 
-        div.area(:style="`font-size: ${textSize}px;`")
+        div.area(:style="`font-size: ${textSize}px; min-height: ${lineCount*18}px;`")
             template(v-for="(string, line) in stringArray")
                 div
                     b(:class="startString.color" :style="`color: ${startString.color} !important`" v-if="startString.display") {{startString.value}}&thinsp;
@@ -16,6 +16,7 @@
                         template(v-if="index != (stringKeyCount - 1) && key.space !== false") &thinsp;
                         template(v-if="index != (stringKeyCount - 1)")
                             template(v-for="(a) in getColumnDiffLength(string, index)") &nbsp;
+
 
 </template>
 <script>
@@ -203,6 +204,11 @@ export default {
         // 計算 Key 總數
         setStringKeyCount() {
             this.stringKeyCount = this.stringKeys.length
+        },
+
+        clearnOriginArray() {
+            this.originStringArray = []
+            this.originColumnLengthArray = []
         }
     },
     created() {
@@ -211,6 +217,10 @@ export default {
     mounted() {
         this.$on('addString', function(stringArray = []) {
             this.addStringColumnLength(stringArray)
+        })
+
+        this.$on('clearnOrigin', function() {
+            this.clearnOriginArray()
         })
     }
 }
