@@ -126,7 +126,7 @@ export default {
                     text: '#',
                     align: 'center',
                     sortable: false,
-                    width: '50px',
+                    // width: '50px',
                     value: 'index'
                 },
                 {
@@ -160,7 +160,7 @@ export default {
                     value: 'city'
                 },
                 {
-                    text: 'Company',
+                    text: 'ISP/Company',
                     align: 'left',
                     sortable: true,
                     value: 'company'
@@ -461,3 +461,11 @@ export default {
     }
 }
 </script>
+
+<style lang="sass" scoped>
+.hljs
+    display: block
+    color: #abb2bf
+    background: #282c34
+    word-break: break-all
+</style>
