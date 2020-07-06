@@ -156,7 +156,7 @@
             text: '#',
             align: 'center',
             sortable: false,
-            width: '30px',
+            width: '50px',
             value: 'index'
           },
           {
