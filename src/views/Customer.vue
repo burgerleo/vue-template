@@ -20,6 +20,8 @@
                             tr
                                 td
                                 td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.customer_name" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'customer_name')")
+                                td
                                     v-text-field.mt-0.pt-0(v-model="searchList.customer_id" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'customer_id')")
                                 td
                                     v-text-field.mt-0.pt-0(v-model="searchList.customer_property" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'customer_property')")
@@ -33,16 +35,26 @@
                                     v-text-field.mt-0.pt-0(v-model="searchList.login_account" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'login_account')")
                                 td
                                     v-text-field.mt-0.pt-0(v-model="searchList.subscription_service_list" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'subscription_service_list')")
+                                td
+                                    v-text-field.mt-0.pt-0(v-model="searchList.remark" width="10px" label="Search" single-line hide-details @input="filterOnlyColumn($event,'remark')")
                         template(v-slot:item="{item,index}")
                             tr
                                 td {{rowIndex(index)}}
+                                td(width="40px") {{item.customer_name}}
                                 td {{item.customer_id}}
-                                td {{item.customer_property}}
+                                td(width="110px") {{item.customer_property}}
                                 td {{item.am}}
                                 td(v-html='(item.authorization)?item.authorization.join().replace(/,/g,"<br>"):""')
                                 td(v-html='(item.skype_account)?item.skype_account.join().replace(/,/g,"<br>"):""')
                                 td(v-html='(item.login_account)?item.login_account.join().replace(/,/g,"<br>"):""')
                                 td
+                                td
+                                    v-tooltip(top)
+                                        template(v-slot:activator="{ on }")
+                                                span &nbsp;
+                                                a(:href="item.remark" target="_blank" v-on="on" )
+                                                    span {{item.remark}}
+                                        span {{item.remark}}
                                 td
                                     v-icon.mr-2(small @click="editDialog(item)") mdi-pencil
                                     v-icon.mr-2(small @click="deleteDialog(item)") mdi-delete
@@ -59,7 +71,8 @@
                     v-card-title.title {{formTitle}}
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
-                            v-text-field(v-model="customer.customer_id" label="Customer Id" type="text" name="customer_id" :rules="[rules.required, rules.number, rules.length, rules.customerType]")
+                            v-text-field(v-model="customer.customer_name" label="Customer Name" type="text" name="customer_name")
+                            v-text-field(v-model="customer.customer_id" label="Customer ID" type="text" name="customer_id" :rules="[rules.required, rules.number, rules.length, rules.customerType]")
                             v-select(v-model="customer.customer_property" :items="customerPropertyList" label="Customer Property" name="customer_property" :rules="[rules.required]")
                             v-text-field(v-model="customer.am" label="AM" type="text" name="customer_am" :rules="[rules.maxChart, rules.checkChart]")
                             v-combobox(multiple v-model="customer.authorization"
@@ -94,7 +107,8 @@
                                 :search-input.sync="login_accountSearch"
                                 :delimiters="[',', ';', ' ']"
                                 @change="pasted('login_account')"
-                                :rules="[rules.emailCountLimit, rules.emailList, rules.max]")
+                                :rules="[rules.emailCountLimit, rules.max]")
+                            v-textarea(v-model="customer.remark" label="Remark" name="remark" height="" rows="2" clearable)
                     v-card-actions
                         v-spacer
                         v-btn(color="grey" @click="closeDialog") Cancel
@@ -142,24 +156,34 @@
             text: '#',
             align: 'center',
             sortable: false,
-            width: '50px',
+            width: '30px',
             value: 'index'
           },
           {
-            text: 'Customer Id',
+            text: 'Customer Name',
             align: 'left',
             sortable: true,
+            width: '30px',
             value: 'customer_id'
           },
           {
-            text: 'Customer Property',
+            text: 'Customer ID',
             align: 'left',
             sortable: true,
+            width: '30px',
+            value: 'customer_id'
+          },
+          {
+            text: 'Commercial Status',
+            align: 'left',
+            sortable: true,
+            width: '80px',
             value: 'customer_property'
           },
           {
             text: 'AM',
             align: 'left',
+            width: '70px',
             sortable: true,
             value: 'am'
           },
@@ -167,25 +191,36 @@
             text: 'Authorization List',
             align: 'left',
             sortable: true,
+            width: '180px',
             value: 'authorization'
           },
           {
             text: 'Skype Account',
             align: 'left',
             sortable: true,
+            width: '180px',
             value: 'skype_account'
           },
           {
             text: 'H7CDN Login Account',
             align: 'left',
             sortable: true,
+            width: '180px',
             value: 'login_account'
           },
           {
             text: 'Subscription Service List',
             align: 'left',
             sortable: true,
+            width: '230px',
             value: ''
+          },
+          {
+            text: 'Remark',
+            align: 'left',
+            sortable: true,
+            width: '330px',
+            value: 'remark'
           },
           {
             text: 'Actions',

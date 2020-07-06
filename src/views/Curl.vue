@@ -5,20 +5,22 @@
                 v-card
                     v-card-text
                         v-row
-                            v-col.pt-0.pb-0.mb-0.mt-0(cols="12")
-                                v-toolbar(flat white)
-                                    v-radio-group.pt-0.pb-0.mb-0.mt-0(v-model="testType" :mondatory="true" row)
-                                        v-radio(label="Single Testing" :value="0")
-                                        v-radio(label="Periodical Testing" :value="1")
-                                        v-flex.pb-0(v-if="testType==1" xs12 sm3 md3)
-                                            v-btn.mb-2.mr-2(x-small color="primary" dark @click="newWindow()") New Window
-                                            v-btn.mb-2.mr-2(x-small color="primary" dark @click="newTabWindow()") New Tab
-                                    v-spacer
-                                    v-btn.mb-2.mr-2(color="primary" dark @click="editDialog()") Setting
+                            v-toolbar(flat white)
+                                header.font-weight-medium.pb-5.mr-2 Testing Mode:
+                                v-radio-group.pt-0.pb-0.mb-0.mt-0(v-model="testType" :mondatory="true" row)
+                                    v-radio(label="Single Testing" :value="0")
+                                    v-radio(label="Periodical Testing" :value="1")
+                                    v-radio(label="F12" :value="2")
+                                v-spacer
+                                v-btn.mb-2.mr-2(@click="editDialog()" v-if="testType==2") Setting
+                        v-divider.mb-7
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
                                 v-layout.ml-auto.mr-auto(wrap)
                                     v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm12 md12)
+                                        v-layout.px-2(row v-if="testType==1")
+                                            v-flex.pt-0.pb-0(xs12 sm3 md3)
+                                                v-text-field(v-model="second" label="Second" type="number" min="5" max="100")
                                         v-radio-group.pt-0.pb-0.mt-0.mb-0(v-model="area" :mondatory="true" row)
                                             v-radio(label="TW" :value="0")
                                             v-radio(label="HK" :value="1")
@@ -27,17 +29,19 @@
                                                 v-select(v-if="area==1" :disabled="area==0" v-model="edge" :items="hkEdge" label="HK Edge" name="hk_edge" item-text="text" item-value="id")
                                     v-flex.pt-0.pb-0(xs12 sm6 md2)
                                         v-select(v-model="method" :items="selectMethod" label="HTTP Method" item-text="name" item-value="id" :rules="[rules.required]" @change="defaultParameters")
-                                    v-flex.pt-0.pb-0(xs12 sm6 md1)
+                                    v-flex.pt-0.pb-0(xs12 sm6 md2)
                                         v-select(v-model="redirect" :items="selectRedir" label="Max Num. of Redirects" item-text="name" item-value="id" )
-                                    v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
+                                    v-flex.py-6.pt-0.pb-0(xs12 sm6 md4)
                                         v-text-field(v-model="url" label="URL" type="" name="url" :rules="[rules.required, rules.url]")
-                                    v-flex.py-6.pt-0.pb-0(xs12 sm6 md2)
+                                    v-flex.py-6.pt-0.pb-0(xs12 sm6 md2 v-if="testType==0 || testType==1")
                                         v-checkbox(v-model="original" label="Origin" @change="clearOriginal")
-                                    v-flex.py-6.pt-0.pb-0(xs12 sm6 md6 v-if="original==true")
+                                    v-flex.py-6.pt-0.pb-0(xs12 sm12 md2 v-if="testType==0 || testType==1")
+                                        v-checkbox(v-model="headerOnly" label="Header only")
+                                    v-flex.py-6.pt-0.pb-0(xs12 sm6 md6 v-if="original==true && (testType==0 || testType==1)")
                                         v-text-field(v-model="hostName" label="Host Name" type="" name="hostName" readonly background-color="#ECEFF1")
-                                    v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
+                                    v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true && (testType==0 || testType==1)")
                                         v-text-field(v-model="port" label="Port" type="" name="port")
-                                    v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true && multiHostIp==false")
+                                    v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true && multiHostIp==false && (testType==0 || testType==1)")
                                         v-text-field(v-model="hostIp" label="Host IP" type="" name="hostIp")
                                     v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-else="original==true && multiHostIp==true")
                                         v-radio-group.pt-0.mt-1(row v-model="hostIp" :mandatory="true")
@@ -50,16 +54,12 @@
                                             v-flex(xs12 sm6 md6)
                                                 v-text-field(label="Value" v-model="header.value")
                                             v-flex(xs12 sm3 md3)
-                                                v-btn( color="primary" dark @click="deleteRow(index)") X
-                                    v-flex.pt-0.pb-0.ml-auto(row align-center xs12 sm12 md12)
-                                        v-btn( color="primary" dark @click="addRow") Add Headers
+                                                v-btn( @click="deleteRow(index)") X
+                                    v-flex.pt-0.pb-0.ml-1(row align-center xs12 sm12 md12)
+                                        v-btn(@click="addRow") Add Headers
 
                                     v-layout.px-2.pt-0.pb-0(row v-if="method=='POST'")
                                         v-flex(xs12 sm12 md12)
-                                            v-flex(xs12 sm6 md3)
-                                                v-select(v-model="postInput" :items="selectPostInput" label="Data Input Method" @change="defaultParameters")
-                                            v-flex(xs12 sm12 md8 v-if="postInput!='Parameters'")
-                                                v-text-field(label="Post Body" v-model="postBody")
                                             v-flex(xs12 v-if="postInput=='Parameters'")
                                                 v-layout.px-2(row v-for="(parameter,index) in parameters " :key="index")
                                                     v-flex(xs12 sm3 md3)
@@ -67,28 +67,35 @@
                                                     v-flex(xs12 sm6 md6)
                                                         v-text-field(label="Value" v-model="parameter.value")
                                                     v-flex(xs12 sm3 md3)
-                                                        v-btn( color="primary" dark @click="deleteParameter(index)") X
-                                        v-flex(row align-center xs12 sm12 md12 v-if="postInput=='Parameters'")
-                                            v-btn(color="primary" dark @click="addParameter") Add Parameters
+                                                        v-btn(@click="deleteParameter(index)") X
+                                        v-flex.pt-0.pb-0(xs12 sm6 md3)
+                                            v-select(v-model="postInput" :items="selectPostInput" label="Data Input Method" @change="defaultParameters")
+                                        v-flex.pt-0.pb-0.ml-1(row align-center xs12 sm12 md3 v-if="postInput=='Parameters'")
+                                            v-btn(@click="addParameter") Add Parameters
+                                        v-flex.pt-0.pb-0.ml-1(xs12 sm12 md8 v-if="postInput!='Parameters'")
+                                            v-text-field(label="Post Body" v-model="postBody")
 
-                                    v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
-                                        v-checkbox(v-model="headerOnly" label="Header only")
-                                    v-flex.pt-0.pb-0(xs12)
-                                        v-btn(color="primary" block @click="send('nameForm')") SEND
+                                    v-flex.pb-2(v-if="testType!=1" xs12 sm3 md10)
+                                        v-btn(color="primary" dark @click="send('nameForm')" v-if="testType==0") Testing once
+                                        v-btn(color="primary" dark @click="send('nameForm')" v-if="testType==2") Testing
+                                    v-flex.pb-2(v-if="testType==1" xs12 sm3 md10)
+                                        v-btn.mr-2.mt-2(color="primary" dark @click="newWindow()") Testing on New Window
+                                        v-btn.mt-2(color="primary" dark @click="newTabWindow()") Testing on New Tab
                                     v-flex.pt-0.pb-0(xs12)
 
                                         v-card-text.pb-0.pl-0
                                             .subheading.font-weight-black Response:
-                                            .subheading.text-right {{timestamp}}
+                                            .subheading.text-right(v-if="testType==0" ) {{timestamp.singleTesting}}
+                                            .subheading.text-right(v-if="testType==2" ) {{timestamp.F12}}
                                         v-divider
-                                        v-card-text.font-weight-bold.pb-0 CURL Command:
-                                        pre(v-highlightjs="commandData")
+                                        v-card-text.font-weight-bold.pb-0(v-if="testType==0 && timestamp.singleTesting !=''") CURL Command:
+                                        pre(v-highlightjs="commandData")(v-if="testType==0 && timestamp.singleTesting !=''")
                                             code.bash
-                                        v-card-text.font-weight-bold.pb-0 Response Code & Download Time:
-                                        pre(v-highlightjs="responseCodeAndTimeTotal")
+                                        v-card-text.font-weight-bold.pb-0(v-if="testType==0 && timestamp.singleTesting !=''") Response Code & Download Time:
+                                        pre(v-highlightjs="responseCodeAndTimeTotal")(v-if="testType==0 && timestamp.singleTesting !=''")
                                             code.java.display-1.font-weight-black
 
-                                        v-card-text.font-weight-bold Header:
+                                        v-card-text.font-weight-bold(v-if="testType==0 && timestamp.singleTesting !=''") Header:
                                             v-expansion-panels
                                                 v-expansion-panel
                                                     v-expansion-panel-header
@@ -96,7 +103,7 @@
                                                             pre(v-highlightjs="headerData")
                                                                 code.bash
 
-                                        v-card-text.font-weight-bold.pt-0 Body:
+                                        v-card-text.font-weight-bold.pt-0(v-if="testType==0 && timestamp.singleTesting !=''") Body:
                                             v-expansion-panels
                                                 v-expansion-panel
                                                     v-expansion-panel-header
@@ -104,7 +111,7 @@
                                                             pre(v-highlightjs="bodyData")
                                                                 code.bash
 
-                                        v-card-text.font-weight-bold Requests:
+                                        v-card-text.font-weight-bold(v-if="testType==2 && timestamp.F12 !=''") Requests:
                                             v-flex(xs12 sm12 md12)
                                                 v-card
                                                     v-data-table.elevation-1(:headers="tableHeaders" :items="desserts" :dense="true" :loading="loading" disable-pagination hide-default-footer fixed-header)
@@ -183,7 +190,11 @@
         parameters: [],
         headers: [],
         area: 0,
-        timestamp:'',
+        timestamp:{
+          singleTesting: '',
+          PeriodicalTesting: '',
+          F12: ''
+        },
         responseCodeAndTimeTotal:'',
         domainList:[],
         hostIpList: [],
@@ -199,7 +210,6 @@
         tabItems: [],
         tab: null,
         newWin:'',
-        newWinWithParams:'',
         newTab:'',
         page: 1,
         pageCount: 0,
@@ -316,50 +326,59 @@
         }
       },
       newWin(){
-        let routeData = this.$router.resolve({path: '/new-periodical-curl'});
+        let routeData = this.$router.resolve({path: '/new-periodical-curl', query:this.getData()});
         window.open(routeData.href,'','height=900,width=1200,resizable=yes,scrollbars=yes,toolbar=yes,status=yes')
       },
       newTab(){
-        let routeData = this.$router.resolve({path: '/periodical-curl'});
+        let routeData = this.$router.resolve({path: '/periodical-curl', query: this.getData()});
         window.open(routeData.href,'',)
       },
-      newWinWithParams(){
-        let routeData = this.$router.resolve({path: '/new-periodical-curl'});
-        window.open(routeData.href,'','height=900,width=1200,resizable=yes,scrollbars=yes,toolbar=yes,status=yes')
-      },
+      testType(){
+        if (this.testType==2){
+          this.original = false
+        }else{
+          this.original = true
+        }
+      }
     },
     methods: {
-      send: function() {
+      getData:function () {
         const method = (this.method == "GET" ? "get" : "post")
         const headerOnly = (this.headerOnly == true ? 1 : 0)
         const header = this.headers
         const parameters = this.parameters
-        const time = new Date();
+        const data = {
+          "url" : this.url,
+          "method" : method,
+          "redirect" : this.redirect,
+          "headerOnly" : headerOnly,
+          "original": this.original,
+          "hostName": this.hostName,
+          "port": this.port,
+          "hostIp": this.hostIp,
+          "header": header,
+          "parameters": parameters,
+          "postInput": this.postInput,
+          "postBody": this.postBody,
+          "area": this.area,
+          "edge": this.edge,
+          "second": this.second
+        }
+        return data
+      },
+      send: function() {
         if (this.$refs.form.validate()) {
-          this.timestamp = time;
-          var data = {
-            "url" : this.url,
-            "method" : method,
-            "redirect" : this.redirect,
-            "headerOnly" : headerOnly,
-            "original": this.original,
-            "hostName": this.hostName,
-            "port": this.port,
-            "hostIp": this.hostIp,
-            "header": header,
-            "parameters": parameters,
-            "postInput": this.postInput,
-            "postBody": this.postBody,
-            "area": this.area,
-            "edge": this.edge,
-            "second": this.second
+          if (this.testType == 0) {
+            this.getInfo(this.getData())
+          }else if(this.testType == 2) {
+            this.getRecursiveDate()
           }
-          this.$store.dispatch("global/startLoading");
-          this.getInfo(data)
-          this.getRecursiveDate()
         }
       },
       getInfo: function(data) {
+        this.$store.dispatch("global/startLoading");
+        const time = new Date();
+        this.timestamp.singleTesting = time;
         this.$store
           .dispatch("curl/getCurlInfo", data)
           .then(
@@ -369,7 +388,7 @@
               this.commandData = result.data.command;
               this.responseCode = result.data.responseCode;
               this.timeTotal = result.data.timeTotal
-              this.responseCodeAndTimeTotal = result.data.responseCode+' '+result.data.timeTotal
+              this.responseCodeAndTimeTotal = result.data.responseCode+' '+result.data.timeTotal + 'Sec'
               this.$store.dispatch("global/finishLoading");
             }.bind(this)
           )
@@ -516,6 +535,7 @@
       },
       getRecursiveDate: function () {
         const self = this;
+        const time = new Date();
         let url = '';
         this.desserts = [];
         if(/(http(s?)):\/\//i.test(this.url)) {
@@ -529,6 +549,8 @@
           "edge": self.edge
         }
         this.loading= true;
+        this.$store.dispatch('global/startLoading')
+        this.timestamp.F12 = time;
         this.$store
           .dispatch('curl/getRecursive', data)
           .then(
@@ -540,12 +562,13 @@
               })
 
               this.loading= false;
+              this.$store.dispatch('global/finishLoading')
             }.bind(this)
           )
           .catch(
             function(error) {
               this.loading= false;
-              console.log(error)
+              this.$store.dispatch('global/finishLoading')
             }.bind(this)
           )
       },
@@ -553,7 +576,9 @@
         this.newWin = [];
       },
       newWindowWithParams: function (path) {
-        let routeData = this.$router.resolve({path: '/new-periodical-curl', query: {  path: path }});
+        const data = this.getData()
+        data.url = path
+        let routeData = this.$router.resolve({path: '/new-periodical-curl', query: data});
         window.open(routeData.href,'','height=900,width=1200,resizable=yes,scrollbars=yes,toolbar=yes,status=yes')
       },
       newTabWindow: function () {
