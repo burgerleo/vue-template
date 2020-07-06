@@ -40,7 +40,16 @@ export default {
                 .catch(function (error) {
                     return Promise.reject(error.response.data);
                 });
-        }
+        },
+
+        getUnreachableCPIPs: (context, data) => {
+            return axios.get("traffic_flows_h7/cpips/unreachable").then(function (response) {
+                return Promise.resolve(response.data);
+            })
+                .catch(function (error) {
+                    return Promise.reject(error.response.data);
+                });
+        },
 
     }
 }
