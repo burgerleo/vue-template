@@ -54,7 +54,7 @@ export default {
             // History page
 
             timer: null,
-            totalTime: 60000,
+            totalTime: 60,
 
             stringKeys: [
                 {
@@ -199,7 +199,7 @@ export default {
             }
         },
         resetTimer() {
-            this.totalTime = 60000
+            this.totalTime = 60
         },
         stopTimer() {
             clearInterval(this.timer)
