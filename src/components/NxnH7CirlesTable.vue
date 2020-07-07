@@ -8,13 +8,13 @@
                             v-progress-linear.mb-n1(:active="loading" height="2px" indeterminate :color="colorList[4]")
                 thead.v-data-table-header
                     tr
-                        th(rowspan="2" colspan="2" :class="colorList[3]") 
+                        th(rowspan="2" colspan="2" :class="colorList[6]") 
                             h2 {{ site + "\nIn   \\   Out"}} 
                         th(:colspan="r1")
-                            v-avatar(v-if="r1>0" tile width="100%" :height="columnHeight" :color="colorList[3]" dark) 
+                            v-avatar(v-if="r1>0" tile width="100%" :height="columnHeight" :color="colorList[6]" dark) 
                                 h2 {{"R1"}}
                         th(:colspan="r2") 
-                            v-avatar(v-if="r2>0" tile width="100%" :height="columnHeight" :color="colorList[3]" dark) 
+                            v-avatar(v-if="r2>0" tile width="100%" :height="columnHeight" :color="colorList[6]" dark) 
                                 h2 {{"R2"}}
                     tr
                         th(v-for="outLine in columns")
@@ -23,10 +23,10 @@
                 tbody
                     tr(v-for="(inLine,key) in columns") 
                         th(v-if="(key == 0)" :rowspan="r1" :height="columnHeight*r1")
-                            v-avatar(tile width="100%" height="100%" :color="colorList[3]" dark) 
+                            v-avatar(tile width="100%" height="100%" :color="colorList[6]" dark) 
                                 h2 {{"R1"}}
                         th(v-if="(key == r1)" :rowspan="r2" :height="columnHeight*r2")
-                            v-avatar(tile width="100%" height="100%" :color="colorList[3]" dark) 
+                            v-avatar(tile width="100%" height="100%" :color="colorList[6]" dark) 
                                 h2 {{"R2"}}
                         th 
                             v-avatar(tile width="100%" :height="columnHeight" :color="getCorGColor(inLine)" dark)
@@ -81,22 +81,20 @@ export default {
     },
     data() {
         return {
-            columnHeight: 50,
-            circleSize1: 34,
-            circleSize2: 14,
-            r1: 0,
-            r2: 0,
-            columns: [],
+            columnHeight: 50, // 最外框欄高
+            circleSize1: 34,  // 同心圓 外框大小
+            circleSize2: 14,  // 同心圓 內框大小
+            r1: 0, // r1 數量
+            r2: 0, // r2 數量
+            columns: [], // R1 + R2 欄位名稱 (按照順序放入)
             colorList: [
-                'green lighten-2',
-                'yellow lighten-2',
-                'red lighten-2',
-                'grey lighten-2',
-                'blue lighten-2', // Global
-                'pink lighten-4', // China
-                'brown lighten-3', // R1
-                'blue-grey lighten-3', // R2
-                'grey lighten-4' // 灰白色
+                'green lighten-2',  // 綠 #81C784
+                'yellow lighten-2', // 黃 #FFF176
+                'red lighten-2',    // 紅 #E57373
+                'grey lighten-2',   // NULL   灰色 #E0E0E0
+                'blue lighten-2',   // Global 藍   #64B5F6
+                'pink lighten-4',   // China  粉   #F8BBD0
+                'grey'              // 灰色 #9E9E9E
             ]
         }
     },
