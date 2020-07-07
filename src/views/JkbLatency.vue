@@ -3,7 +3,7 @@
         v-row
             v-col.pb-1.pt-1(cols="12")
                 v-toolbar(flat white dense)
-                    v-toolbar-title.pl-1 JKB Latency
+                    v-toolbar-title.pl-1 JKB RTT
                     v-divider.mx-1(inset vertical)
 
                     v-radio-group.mx-0(v-model='isp' row hide-details)
