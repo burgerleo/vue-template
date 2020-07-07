@@ -75,7 +75,7 @@
                             
                             v-select(v-model="formData.good" :items="['Yes','No']" label="Good")
                             
-                            v-combobox(v-model="formData.tag" :items="['A','B','C','D']" label="Tag" hide-selected dense hide-details)
+                            v-combobox(v-model="formData.tag" :items="['A','B','C','D']" label="Tag" hide-selected)
                                 template(v-slot:no-data)
                                     v-card-text No results matching 
                             v-text-field(v-model="formData.url" label="URL Search" type="search" name="path")
@@ -319,8 +319,6 @@ export default {
             this.dialog.add = true
             this.formData = {}
             this.formData.id = -1
-
-            this.defaultAnim.pause()
         },
         editDialog(item) {
             this.formTitle = 'Edit ...'
