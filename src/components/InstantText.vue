@@ -54,6 +54,7 @@ export default {
             type: Array,
             default: () => [10, 24]
         },
+        // 如果輸入 0 等於最大上限同等於，資料總筆數
         bufferSize: {
             type: Number,
             default: 500

@@ -20,9 +20,9 @@
             v-col(cols="12")
                 h3.pd-0 Logs : 
                 div(v-show="tab == 0")
-                    InstantText(ref="textbox" :hideLineCountBar="true" :hideTextSizeBar="true" :stringKeys="stringKeys" :defaultLineCount="pageCount")
+                    InstantText(ref="textbox" hideLineCountBar hideTextSizeBar :stringKeys="stringKeys" :defaultLineCount="pageCount")
                 div(v-show="tab == 1")
-                    InstantText(ref="textbox2" :hideLineCountBar="true" :hideTextSizeBar="true" :stringKeys="stringKeys" :defaultLineCount="pageCount2")
+                    InstantText(ref="textbox2" hideLineCountBar hideTextSizeBar :stringKeys="stringKeys" :defaultLineCount="pageCount2" :lineCountRange="lineCountRange2" :bufferSize="0" )
 </template>
 
 <script>
@@ -40,13 +40,21 @@ export default {
         return {
             tab: 0,
             tabs: [{ name: 'Latest' }, { name: 'History' }],
+            
+            // Latest page
             pageCount: 20,
-            pageCount2: 100,
             countList: [20, 50],
+            // Latest page
+
+            // History page
+            pageCount2: 10000,
             day: 1,
             dayList: [1, 2],
+            lineCountRange2: [10000, 10000],
+            // History page
+
             timer: null,
-            totalTime: 60,
+            totalTime: 60000,
 
             stringKeys: [
                 {
@@ -163,6 +171,7 @@ export default {
                     this.$refs.textbox2.$emit('clearnOrigin')
 
                     this.pageCount2 = logList.length
+                    this.lineCountRange2 = [this.pageCount2, this.pageCount2]
 
                     this.$refs.textbox2.$emit('addString', logList.reverse())
                     break
@@ -190,7 +199,7 @@ export default {
             }
         },
         resetTimer() {
-            this.totalTime = 60
+            this.totalTime = 60000
         },
         stopTimer() {
             clearInterval(this.timer)
