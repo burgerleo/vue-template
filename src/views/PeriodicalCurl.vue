@@ -7,68 +7,6 @@
                     v-card-text
                         v-form(ref="form" onsubmit="return false;")
                             v-layout(wrap)
-                                v-flex.pt-0.pb-0(xs12 sm12 md12)
-                                    v-layout.px-2(row)
-                                        v-flex.pt-0.pb-0(xs12 sm3 md3)
-                                            v-text-field(v-model="second" label="Second" type="number" min="5" max="100")
-                                                v-layout.ml-auto.mr-auto(wrap v-if="testType==0")
-                                    v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm12 md12)
-                                        v-radio-group.pt-0.pb-0.mt-0.mb-0(v-model="area" :mondatory="true" row)
-                                            v-radio(label="TW" :value="0")
-                                            v-radio(label="HK" :value="1")
-                                            v-flex.pt-0.pb-0.mt-0.mb-0(xs12 sm6 md6)
-                                                v-select(v-if="area==0" :disabled="area==1" v-model="edge" :items="twEdge" label="TW Edge" name="tw_edge" item-text="text" item-value="id")
-                                                v-select(v-if="area==1" :disabled="area==0" v-model="edge" :items="hkEdge" label="HK Edge" name="hk_edge" item-text="text" item-value="id")
-                                v-flex.pt-0.pb-0(xs12 sm6 md4)
-                                    v-select(v-model="method" :items="selectMethod" label="HTTP Method" item-text="name" item-value="id" :rules="[rules.required]" @change="defaultParameters")
-                                v-flex.pt-0.pb-0(xs12 sm6 md4)
-                                    v-select(v-model="redirect" :items="selectRedir" label="Max Num. of Redirects" item-text="name" item-value="id" )
-                                v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
-                                    v-text-field(v-model="url" label="URL" type="" name="url" :rules="[rules.required, rules.url]")
-                                v-flex.py-6.pt-0.pb-0(xs12 sm6 md6)
-                                    v-checkbox(v-model="original" label="Origin" @change="clearOriginal")
-                                v-flex.py-6.pt-0.pb-0(xs12 sm6 md6 v-if="original==true")
-                                    v-text-field(v-model="hostName" label="Host Name" type="" name="hostName" readonly background-color="#ECEFF1")
-                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true")
-                                    v-text-field(v-model="port" label="Port" type="" name="port")
-                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-if="original==true && multiHostIp==false")
-                                    v-text-field(v-model="hostIp" label="Host IP" type="" name="hostIp")
-                                v-flex.py-6.pt-0.pb-0(xs12 sm3 md3 v-else="original==true && multiHostIp==true")
-                                    v-radio-group.pt-0.mt-1(row v-model="hostIp" :mandatory="true") Host IP
-                                        v-spacer.pl-3
-                                            v-radio(v-for="ip in hostIpList" :label="ip" :value="ip")
-                                v-flex.pt-0.pb-0(xs12 pa-2)
-                                    v-layout.px-2(row v-for="(header,index) in headers " :key="index")
-                                        v-flex(xs12 sm3 md3)
-                                            v-text-field(label="Key" v-model="header.key")
-                                        v-flex(xs12 sm6 md6)
-                                            v-text-field(label="Value" v-model="header.value")
-                                        v-flex(xs12 sm3 md3)
-                                            v-btn( color="primary" dark @click="deleteRow(index)") X
-                                v-flex.pt-0.pb-0(row align-center xs12 sm12 md12)
-                                    v-btn( color="primary" dark @click="addRow") Add Headers
-
-                                v-layout.px-2.pt-0.pb-0(row v-if="method=='POST'")
-                                    v-flex(xs12 sm12 md12)
-                                        v-flex(xs12 sm6 md3)
-                                            v-select(v-model="postInput" :items="selectPostInput" label="Data Input Method" @change="defaultParameters")
-                                        v-flex(xs12 sm12 md8 v-if="postInput!='Parameters'")
-                                            v-text-field(label="Post Body" v-model="postBody")
-                                        v-flex(xs12 v-if="postInput=='Parameters'")
-                                            v-layout.px-2(row v-for="(parameter,index) in parameters " :key="index")
-                                                v-flex(xs12 sm3 md3)
-                                                    v-text-field(label="Key" v-model="parameter.key")
-                                                v-flex(xs12 sm6 md6)
-                                                    v-text-field(label="Value" v-model="parameter.value")
-                                                v-flex(xs12 sm3 md3)
-                                                    v-btn( color="primary" dark @click="deleteParameter(index)") X
-                                    v-flex(row align-center xs12 sm12 md12 v-if="postInput=='Parameters'")
-                                        v-btn(color="primary" dark @click="addParameter") Add Parameters
-
-                                v-flex.py-6.pt-0.pb-0(xs12 sm12 md12)
-                                    v-checkbox(v-model="headerOnly" label="Header only")
-                                v-flex.pt-0.pb-0(xs12)
-                                    v-btn(color="primary" block @click="send('nameForm')") SEND
                                 v-flex.pt-0.pb-0(xs12 v-if="testType==0")
 
                                     v-card-text.pb-0.pl-0
@@ -79,23 +17,8 @@
                                         code.bash
                                     v-card-text.font-weight-bold.pb-0 Response Code & Download Time:
                                     pre(v-highlightjs="responseCodeAndTimeTotal")
-                                        code.python.headline.font-weight-black
+                                        code.python.title.font-weight-medium
 
-                                    v-card-text.font-weight-bold Header:
-                                        v-expansion-panels
-                                            v-expansion-panel
-                                                v-expansion-panel-header
-                                                    v-expansion-panel-content
-                                                        pre(v-highlightjs="headerData")
-                                                            code.bash
-
-                                    v-card-text.font-weight-bold.pt-0 Body:
-                                        v-expansion-panels
-                                            v-expansion-panel
-                                                v-expansion-panel-header
-                                                    v-expansion-panel-content
-                                                        pre(v-highlightjs="bodyData")
-                                                            code.bash
                     v-divider
 </template>
 <script>
@@ -133,6 +56,7 @@
         date:'',
         time:'',
         responseCodeAndTimeTotal:'',
+        TempResponseCodeAndTimeTotal:[],
         domainList:[],
         hostIpList: [],
         multiHostIp: false,
@@ -150,12 +74,6 @@
       };
     },
     watch:{
-      // url: function(value) {
-      //   this.originalDataFormat(value)
-      //   if (value !== '' && value.match(/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/)){
-      //     this.getDomainList(value)
-      //   }
-      // },
       url: function(value) {
         if (value !== '' && value.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.%]+$/gm)){
           const domain = this.originalDataFormat(value)
@@ -174,34 +92,8 @@
     },
     methods: {
       send: function() {
-        const method = (this.method == "GET" ? "get" : "post")
-        const headerOnly = (this.headerOnly == true ? 1 : 0)
-        const header = this.headers
-        const parameters = this.parameters
-        const time = new Date();
-        if (this.$refs.form.validate()) {
-          this.timestamp = time;
-          var data = {
-            "url" : this.url,
-            "method" : method,
-            "redirect" : this.redirect,
-            "headerOnly" : headerOnly,
-            "original": this.original,
-            "hostName": this.hostName,
-            "port": this.port,
-            "hostIp": this.hostIp,
-            "header": header,
-            "parameters": parameters,
-            "postInput": this.postInput,
-            "postBody": this.postBody,
-            "area": this.area,
-            "edge": this.edge,
-            "second": this.second
-          }
           this.$store.dispatch("global/startLoading");
-          this.pollingList.push(data)
           this.polling(this.pollingList)
-        }
       },
       getInfo: function(data) {
         this.$store
@@ -217,18 +109,13 @@
               this.commandData = result.data.command;
               this.responseCode = result.data.responseCode;
               this.timeTotal = result.data.timeTotal
-              this.responseCodeAndTimeTotal = (this.responseCodeAndTimeTotal === '')
-                ? this.date+ '   ' + this.time
-                + '   '
-                + result.data.responseCode
-                + '   '
-                + result.data.timeTotal
-                : this.responseCodeAndTimeTotal
-                + "\r\n " + this.date+ '   ' + this.time
-                + '   '
-                + result.data.responseCode
-                + '   '
-                + result.data.timeTotal
+
+              this.TempResponseCodeAndTimeTotal.push(this.date+ '   ' + this.time+'  '+result.data.responseCode+ '   ' + result.data.timeTotal + 'Sec')
+              if (this.TempResponseCodeAndTimeTotal.length>20) {
+                this.TempResponseCodeAndTimeTotal.shift()
+              }
+              this.responseCodeAndTimeTotal = this.TempResponseCodeAndTimeTotal.join("\r\n ")
+
               this.$store.dispatch("global/finishLoading");
             }.bind(this)
           )
@@ -375,6 +262,7 @@
       },
       polling: function (data) {
         clearInterval(this.timer)
+        console.log(data)
         data.forEach((item, index, array) => {
           var second = parseInt(item.second+'000')
           this.timer = window.setInterval(() => {
@@ -389,8 +277,21 @@
     created() {
       this.getCustomerInfo();
       this.getEdgeInfo();
-    },mounted() {
-      this.url = this.path = this.$route.query.path ? this.$route.query.path : '';
+    },
+    mounted() {
+      if (this.$route.query){
+        // console.log(this.$route.query)
+        const data = this.$route.query
+
+        if (data.original==='false'){
+          data.original = false
+        }else{
+          data.original = true
+        }
+
+        this.pollingList.push(data)
+        this.send()
+      }
     }
   };
 </script>
