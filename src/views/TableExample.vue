@@ -48,6 +48,22 @@
                         div bgpList({{bgpList.length}}):
                         pre {{bgpList}}
 
+                v-row.px-1.py-1
+                    v-col(cols="12")
+                        div
+                            v-btn.mb-2.mr-2(color="primary" dark @click="addString") Add String
+                            v-btn.mb-2.mr-2(color="primary" dark @click="hideLineCountBar = !hideLineCountBar") Switch LineCountBar
+                            v-btn.mb-2.mr-2(color="primary" dark @click="hideTextSizeBar = !hideTextSizeBar") Switch TextSizeBar
+                            
+                        InstantText(ref="textbox" :defaultLineCount="defaultLineCount1" :defaultTextSize="14" :hideLineCountBar="hideLineCountBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKey1" :lineCountRange="lineCountRange1")
+                
+                v-row.px-1.py-1
+                    v-col(cols="12")
+                        div
+                            v-btn.mb-2.mr-2(color="primary" dark @click="addString2") Add String2
+                            v-btn.mb-2.mr-2(color="primary" dark @click="stringDisplayModule = !stringDisplayModule") Switch Display Module
+                        InstantText(ref="textbox2" :hideLineCountBar="hideLineCountBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKeys2" :startString="startString2" :stringDisplayModule="stringDisplayModule")
+
             v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
                 v-card
                     v-card-title.title {{formTitle}}
@@ -59,7 +75,7 @@
                             
                             v-select(v-model="formData.good" :items="['Yes','No']" label="Good")
                             
-                            v-combobox(v-model="formData.tag" :items="['A','B','C','D']" label="Tag" hide-selected dense hide-details)
+                            v-combobox(v-model="formData.tag" :items="['A','B','C','D']" label="Tag" hide-selected)
                                 template(v-slot:no-data)
                                     v-card-text No results matching 
                             v-text-field(v-model="formData.url" label="URL Search" type="search" name="path")
@@ -84,16 +100,19 @@
 import textFieldRules from '../utils/textFieldRules'
 import DataTable2 from '../components/DataTable2'
 import DataTable3 from '../components/NxnH7CirlesTable'
+import InstantText from '../components/InstantText'
 import addJson from '../assets/icon/add/add.json'
 import toggleJson from '../assets/icon/toggle/toggle.json'
+import dateFormat from '../utils/dateFormat'
 
 export default {
-    name: 'DomainManage',
-    mixins: [textFieldRules],
+    name: 'tableExample',
+    mixins: [textFieldRules, dateFormat],
 
     components: {
         DataTable2,
-        DataTable3
+        DataTable3,
+        InstantText
     },
     data() {
         return {
@@ -191,7 +210,7 @@ export default {
                 autoplay: true
             },
             // 動態 icon 建立後存放
-            defaultAnim: [], 
+            defaultAnim: [],
 
             bgpList: [
                 'CUG-HKR2C',
@@ -204,6 +223,87 @@ export default {
             tableData: {},
             loading2: false,
 
+            // string Module
+
+            hideLineCountBar: false,
+            hideTextSizeBar: false,
+            stringDisplayModule: false,
+            lineCountRange1: [1, 200],
+            defaultLineCount1: 8,
+
+            stringKey1: [
+                {
+                    value: 'created_at', // 要顯示的 Key
+                    color: '', // 顏色 可接受 vuetify cass name or 色碼(開頭要有# 號)
+                    space: true, //是否要保留文字後面的空白
+                    default: '' //在文字的最後補上的字元
+                },
+                {
+                    value: 'source',
+                    color: '#fff59d'
+                },
+                {
+                    value: 'domain',
+                    color: 'red--text text--lighten-1',
+                    space: true
+                },
+                {
+                    value: 'changed_from_cname',
+                    space: false
+                },
+                {
+                    value: '(',
+                    default: '(',
+                    space: false
+                },
+                {
+                    value: 'changed_from_provider_name',
+                    color: 'red--text text--lighten-1',
+                    space: false
+                },
+                {
+                    value: ')',
+                    default: ')',
+                    space: true
+                },
+                {
+                    value: 'changeIcon',
+                    default: '⇨',
+                    space: true
+                },
+                {
+                    value: 'changed_to_cname',
+                    space: false
+                },
+                {
+                    value: '(',
+                    default: '(',
+                    space: false
+                },
+                {
+                    value: 'changed_to_provider_name',
+                    color: 'red--text text--lighten-1',
+                    space: false
+                },
+                {
+                    value: ')',
+                    default: ')',
+                    space: true
+                }
+            ],
+
+            startString2: {
+                value: '●', // 起始符號 or 文字
+                color: 'blue--text text--lighten-2', // 顏色 可接受 vuetify cass name or 色碼(開頭要有# 號)
+                display: true // 是否需要顯示
+            },
+            stringKeys2: [
+                {
+                    value: 'string'
+                }
+            ]
+
+            // string Module
         }
     },
     watch: {},
@@ -219,8 +319,6 @@ export default {
             this.dialog.add = true
             this.formData = {}
             this.formData.id = -1
-
-            this.defaultAnim.pause()
         },
         editDialog(item) {
             this.formTitle = 'Edit ...'
@@ -379,12 +477,71 @@ export default {
             this.tableData = tableData
 
             this.bgpList = JSON.parse(JSON.stringify(bgpList))
+        },
+
+        // string Module
+        addString() {
+            this.$refs.textbox.$emit('addString', [
+                {
+                    domain:
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.' +
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.com',
+                    source: this.getRandomByMinMax(0, 1) ? 'iRouteCDN' : 'uCDN',
+                    changed_from_cname:
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.' +
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.cdn.com',
+                    changed_from_provider_name:
+                        this.makerandomletter(1) +
+                        this.getRandomByMinMax(10, 99) +
+                        '-' +
+                        this.getRandomByMinMax(1, 9),
+                    changed_to_cname:
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.' +
+                        this.makerandomletter(this.getRandomByMinMax(3, 10)) +
+                        '.cdn.com',
+                    changed_to_provider_name:
+                        this.makerandomletter(1) +
+                        this.getRandomByMinMax(10, 99) +
+                        '-' +
+                        this.getRandomByMinMax(1, 9),
+
+                    created_at: this.dateFormat2(new Date())
+                }
+            ])
+        },
+
+        addString2() {
+            this.$refs.textbox2.$emit('addString', [
+                {
+                    string:
+                        '64 bytes from 114.114.114.114: icmp_req=1 ttl=' +
+                        this.getRandomByMinMax(50, 100) +
+                        ' time=' +
+                        this.getRandomByMinMax(100, 300) +
+                        ' ms'
+                }
+            ])
         }
+
+        // string Module
     },
     mounted() {
         document.title = 'Table Example'
         this.init()
         this.setTableData()
+
+        // string Module
+        for (let index = 0; index < 10; index++) {
+            this.addString()
+            this.addString2()
+        }
+
+        // string Module
     }
 }
 </script>

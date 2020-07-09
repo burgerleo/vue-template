@@ -199,10 +199,10 @@ export default new Router({
                 },
                 {
                     name: "jkb_latency",
-                    path: "jkb-Latency",
+                    path: "jkb-rtt",
                     component: JkbLatency,
                     meta: {
-                        title: 'JKB Latency'
+                        title: 'JKB RTT'
                     }
                 },
                 {

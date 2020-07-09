@@ -118,9 +118,9 @@ export default {
                         },
                         {
                             icon: 'mdi-looks',
-                            title: 'JKB Latency',
+                            title: 'JKB RTT',
                             display: true,
-                            router: '/jkb-Latency'
+                            router: '/jkb-rtt'
                         },
                         {
                             icon: 'mdi-gesture',
