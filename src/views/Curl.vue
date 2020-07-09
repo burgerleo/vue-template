@@ -306,7 +306,8 @@
           min:1,
           max:10000,
           downloadRangeSecondStage:[1000,5000]
-        }
+        },
+        selectedEdge:''
       };
     },
     watch:{
@@ -339,6 +340,14 @@
         }else{
           this.original = true
         }
+      },
+      edge(value){
+        const edgeInfo = this.edgeList.find(function (item, index, array) {
+          return item.id == value
+        })
+
+        this.selectedEdge = edgeInfo
+
       }
     },
     methods: {
@@ -441,24 +450,28 @@
         this.parameters.splice(index, 1)
       },
       mappingIp:function (value) {
-        this.multiHostIp = false;
-        this.hostIp = '';
-        var arr = [];
-        let list = this.domainList.filter((item, index, array) => {
-          // return item.domain.match(value)//模糊搜尋
-          return item.domain == value//完整搜尋
-        })
-
-        list.forEach((item) => {
-          arr.push(item.host)
-        })
-        if (list.length ==1) {
-          this.hostIp = arr[0]
-        }else if (list.length >1) {
-          this.multiHostIp = true
-          this.hostIpList = arr
+        if (this.selectedEdge.cdn_provider == 'uCDN'){
+          this.hostIp = 'This function is not available. Please input it manually';
         }else{
-          this.hostIp = "FQDN Not Found in CDNBest"
+          this.multiHostIp = false;
+          this.hostIp = '';
+          var arr = [];
+          let list = this.domainList.filter((item, index, array) => {
+            // return item.domain.match(value)//模糊搜尋
+            return item.domain == value//完整搜尋
+          })
+
+          list.forEach((item) => {
+            arr.push(item.host)
+          })
+          if (list.length ==1) {
+            this.hostIp = arr[0]
+          }else if (list.length >1) {
+            this.multiHostIp = true
+            this.hostIpList = arr
+          }else{
+            this.hostIp = "FQDN Not Found in CDNBest"
+          }
         }
       },
       getDomainList:function (value) {
