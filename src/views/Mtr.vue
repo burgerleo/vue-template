@@ -324,13 +324,28 @@ export default {
             .dispatch('edge/getInfo')
             .then(
                 function(result) {
-                    this.edgeList = result.data.map((item) => {
+                    // this.edgeList = result.data.map((item) => {
+                    //     return {
+                    //         name: item.name,
+                    //         edge_oob: item.edge_oob,
+                    //         area: item.area
+                    //     }
+                    // })
+
+                    // 只顯示已部署 Ping, Traceroute, MTR, Dig 之 Edges
+                    let installedBinEdges = ['10.10.13.200', '10.11.51.200']
+                    
+                    let edges = result.data
+                    .filter(item => installedBinEdges.includes(item.edge_oob))
+                    .map(item => {
                         return {
                             name: item.name,
                             edge_oob: item.edge_oob,
                             area: item.area
                         }
                     })
+
+                    this.edgeList.push(...edges)
 
                 this.$store.dispatch('global/finishLoading')
                 }.bind(this)
