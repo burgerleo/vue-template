@@ -4,7 +4,7 @@
         NavigationDrawer(ref="drawer")
         v-app-bar(fixed :clipped-left="clipped" app color="primary" dark)
             v-app-bar-nav-icon(@click.stop="$refs.drawer.drawer = !$refs.drawer.drawer")
-            v-toolbar-title H7 Operation Portal
+            v-toolbar-title H7 Vue Template
             v-spacer
             v-btn(icon :to="'/helper'+ path" v-if="!displayHelper()" target="_blank")
                 v-icon mdi-help-circle
@@ -35,18 +35,10 @@ export default {
         return {
             drawer: true,
             clipped: true,
-            year: 2019,
+            year: 2020,
             version: process.env.VUE_APP_VERSION,
             env: process.env.NODE_ENV,
             inset: false,
-            tabs: [
-                { id: 1, name: 'CST' },
-                { id: 2, name: 'OPS' },
-                { id: 3, name: 'RD' }
-            ],
-            selectedTabId: 1,
-            selectedTab: 1,
-            tabId: 1,
             dialog: {
                 setting: false
             },
@@ -54,18 +46,11 @@ export default {
         }
     },
     watch: {
-        selectedTab: function() {
-            this.selectedTabId = this.selectedTab - 1
-        },
         $route(to, from) {
             this.setPath()
         }
     },
     methods: {
-        navigationControl(value) {
-            this.selectedTab = value
-            this.selectedTabId = this.selectedTab - 1
-        },
         setPath() {
             this.path = this.$router.currentRoute.path
         },
