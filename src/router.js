@@ -5,6 +5,7 @@ import Layout from "./views/Layout.vue";
 import Helper from "./views/admin/Helper.vue";
 import TableExample from "./views/TableExample.vue";
 import NxnExample from "./views/NxnExample.vue";
+import TextBoxExample from "./views/TextBoxExample.vue";
 
 
 
@@ -60,7 +61,17 @@ export default new Router({
                         title: 'NXN Example'
                     }
                 },
+                {
+                    name: "TextBoxExample",
+                    path: "textbox-example",
+                    component: TextBoxExample,
+                    meta: {
+                        title: 'TextBox Examplee'
+                    }
+                },
 
+
+                
                 
             ]
         }

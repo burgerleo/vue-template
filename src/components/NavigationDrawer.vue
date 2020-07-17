@@ -56,15 +56,29 @@ export default {
                 {
                     tabId: 0,
                     icon: 'mdi-magnify',
+                    title: 'TextBox Example',
+                    display: true,
+                    active: false,
+                    router: '/textbox-example'
+                },
+                {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
                     title: 'Lookup',
                     display: true,
                     active: false,
                     items: [
                         {
                             icon: 'mdi-access-point',
-                            title: 'IP Location',
-                            display: true
-                            // router: '/ip2location'
+                            title: 'Lookup2',
+                            display: true,
+                            router: '/about'
+                        },
+                        {
+                            // icon: 'mdi-access-point',
+                            title: 'Lookup2',
+                            display: true,
+                            router: '/about'
                         }
                     ]
                 },
