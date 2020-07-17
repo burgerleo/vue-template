@@ -40,193 +40,35 @@ export default {
                 {
                     tabId: 0,
                     icon: 'mdi-magnify',
+                    title: 'Table Example',
+                    display: true,
+                    active: false,
+                    router: '/table-example'
+                },
+                {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
+                    title: 'NXN Example',
+                    display: true,
+                    active: false,
+                    router: '/nxn-example'
+                },
+                {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
                     title: 'Lookup',
                     display: true,
                     active: false,
                     items: [
                         {
-                            icon: 'mdi-ethernet-cable',
-                            title: 'Dig',
-                            display: true,
-                            router: '/dig'
-                        },
-                        {
                             icon: 'mdi-access-point',
                             title: 'IP Location',
-                            display: true,
-                            router: '/ip2location'
+                            display: true
+                            // router: '/ip2location'
                         }
                     ]
                 },
-                {
-                    tabId: 0,
-                    icon: 'mdi-test-tube',
-                    title: 'Test & Analyze',
-                    display: true,
-                    active: false,
-                    items: [
-                        {
-                            icon: 'mdi-check',
-                            title: 'Curl & F12',
-                            display: true,
-                            router: '/curl'
-                        },
-                        {
-                            icon: 'mdi-pin',
-                            title: 'Ping',
-                            display: true,
-                            router: '/ping'
-                        },
-                        {
-                            icon: 'mdi-lan-pending',
-                            title: 'Ping Realtime',
-                            display: true,
-                            router: '/ping-realtime'
-                        },
-                        {
-                            icon: 'mdi-vector-circle',
-                            title: 'Test All Circuits',
-                            display: true,
-                            router: '/test-all-circuits'
-                        },
-                        {
-                            icon: 'mdi-file-tree',
-                            title: 'Traceroute',
-                            display: true,
-                            router: '/traceroute'
-                        },
-                        {
-                            icon: 'mdi-sitemap',
-                            title: 'MTR',
-                            display: true,
-                            router: '/mtr'
-                        }
-                    ]
-                },
-                {
-                    tabId: 0,
-                    icon: 'mdi-monitor',
-                    title: 'Monitoring',
-                    display: true,
-                    active: false,
-                    items: [
-                        {
-                            icon: 'mdi-lumx',
-                            title: 'JKB Availability',
-                            display: true,
-                            router: '/jkb-availability'
-                        },
-                        {
-                            icon: 'mdi-looks',
-                            title: 'JKB RTT',
-                            display: true,
-                            router: '/jkb-rtt'
-                        },
-                        {
-                            icon: 'mdi-gesture',
-                            title: 'Dummy Packet Loss',
-                            display: true,
-                            router: '/dummy-packet-loss'
-                        },
-                        {
-                            icon: 'mdi-gauge',
-                            title: 'Dummy RTT',
-                            display: true,
-                            router: '/dummy-rtt'
-                        },
-                        {
-                            icon: 'mdi-nfc-tap',
-                            title: 'FQDN Change',
-                            display: true,
-                            router: '/fqdnChange'
-                        }
-                    ]
-                },
-                {
-                    tabId: 0,
-                    icon: 'mdi-file',
-                    title: 'Reports',
-                    display: true,
-                    router: '/reports'
-                },
-                {
-                    tabId: 0,
-                    icon: 'mdi-human-greeting',
-                    title: 'Management',
-                    display: true,
-                    active: false,
-                    items: [
-                        {
-                            icon: 'mdi-format-align-justify',
-                            title: 'Cert Management',
-                            display: true,
-                            router: '/crt-key'
-                        },
-                        {
-                            icon: 'mdi-chart-histogram',
-                            title: 'Package IP Mapping',
-                            display: true,
-                            router: '/dns-records'
-                        }
-                    ]
-                },
-                {
-                    tabId: 0,
-                    icon: 'mdi-account',
-                    title: 'Configuration MGT',
-                    display: true,
-                    active: false,
-                    items: [
-                        {
-                            title: 'BGP Peer',
-                            icon: 'mdi-call-made',
-                            display: true,
-                            router: '/bgp'
-                        },
-                        {
-                            icon: 'mdi-forward',
-                            title: 'Dummy IP Combination',
-                            display: true,
-                            router: '/dummy-ip'
-                        },
-                        {
-                            icon: 'mdi-comment-check',
-                            title: 'Edge',
-                            display: true,
-                            router: '/edge'
-                        },
-                        {
-                            icon: 'mdi-human-male-female',
-                            title: 'Customer',
-                            display: true,
-                            router: '/customer'
-                        },
-                        {
-                            icon: 'mdi-content-paste',
-                            title: 'FQDN Management',
-                            display: true,
-                            router: '/domain-manage'
-                        },
-                        {
-                            icon: 'mdi-white-balance-sunny',
-                            title: 'H7 IP Prefix',
-                            display: true,
-                            router: '/h7-ip'
-                        },
-                        {
-                            icon: 'mdi-blur-linear',
-                            title: 'Critical Public IP',
-                            display: true,
-                            router: '/cpip'
-                        },
-                        {
-                            icon: 'mdi-ticket',
-                            title: 'Country',
-                            display: true,
-                            router: '/country'
-                        }
-                    ]
-                },
+
                 {
                     tabId: 1,
                     header: 'Platform Administrator'
