@@ -48,6 +48,14 @@ export default {
                 {
                     tabId: 0,
                     icon: 'mdi-magnify',
+                    title: 'Table2 Example',
+                    display: true,
+                    active: false,
+                    router: '/table2-example'
+                },
+                {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
                     title: 'NXN Example',
                     display: true,
                     active: false,
@@ -61,6 +69,23 @@ export default {
                     active: false,
                     router: '/textbox-example'
                 },
+                {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
+                    title: 'TwoList',
+                    display: true,
+                    active: false,
+                    router: '/two-list'
+                },
+                {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
+                    title: 'Table Column',
+                    display: true,
+                    active: false,
+                    router: '/table-column'
+                },
+
                 {
                     tabId: 0,
                     icon: 'mdi-magnify',

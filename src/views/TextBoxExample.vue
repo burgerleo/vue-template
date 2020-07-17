@@ -10,7 +10,6 @@
                             v-btn.mb-2.mr-2(color="primary" dark @click="hideTextSizeBar = !hideTextSizeBar") Switch TextSizeBar
                             
                         InstantText(ref="textbox" :defaultLineCount="defaultLineCount1" :defaultTextSize="14" :hideLineCountBar="hideLineCountBar" :hideTextSizeBar="hideTextSizeBar" :stringKeys="stringKey1" :lineCountRange="lineCountRange1")
-                
                 v-row.px-1.py-1
                     v-col(cols="12")
                         div

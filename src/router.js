@@ -4,10 +4,11 @@ import Home from "./views/Home.vue";
 import Layout from "./views/Layout.vue";
 import Helper from "./views/admin/Helper.vue";
 import TableExample from "./views/TableExample.vue";
+import Table2Example from "./views/Table2Example.vue";
 import NxnExample from "./views/NxnExample.vue";
 import TextBoxExample from "./views/TextBoxExample.vue";
-
-
+import TwoList from "./views/TwoList.vue";
+import TableColumn from "./views/TableColumn.vue";
 
 Vue.use(Router);
 
@@ -50,7 +51,15 @@ export default new Router({
                     component: TableExample,
                     meta: {
                         title: 'Table Example'
-                        
+
+                    }
+                },
+                {
+                    name: "Table2Example",
+                    path: "table2-example",
+                    component: Table2Example,
+                    meta: {
+                        title: 'Table2 Example'
                     }
                 },
                 {
@@ -69,10 +78,22 @@ export default new Router({
                         title: 'TextBox Examplee'
                     }
                 },
-
-
-                
-                
+                {
+                    name: "TwoList",
+                    path: "two-list",
+                    component: TwoList,
+                    meta: {
+                        title: 'Two Lists'
+                    }
+                },
+                {
+                    name: "TableColumn",
+                    path: "table-column",
+                    component: TableColumn,
+                    meta: {
+                        title: 'Table Column'
+                    }
+                },
             ]
         }
         // ,
