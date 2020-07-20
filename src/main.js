@@ -15,6 +15,9 @@ import 'quill/dist/quill.bubble.css' // for bubble theme
 
 import lottie from 'vue-lottie'; // lottie
 import helper from './utils/helper.js'; // helper
+
+import VueColumnsResizableVuetify from 'vue-columns-resizable-vuetify';
+Vue.use(VueColumnsResizableVuetify);
 Vue.mixin(helper);
 
 Vue.use(VueHighlightJS);

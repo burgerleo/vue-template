@@ -21,6 +21,11 @@
         <pre class="col-2">{{list}}</pre>
 
         <pre class="col-2">{{headers}}</pre>
+        <div class="col-8">
+            <v-data-table :items="desserts" :headers="headers2" :v-columns-resizable="true">
+                <!-- <template v-slot:items="{}">//It is not necessary to use template at all</template> -->
+            </v-data-table>
+        </div>
     </div>
 </template>
 
@@ -43,7 +48,51 @@ export default {
                 { id: 4, name: 'David', sport: 'rugby' },
                 { id: 5, name: 'Leo', sport: 'climb' }
             ],
-            dragging: false
+            dragging: false,
+            headers2: [
+                {
+                    text: '#',
+                    align: 'center',
+                    sortable: false,
+                    width: '50px',
+                    value: 'index'
+                },
+                {
+                    text: 'Site',
+                    align: 'left',
+                    sortable: true,
+                    value: 'site'
+                },
+                {
+                    text: 'In',
+                    align: 'left',
+                    sortable: true,
+                    value: 'inName'
+                },
+                {
+                    text: 'Out',
+                    align: 'left',
+                    sortable: true,
+                    value: 'outName'
+                }
+            ],
+            desserts: [
+                {
+                    site: '123',
+                    inName: '333',
+                    outName: '222'
+                },
+                {
+                    site: 'r242fe',
+                    inName: '333',
+                    outName: '1223'
+                },
+                {
+                    site: '12123123',
+                    inName: '335235353',
+                    outName: '44443'
+                }
+            ]
         }
     },
     computed: {
