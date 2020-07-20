@@ -101,7 +101,7 @@ export default {
                         },
                         {
                             // icon: 'mdi-access-point',
-                            title: 'Lookup2',
+                            title: 'Lookup3',
                             display: true,
                             router: '/about'
                         }
