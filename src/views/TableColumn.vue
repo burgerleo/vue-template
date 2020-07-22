@@ -1,32 +1,42 @@
-<template>
-    <div class="row">
-        <div class="col-6">
-            <h3>Draggable table</h3>
+<template lang="pug">
+    div.row
+        div.col-6
+            h3 Draggable table
+            table.table.table-striped
+                thead.thead-dark
+                    draggable(tag="tr" v-bind="dragOptions" v-model="headers")
+                        th(:key="header" scope="col" v-for="header in headers") {{ header }}
+                draggable(tag="tbody" v-bind="dragOptions" v-model="list")
+                    tr(:key="item.name" v-for="item in list")
+                        td(:key="header" v-for="header in headers") {{ item[header] }}
 
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                    <draggable tag="tr" v-bind="dragOptions" v-model="headers">
-                        <th :key="header" scope="col" v-for="header in headers">{{ header }}</th>
-                    </draggable>
-                </thead>
+        div.col-2
+            pre {{list}}
+        div.col-2
+        div.col-2
+            pre {{headers}}
+        
+        div.col-8
+            draggable(tag="tbody" v-bind="dragOptions" v-model="headers2")
+                tr(:key="item.value" v-for="item in headers2")
+                    td(:key="item.value") {{ item.value }}
 
-                <draggable tag="tbody" v-bind="dragOptions" v-model="list">
-                    <tr :key="item.name" v-for="item in list">
-                        <td :key="header" v-for="header in headers">{{ item[header] }}</td>
-                    </tr>
-                </draggable>
-            </table>
-        </div>
+            v-data-table(:headers="headers2" :items="desserts" v-columns-resizable)
+                //- draggable(tag="div" v-bind="dragOptions" v-model="headers2")
+                    template(v-slot:header.site="{ header }")
+                        div {{ header.text.toUpperCase() }}
+                    template(v-slot:header.inName="{ header }")
+                        div {{ header.text.toUpperCase() }}
+                    template(v-slot:header.outName="{ header }")
+                        div {{ header.text.toUpperCase() }}    
+                template(v-slot:header)
+                    draggable(tag="tr" v-bind="dragOptions" v-model="headers2")
+                        //- td(:key="item.value" v-for="item in headers2") {{ item.text }}
+                        td {{ headers2[0].text }}
+                        td {{ headers2[1].text }}
+                        td {{ headers2[2].text }}
+                        td {{ headers2[3].text }}
 
-        <pre class="col-2">{{list}}</pre>
-
-        <pre class="col-2">{{headers}}</pre>
-        <div class="col-8">
-            <v-data-table :items="desserts" :headers="headers2" :v-columns-resizable="true">
-                <!-- <template v-slot:items="{}">//It is not necessary to use template at all</template> -->
-            </v-data-table>
-        </div>
-    </div>
 </template>
 
 <script>
@@ -78,16 +88,19 @@ export default {
             ],
             desserts: [
                 {
+                    index: '1',
                     site: '123',
                     inName: '333',
                     outName: '222'
                 },
                 {
+                    index: '2',
                     site: 'r242fe',
                     inName: '333',
                     outName: '1223'
                 },
                 {
+                    index: '3',
                     site: '12123123',
                     inName: '335235353',
                     outName: '44443'
