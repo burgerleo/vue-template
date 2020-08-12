@@ -28,13 +28,9 @@
                     >
                         <transition-group :name="'flip-list'" type="transition">
                             <li :key="element.order" class="list-group-item" v-for="element in list">
-                                <i
-                                    :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'"
-                                    @click=" element.fixed=! element.fixed"
-                                    aria-hidden="true"
-                                ></i>
-                                {{element.name}}
+                                <v-icon @click=" element.fixed =! element.fixed">{{element.fixed ? 'mdi-anchor' : 'mdi-pin' }}</v-icon>
                                 <span class="badge">{{element.order}}</span>
+                                {{element.name}}
                             </li>
                         </transition-group>
                     </draggable>
@@ -44,13 +40,9 @@
                     <draggable :move="onMove" element="span" v-bind="dragOptions" v-model="list2">
                         <transition-group class="list-group" name="no" tag="ul">
                             <li :key="element.order" class="list-group-item" v-for="element in list2">
-                                <i
-                                    :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'"
-                                    @click=" element.fixed=! element.fixed"
-                                    aria-hidden="true"
-                                ></i>
-                                {{element.name}}
+                                <v-icon @click=" element.fixed =! element.fixed">{{element.fixed ? 'mdi-anchor' : 'mdi-pin' }}</v-icon>
                                 <span class="badge">{{element.order}}</span>
+                                {{element.name}}
                             </li>
                         </transition-group>
                     </draggable>
@@ -95,15 +87,18 @@ export default {
             list2: [
                 {
                     order: 9,
-                    name: 'Leo'
+                    name: 'Leo',
+                    fixed: false
                 },
                 {
                     order: 10,
-                    name: 'Leo2'
+                    name: 'Leo2',
+                    fixed: false
                 },
                 {
                     order: 11,
-                    name: 'Leo3'
+                    name: 'Leo3',
+                    fixed: false
                 }
             ],
             editable: true,
@@ -157,6 +152,20 @@ export default {
 </script>
 
 <style>
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1.5px solid #ddd;
+}
+.list-group-item:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
 .flip-list-move {
     transition: transform 0.2s;
 }

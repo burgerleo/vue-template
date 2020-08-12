@@ -1,42 +1,33 @@
 <template lang="pug">
-    div.row
-        div.col-6
-            h3 Draggable table
-            table.table.table-striped
-                thead.thead-dark
-                    draggable(tag="tr" v-bind="dragOptions" v-model="headers")
-                        th(:key="header" scope="col" v-for="header in headers") {{ header }}
-                draggable(tag="tbody" v-bind="dragOptions" v-model="list")
-                    tr(:key="item.name" v-for="item in list")
-                        td(:key="header" v-for="header in headers") {{ item[header] }}
+.row
+    .col-6
+        h3 Draggable table
+        table.table.table-striped(v-columns-resizable)
+            thead.thead-dark
+                draggable(tag='tr', v-bind='dragOptions', v-model='headers')
+                    th(:key='header', scope='col', v-for='header in headers') {{ header }}
+            draggable(tag='tbody', v-bind='dragOptions', v-model='list')
+                tr(:key='item.name', v-for='item in list')
+                    td(:key='header', v-for='header in headers') {{ item[header] }}
 
-        div.col-2
-            pre {{list}}
-        div.col-2
-        div.col-2
-            pre {{headers}}
-        
-        div.col-8
-            draggable(tag="tbody" v-bind="dragOptions" v-model="headers2")
-                tr(:key="item.value" v-for="item in headers2")
-                    td(:key="item.value") {{ item.value }}
+        input(v-model='tag')
+        tag(:is='tag', :tag='tag') Hello, world!
 
-            v-data-table(:headers="headers2" :items="desserts" v-columns-resizable)
-                //- draggable(tag="div" v-bind="dragOptions" v-model="headers2")
-                    template(v-slot:header.site="{ header }")
-                        div {{ header.text.toUpperCase() }}
-                    template(v-slot:header.inName="{ header }")
-                        div {{ header.text.toUpperCase() }}
-                    template(v-slot:header.outName="{ header }")
-                        div {{ header.text.toUpperCase() }}    
-                template(v-slot:header)
-                    draggable(tag="tr" v-bind="dragOptions" v-model="headers2")
-                        //- td(:key="item.value" v-for="item in headers2") {{ item.text }}
-                        td {{ headers2[0].text }}
-                        td {{ headers2[1].text }}
-                        td {{ headers2[2].text }}
-                        td {{ headers2[3].text }}
-
+        v-data-table.leo-table(
+            :headers='headers2',
+            :items='desserts',
+            dense,
+            v-columns-resizable
+        )
+            template(v-slot:header)
+                draggable(tag='tr', v-bind='dragOptions', v-model='headers2')
+                    td(:key='item.value', v-for='item in headers2') {{ item.text }}
+        pre {{ desserts }}
+    .col-2
+        pre {{ list }}
+    .col-2
+    .col-2
+        pre {{ headers }}
 </template>
 
 <script>
@@ -46,7 +37,7 @@ export default {
     display: 'Table Column',
     order: 9,
     components: {
-        draggable
+        draggable,
     },
     data() {
         return {
@@ -56,7 +47,7 @@ export default {
                 { id: 2, name: 'Brooke', sport: 'foot' },
                 { id: 3, name: 'Courtenay', sport: 'volley' },
                 { id: 4, name: 'David', sport: 'rugby' },
-                { id: 5, name: 'Leo', sport: 'climb' }
+                { id: 5, name: 'Leo', sport: 'climb' },
             ],
             dragging: false,
             headers2: [
@@ -65,59 +56,74 @@ export default {
                     align: 'center',
                     sortable: false,
                     width: '50px',
-                    value: 'index'
+                    value: 'index',
                 },
                 {
                     text: 'Site',
                     align: 'left',
                     sortable: true,
-                    value: 'site'
+                    value: 'site',
                 },
                 {
                     text: 'In',
                     align: 'left',
                     sortable: true,
-                    value: 'inName'
+                    value: 'inName',
                 },
                 {
                     text: 'Out',
                     align: 'left',
                     sortable: true,
-                    value: 'outName'
-                }
+                    value: 'outName',
+                },
             ],
             desserts: [
                 {
                     index: '1',
-                    site: '123',
-                    inName: '333',
-                    outName: '222'
+                    site: '11',
+                    inName: '11',
+                    outName: '11',
                 },
                 {
                     index: '2',
-                    site: 'r242fe',
-                    inName: '333',
-                    outName: '1223'
+                    site: '22',
+                    inName: '22',
+                    outName: '22',
                 },
                 {
                     index: '3',
-                    site: '12123123',
-                    inName: '335235353',
-                    outName: '44443'
-                }
-            ]
+                    site: '333',
+                    inName: '333',
+                    outName: '333',
+                },
+                {
+                    index: '4',
+                    site: '44444',
+                    inName: '44444',
+                    outName: '44444',
+                },
+                {
+                    index: '5',
+                    site: '5555',
+                    inName: '5555',
+                    outName: '5555',
+                },
+            ],
+            abc: true,
+            tag: 'h1',
         }
     },
+    methods: {},
     computed: {
         dragOptions() {
             return {
                 animation: 0,
                 group: 'description',
                 disabled: false,
-                ghostClass: 'ghost'
+                ghostClass: 'ghost',
             }
-        }
-    }
+        },
+    },
 }
 </script>
 
@@ -134,18 +140,35 @@ export default {
     opacity: 0.5;
     background: #c8ebfb;
 }
-
-thead {
-    tr {
-        th {
-            cursor: move;
-        }
-    }
+.moveTag {
+    cursor: move;
 }
 
-tbody {
-    tr {
+.table {
+    .thead-dark th {
+        color: #fff;
+        background-color: #343a40;
+        border-color: #454d55;
+    }
+    thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
         cursor: move;
+    }
+    td,
+    th {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        cursor: move;
+    }
+}
+.leo-table {
+    tr {
+        th {
+            background-color: #343a40;
+            border-color: #454d55;
+        }
     }
 }
 </style>

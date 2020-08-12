@@ -12,7 +12,7 @@ import TableColumn from "./views/TableColumn.vue";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
     mode: "history",
     base: process.env.BASE_URL,
     routes: [
@@ -107,3 +107,23 @@ export default new Router({
         // }
     ]
 });
+
+router.beforeEach((to, from, next) => {
+    if (
+        to.fullPath == "/aaa"
+    ) {
+        return next({
+            name: 'home',
+        });
+    }
+
+    // console.log(router)
+
+    // return next({
+    //     name: 'home',
+    // });
+
+    return next();
+});
+
+export default router;
