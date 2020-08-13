@@ -9,6 +9,7 @@ import NxnExample from "./views/NxnExample.vue";
 import TextBoxExample from "./views/TextBoxExample.vue";
 import TwoList from "./views/TwoList.vue";
 import TableColumn from "./views/TableColumn.vue";
+import Component1 from "./views/Component1.vue";
 
 Vue.use(Router);
 
@@ -94,6 +95,15 @@ const router = new Router({
                         title: 'Table Column'
                     }
                 },
+                {
+                    name: "Component1",
+                    path: "component1",
+                    component: Component1,
+                    meta: {
+                        title: 'Component1'
+                    }
+                },
+                
             ]
         }
         // ,

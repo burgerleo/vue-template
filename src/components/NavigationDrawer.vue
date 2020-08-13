@@ -85,7 +85,6 @@ export default {
                     active: false,
                     router: '/table-column'
                 },
-
                 {
                     tabId: 0,
                     icon: 'mdi-magnify',
@@ -107,7 +106,14 @@ export default {
                         }
                     ]
                 },
-
+                {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
+                    title: 'Component 1',
+                    display: true,
+                    active: false,
+                    router: '/component1'
+                },
                 {
                     tabId: 1,
                     header: 'Platform Administrator'
