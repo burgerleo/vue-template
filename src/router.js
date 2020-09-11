@@ -10,6 +10,7 @@ import TextBoxExample from "./views/TextBoxExample.vue";
 import TwoList from "./views/TwoList.vue";
 import TableColumn from "./views/TableColumn.vue";
 import Component1 from "./views/Component1.vue";
+import AlexDay12 from "./views/AlexDay12.vue";
 
 Vue.use(Router);
 
@@ -103,6 +104,15 @@ const router = new Router({
                         title: 'Component1'
                     }
                 },
+                {
+                    name: "AlexDay12",
+                    path: "alexday12",
+                    component: AlexDay12,
+                    meta: {
+                        title: 'AlexDay12'
+                    }
+                },
+
                 
             ]
         }

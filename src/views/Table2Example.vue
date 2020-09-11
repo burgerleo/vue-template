@@ -1,113 +1,174 @@
 <template lang="pug">
-    v-container(grid-list-lg)
-        v-layout
-            v-flex(xs12 sm12 md12)
-                v-card
-                    v-toolbar(flat white)
-                        v-toolbar-title Table Example
-                        v-divider.mx-4(inset vertical)
-                        v-text-field(v-model="searchText" append-icon="mdi-magnify" label='Search' single-line hide-details )
-                        v-divider.mx-4(inset vertical)
-                        v-spacer
-                        v-btn.mb-2.mr-2(color="primary" dark @click="loading = !loading") Loading Switch
-                        v-btn.mb-2.mr-2(color="primary" dark @click="clearFilter") clear Filter
-                        v-btn.mb-2.mr-2(color="primary" dark @click="newDialog") Add
-                        v-btn.mb-2.mr-2(color="primary" dark @click="init")
-                            v-icon mdi-refresh
-                        v-menu.mx-0.px-0(offset-y left) 
-                            template(v-slot:activator="{on}")
-                                v-btn.mx-0.px-0.mb-2(icon v-on="on")
-                                    v-icon mdi-dots-vertical
-                            v-list
-                                v-list-item(@click="init")
-                                    v-list-item-title Test List 1
-                                v-list-item(@click="init")
-                                    v-list-item-title Test List 2
-                                v-list-item(@click="init")
-                                    v-list-item-title Test List 3
-
-                    DataTable2(ref="table2" :headers="headers" :items="desserts" :searchText="searchText" :searchList="searchList" :defaultItemsPerPage="itemsPerPage" :itemsPerPageList="itemsPerPageList" :loading="loading" @showDialog="dialogSwitch" :setUripath="jkbURI" :setLinkMethod="setLinkMethod")
-
-                //- v-row
-                    table(class="table table-striped")
-                        thead(class="thead-dark")
-                            draggable(v-model="headers2" tag="tr")
-                                th(v-for="header in headers2" :key="header" scope="col") {{ header }}
-                        tbody
-                            tr(v-for="item in list2" :key="item.name")
-                                td(v-for="header in headers2" :key="header") {{ item[header] }}
-
-                    //- rawDisplayer(class="col-2" :value="list2" title="List")
-
-                    //- rawDisplayer(class="col-2" :value="headers2" title="Headers")
-                //- v-row
-                    draggable(
-                        :list="list3"
-                        :disabled="!enabled"
-                        class="list-group"
-                        ghost-class="ghost"
-                        :move="checkMove"
-                        @start="dragging = true"
-                        @end="dragging = false"
+v-container(grid-list-lg)
+    v-layout
+        v-flex(xs12, sm12, md12)
+            v-card
+                v-toolbar(flat, white)
+                    v-toolbar-title Table Example
+                    v-divider.mx-4(inset, vertical)
+                    v-text-field(
+                        v-model='searchText',
+                        append-icon='mdi-magnify',
+                        label='Search',
+                        single-line,
+                        hide-details
                     )
-                        div(
-                            class="list-group-item"
-                            v-for="element in list3"
-                            :key="element.name"
-                        ) {{ element.name }}
-                v-row
-                    div(class="col-md-3")
-                        draggable(:move="onMove" element="span" v-bind="dragOptions" v-model="list4")
-                            transition-group(class="list-group" name="no" tag="ul")
-                                div(:key="element.order" class="list-group-item" v-for="element in list4")
-                                    v-chip(
-                                        class="ma-2"
-                                        color="primary"
-                                        text-color="white"
-                                        @click="element.fixed =! element.fixed"
-                                    ) {{element.name}}
+                    v-divider.mx-4(inset, vertical)
+                    v-spacer
+                    v-btn.mb-2.mr-2(
+                        color='primary',
+                        dark,
+                        @click='loading = !loading'
+                    ) Loading Switch
+                    v-btn.mb-2.mr-2(
+                        color='primary',
+                        dark,
+                        @click='clearFilter'
+                    ) clear Filter
+                    v-btn.mb-2.mr-2(color='primary', dark, @click='newDialog') Add
+                    v-dialog(v-model="draggingDialog" scrollable max-width="600px")
+                        template(v-slot:activator="{ on, attrs }")
+                            v-btn.mb-2.mr-2(
+                                    color="primary"
+                                    dark
+                                    v-bind="attrs"
+                                    v-on="on"
+                            ) 
+                                v-icon mdi-sort
+                        draggable(
+                            :move='onMove',
+                            element='span',
+                            v-bind='dragOptions',
+                            v-model='headers'
+                        )
+                            transition-group.list-group(name='no', tag='v-card')
+                                .list-group-item(
+                                    :key='header.text',
+                                    v-for='header in headers'
+                                    v-show="!header.fixed"
+                                )
+                                    v-chip.ma-2(
+                                        color='primary',
+                                        text-color='white',
+                                        @click='header.fixed = !header.fixed'
+                                    ) {{ header.text }}
+
+                    v-btn.mb-2.mr-2(color='primary', dark, @click='init')
+                        v-icon mdi-refresh
+                    v-menu.mx-0.px-0(offset-y, left) 
+                        template(v-slot:activator='{ on }')
+                            v-btn.mx-0.px-0.mb-2(icon, v-on='on')
+                                v-icon mdi-dots-vertical
+                        v-list
+                            v-list-item(@click='init')
+                                v-list-item-title Test List 1
+                            v-list-item(@click='init')
+                                v-list-item-title Test List 2
+                            v-list-item(@click='init')
+                                v-list-item-title Test List 3
+
+                DataTable2(
+                    ref='table2',
+                    :headers='headers',
+                    :items='desserts',
+                    :searchText='searchText',
+                    :searchList='searchList',
+                    :defaultItemsPerPage='itemsPerPage',
+                    :itemsPerPageList='itemsPerPageList',
+                    :loading='loading',
+                    @showDialog='dialogSwitch',
+                    :setUripath='jkbURI',
+                    :setLinkMethod='setLinkMethod'
+                )
+
+            v-row 
+                pre {{headers}}
+            //- v-row
+                .col-md-3
+                    draggable(
+                        :move='onMove',
+                        element='span',
+                        v-bind='dragOptions',
+                        v-model='headers'
+                    )
+                        transition-group.list-group(name='no', tag='ul')
+                            .list-group-item(
+                                :key='header.text',
+                                v-for='header in headers'
+                            )
+                                v-chip.ma-2(
+                                    color='primary',
+                                    text-color='white',
+                                    @click='header.fixed = !header.fixed'
+                                ) {{ header.text }}
 
 
-                                //- li(:key="element.order" class="list-group-item" v-for="element in list4")
-                                    i(
-                                        :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'"
-                                        @click="element.fixed =! element.fixed"
-                                        aria-hidden="true"
-                                    ) {{element.name}}
-                                    //- span(class="badge") {{" "+element.order}}
+        v-dialog(v-model='dialog.add', max-width='460', scrollable, persistent)
+            v-card
+                v-card-title.title {{ formTitle }}
+                v-card-text
+                    v-form(ref='form', onsubmit='return false;')
+                        v-text-field(
+                            v-if='editedIndex !== -1',
+                            v-model='formData.number',
+                            label='Number',
+                            type='text',
+                            name='name',
+                            readonly
+                        )
 
+                        v-text-field(
+                            v-model='formData.name',
+                            label='Name',
+                            type='text',
+                            name='name',
+                            :rules='[rules.required]'
+                        )
 
+                        v-select(
+                            v-model='formData.good',
+                            :items='["Yes", "No"]',
+                            label='Good'
+                        )
 
-            v-dialog(v-model="dialog.add" max-width="460" scrollable persistent)
-                v-card
-                    v-card-title.title {{formTitle}}
-                    v-card-text
-                        v-form(ref="form" onsubmit="return false;")
-                            v-text-field(v-if="editedIndex !== -1" v-model="formData.number" label="Number" type="text" name="name" readonly)
-                            
-                            v-text-field(v-model="formData.name" label="Name" type="text" name="name" :rules="[rules.required]")
-                            
-                            v-select(v-model="formData.good" :items="['Yes','No']" label="Good")
-                            
-                            v-combobox(v-model="formData.tag" :items="['A','B','C','D']" label="Tag" hide-selected)
-                                template(v-slot:no-data)
-                                    v-card-text No results matching 
-                            v-text-field(v-model="formData.url" label="URL Search" type="search" name="path")
+                        v-combobox(
+                            v-model='formData.tag',
+                            :items='["A", "B", "C", "D"]',
+                            label='Tag',
+                            hide-selected
+                        )
+                            template(v-slot:no-data)
+                                v-card-text No results matching
+                        v-text-field(
+                            v-model='formData.url',
+                            label='URL Search',
+                            type='search',
+                            name='path'
+                        )
 
-                            v-text-field(v-model="formData.remark" label="Remark" type="text" name="remark")
-                    v-card-actions  
-                        v-spacer
-                        v-btn(color="grey" @click="closeDialog") Cancel
-                        v-btn(color="primary" @click="save") Save
+                        v-text-field(
+                            v-model='formData.remark',
+                            label='Remark',
+                            type='text',
+                            name='remark'
+                        )
+                v-card-actions 
+                    v-spacer
+                    v-btn(color='grey', @click='closeDialog') Cancel
+                    v-btn(color='primary', @click='save') Save
 
-            v-dialog.delete-dialog(v-model="dialog.delete" max-width="460" persistent)
-                v-card
-                    v-card-title.title {{formTitle}}
-                    v-card-text Are you sure want to delete {{formData.name}}?
-                    v-card-actions  
-                        v-spacer
-                        v-btn(color="grey" @click="closeDialog") Cancel
-                        v-btn(color="primary" @click="deleteFormData") Yes
+        v-dialog.delete-dialog(
+            v-model='dialog.delete',
+            max-width='460',
+            persistent
+        )
+            v-card
+                v-card-title.title {{ formTitle }}
+                v-card-text Are you sure want to delete {{ formData.name }}?
+                v-card-actions 
+                    v-spacer
+                    v-btn(color='grey', @click='closeDialog') Cancel
+                    v-btn(color='primary', @click='deleteFormData') Yes
 </template>
 
 <script>
@@ -128,7 +189,7 @@ export default {
         DataTable2,
         DataTable3,
         InstantText,
-        draggable
+        draggable,
     },
     data() {
         return {
@@ -143,7 +204,7 @@ export default {
             formTitle: '',
             dialog: {
                 add: false,
-                delete: false
+                delete: false,
             },
             formData: {},
             headers: [
@@ -152,25 +213,26 @@ export default {
                     align: 'center',
                     sortable: false,
                     width: '50px',
-                    value: 'index'
+                    value: 'index',
+                    fixed: true,
                 },
                 {
                     text: 'Number',
                     align: 'left',
                     sortable: true,
-                    value: 'number'
+                    value: 'number',
                 },
                 {
                     text: 'Name',
                     align: 'left',
                     sortable: true,
-                    value: 'name'
+                    value: 'name',
                 },
                 {
                     text: 'Good',
                     align: 'left',
                     sortable: true,
-                    value: 'good'
+                    value: 'good',
                 },
                 {
                     text: 'Tag',
@@ -178,14 +240,14 @@ export default {
                     sortable: true,
                     search: false,
                     value: 'tag',
-                    combobox: ['A', 'B', 'C', 'D']
+                    combobox: ['A', 'B', 'C', 'D'],
                 },
                 {
                     text: 'Link',
                     align: 'left',
                     sortable: true,
                     value: 'url',
-                    href: true
+                    href: true,
                 },
                 {
                     text: 'Remark',
@@ -193,7 +255,7 @@ export default {
                     sortable: true,
                     width: '200px',
                     value: 'remark',
-                    search: false
+                    search: false,
                 },
                 {
                     text: 'Actions',
@@ -201,9 +263,10 @@ export default {
                     sortable: false,
                     width: '100px',
                     value: 'actions',
+                    fixed: true,
                     edit: true,
-                    delete: true
-                }
+                    delete: true,
+                },
             ],
             desserts: [],
             loading: true,
@@ -218,34 +281,14 @@ export default {
                 { id: 1, name: 'Abby', sport: 'basket' },
                 { id: 2, name: 'Brooke', sport: 'foot' },
                 { id: 3, name: 'Courtenay', sport: 'volley' },
-                { id: 4, name: 'David', sport: 'rugby' }
+                { id: 4, name: 'David', sport: 'rugby' },
             ],
             dragging: false,
-
-            enabled: true,
-            list3: [
-                { name: 'John', id: 0 },
-                { name: 'Joao', id: 1 },
-                { name: 'Jean', id: 2 }
-            ],
 
             editable: true,
             isDragging: false,
             delayedDragging: false,
-            list4: [
-                {
-                    order: 9,
-                    name: 'Leo'
-                },
-                {
-                    order: 10,
-                    name: 'Leo2'
-                },
-                {
-                    order: 11,
-                    name: 'Leo3'
-                }
-            ]
+            draggingDialog:false,
         }
     },
     computed: {
@@ -254,13 +297,12 @@ export default {
                 animation: 0,
                 group: 'description',
                 disabled: !this.editable,
-                ghostClass: 'ghost'
+                ghostClass: 'ghost',
             }
-        }
+        },
     },
     watch: {
         isDragging(newValue) {
-            // console.log(newValue)
             if (newValue) {
                 this.delayedDragging = true
                 return
@@ -268,7 +310,7 @@ export default {
             this.$nextTick(() => {
                 this.delayedDragging = false
             })
-        }
+        },
     },
     methods: {
         dialogSwitch(bool, item) {
@@ -307,7 +349,7 @@ export default {
                     remark: 'is very good',
                     good: 'Yes',
                     tag: 'A',
-                    url: 'hiero7'
+                    url: 'hiero7',
                 },
                 {
                     number: 'F007',
@@ -315,7 +357,7 @@ export default {
                     remark: 'is very good',
                     good: 'Yes',
                     tag: 'A',
-                    url: 'Elaine'
+                    url: 'Elaine',
                 },
                 {
                     number: 'F009',
@@ -323,7 +365,7 @@ export default {
                     remark: 'is very bad',
                     good: 'No',
                     tag: 'B',
-                    url: 'Leo'
+                    url: 'Leo',
                 },
                 {
                     number: 'F022',
@@ -331,8 +373,8 @@ export default {
                     remark: 'is very good',
                     good: 'Yes',
                     tag: 'A',
-                    url: 'Leo'
-                }
+                    url: 'Leo',
+                },
             ]
             this.loading = false
             // do something ...
@@ -391,11 +433,11 @@ export default {
         },
         checkMove(e) {
             window.console.log('Future index: ' + e.draggedContext.futureIndex)
-        }
+        },
     },
     mounted() {
         this.init()
-    }
+    },
 }
 </script>
 
@@ -413,8 +455,6 @@ export default {
         }
     }
 }
-
-
 
 .flip-list-move {
     transition: transform 0.5s;

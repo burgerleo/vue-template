@@ -115,6 +115,14 @@ export default {
                     router: '/component1'
                 },
                 {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
+                    title: 'AlexDay12',
+                    display: true,
+                    active: false,
+                    router: '/alexday12'
+                },
+                {
                     tabId: 1,
                     header: 'Platform Administrator'
                 },
