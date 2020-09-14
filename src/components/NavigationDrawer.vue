@@ -40,6 +40,21 @@ export default {
                 {
                     tabId: 0,
                     icon: 'mdi-magnify',
+                    title: 'Table',
+                    display: true,
+                    active: false,
+                    items: [
+                        {
+                            icon: 'mdi-access-point',
+                            title: 'SortByTable',
+                            display: true,
+                            router: '/sortbytable'
+                        },
+                    ]
+                },
+                {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
                     title: 'Table Example',
                     display: true,
                     active: false,

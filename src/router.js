@@ -11,6 +11,8 @@ import TwoList from "./views/TwoList.vue";
 import TableColumn from "./views/TableColumn.vue";
 import Component1 from "./views/Component1.vue";
 import AlexDay12 from "./views/AlexDay12.vue";
+import SortbyTable from "./views/table/SortbyTable.vue";
+
 
 Vue.use(Router);
 
@@ -112,8 +114,14 @@ const router = new Router({
                         title: 'AlexDay12'
                     }
                 },
-
-                
+                {
+                    name: "SortbyTable",
+                    path: "sortbytable",
+                    component: SortbyTable,
+                    meta: {
+                        title: 'SortbyTable'
+                    }
+                },
             ]
         }
         // ,
