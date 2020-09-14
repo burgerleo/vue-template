@@ -60,17 +60,19 @@ v-container(grid-list-lg)
                                                 text-color='white',
                                                 @click='header.fixed = !header.fixed'
                                             ) {{ header.text }}
+
+                            v-btn.mb-2.mr-2(
+                                color='pink',
+                                dark,
+                                @click.stop='drawer = !drawer'
+                            ) 
+                                v-icon mdi-sort
                             v-btn.mb-2.mr-2(
                                 color='primary',
                                 dark,
                                 @click='init'
                             )
                                 v-icon mdi-refresh
-                            v-btn.mb-2.mr-2(
-                                color='pink',
-                                dark,
-                                @click.stop='drawer = !drawer'
-                            ) Toggle
                             v-menu.mx-0.px-0(offset-y, left) 
                                 template(v-slot:activator='{ on }')
                                     v-btn.mx-0.px-0.mb-2(icon, v-on='on')
@@ -102,7 +104,7 @@ v-container(grid-list-lg)
             floating,
             v-model='drawer',
             temporary
-            width=150
+            width=250
         )
             template(v-slot:prepend)
                 draggable(

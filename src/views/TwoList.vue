@@ -1,6 +1,7 @@
 <template>
     <div class="fluid container">
         <div class="form-group form-group-lg panel panel-default">
+            <h2> npm i -S vuedraggable</h2>
             <div class="panel-heading">
                 <h3 class="panel-title">Sortable control</h3>
             </div>
