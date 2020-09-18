@@ -1,7 +1,7 @@
 <template lang="pug">
 #dataTable2
     v-data-table.elevation-1(
-        :headers='headers',
+        :headers='headerList',
         :items='newItems',
         :search='searchText',
         :dense='dense',
@@ -18,13 +18,9 @@
         template(v-slot:top)
         template(v-slot:header='{ item, index }')
             tr
-                td(v-if='headers[0].value == "index"')
-                td(
-                    v-for='header in headerList',
-                    v-if='header.hasOwnProperty("display") ? header.display : true'
-                )
+                td(v-for='header in headers', v-if='header.display')
                     v-text-field.mt-0.pt-0(
-                        v-if='header.hasOwnProperty("search") ? header.search : true',
+                        v-if='header.search',
                         v-model='searchList[header.value]',
                         width='10px',
                         label='Search',
@@ -47,29 +43,29 @@
                             v-card-text No results matching
         template(v-slot:item='{ item, index }')
             tr
-                td(v-if='headers[0].value == "index"') {{ rowIndex(index) }}
                 td(
-                    v-for='header in headerList',
-                    v-if='header.hasOwnProperty("display") ? header.display : true',
+                    v-for='header in headers',
+                    v-if='header.display',
                     :class='getColor(header, item)',
                     :style='getColor(header, item)'
-                ) {{ !header.href ? getColumn(header.value, item) : null }}
-                    a(
-                        v-if='header.href',
-                        :href='getLink(getColumn(header.value, item), item)',
-                        target='_blank'
-                    ) {{ getColumn(header.value, item) }}
-                td(v-if='actions.display')
-                    v-icon.mr-2(
-                        v-if='actions.edit',
-                        small,
-                        @click='editDialog(item)'
-                    ) mdi-pencil
-                    v-icon.mr-2(
-                        v-if='actions.delete',
-                        small,
-                        @click='deleteDialog(item)'
-                    ) mdi-delete
+                ) 
+                    template(v-if='header.value == "index"') {{ rowIndex(index) }}
+                    template(v-else) {{ !header.href ? getColumn(header.value, item) : null }}
+                        v-icon.mr-2(
+                            v-if='header.edit',
+                            small,
+                            @click='editDialog(item)'
+                        ) mdi-pencil
+                        v-icon.mr-2(
+                            v-if='header.delete',
+                            small,
+                            @click='deleteDialog(item)'
+                        ) mdi-delete
+                        a(
+                            v-if='header.href',
+                            :href='getLink(getColumn(header.value, item), item)',
+                            target='_blank'
+                        ) {{ getColumn(header.value, item) }}
         template(v-slot:footer)
             v-footer(v-if='!hideFooter')
                 v-col.text-right.pt-0.pl-0.pb-0(cols='12', sm='2')
@@ -174,7 +170,6 @@ export default {
             newItems: [],
             copyItem: null,
             uri: '',
-            actions: { edit: false, delete: false },
         }
     },
     watch: {
@@ -208,29 +203,23 @@ export default {
             this.itemsPerPage = this.defaultItemsPerPage
         },
         getHeaderList() {
-            var actions = this.actions
-            var headerList = this.headers.map(function (item) {
-                if (item.value == 'actions') {
-                    actions.edit = item.hasOwnProperty('edit')
-                        ? item.edit
-                        : false
+            this.headerList = this.headers.map((item) => {
+                item.search = item.hasOwnProperty('search') ? item.search : true
 
-                    actions.delete = item.hasOwnProperty('delete')
-                        ? item.delete
-                        : false
+                item.edit = item.hasOwnProperty('edit') ? item.edit : false
 
-                    actions.display = item.hasOwnProperty('display')
-                        ? item.display
-                        : true
-                    return
-                }
-                if (item.value != 'index') {
-                    return item
-                }
+                item.delete = item.hasOwnProperty('delete')
+                    ? item.delete
+                    : false
+
+                item.display = item.hasOwnProperty('display')
+                    ? item.display
+                    : true
+
+                item.align = item.display ? item.align : ' d-none'
+
+                return item
             })
-
-            // 移除空資料
-            this.headerList = headerList.filter((item) => item)
         },
         getFooterText() {
             var max = this.newItems.length

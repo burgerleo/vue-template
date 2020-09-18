@@ -12,6 +12,8 @@ import TableColumn from "./views/TableColumn.vue";
 import Component1 from "./views/Component1.vue";
 import AlexDay12 from "./views/AlexDay12.vue";
 import SortbyTable from "./views/table/SortbyTable.vue";
+import ShowTable from "./views/table/ShowTable.vue";
+
 
 
 Vue.use(Router);
@@ -122,6 +124,16 @@ const router = new Router({
                         title: 'SortbyTable'
                     }
                 },
+                {
+                    name: "ShowTable",
+                    path: "showtable",
+                    component: ShowTable,
+                    meta: {
+                        title: 'ShowTable'
+                    }
+                },
+
+                
             ]
         }
         // ,

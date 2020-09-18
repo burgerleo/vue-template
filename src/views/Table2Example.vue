@@ -214,6 +214,7 @@ export default {
                     sortable: false,
                     width: '50px',
                     value: 'index',
+                    search: false,
                     fixed: true,
                 },
                 {
@@ -264,6 +265,7 @@ export default {
                     width: '100px',
                     value: 'actions',
                     fixed: true,
+                    search: false,
                     edit: true,
                     delete: true,
                 },

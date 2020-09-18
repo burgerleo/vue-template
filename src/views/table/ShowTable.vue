@@ -85,18 +85,18 @@ v-container(grid-list-lg)
                                     v-list-item(@click='init')
                                         v-list-item-title Test List 3
 
-                        DataTable(
-                            :headers.sync='headers',
+                        DataTable2(
+                            ref='table2',
+                            :headers='headers',
                             :items='desserts',
-                            hideFooter
+                            :searchText='searchText',
+                            :searchList='searchList',
+                            :defaultItemsPerPage='itemsPerPage',
+                            :itemsPerPageList='itemsPerPageList',
+                            :loading='loading',
+                            @showDialog='dialogSwitch'
                         )
-                            //- template(v-slot:item='{ item, index }')
-                                tr
-                                    td {{ index }}
-                                    td(
-                                        v-for='header in headers',
-                                        v-if='header.value != "index"'
-                                    ) {{ item[header.value] }}
+
         v-navigation-drawer(
             app,
             absolute,
@@ -118,7 +118,7 @@ v-container(grid-list-lg)
                             :key='header.text',
                             v-for='header in headers'
                         )
-                            v-icon(@click='header.fixed = !header.fixed') {{ header.fixed ? "mdi-pin" : "mdi-pin-off" }}
+                            v-icon(@click='switchField(header)') {{ header.display ? "mdi-eye" : "mdi-eye-off" }}
                             v-chip.ma-2(
                                 color='primary',
                                 text-color='white',
@@ -196,13 +196,12 @@ v-container(grid-list-lg)
 <script>
 import textFieldRules from '../../utils/textFieldRules'
 import DataTable from '../../components/DataTable'
-
 import DataTable2 from '../../components/DataTable2'
 import dateFormat from '../../utils/dateFormat'
 import draggable from 'vuedraggable'
 
 export default {
-    name: 'SortbyTable',
+    name: 'ShowTable',
     mixins: [textFieldRules, dateFormat],
 
     components: {
@@ -231,56 +230,57 @@ export default {
                     align: 'center',
                     sortable: false,
                     width: '50px',
-                    fixed: true,
                     value: 'index',
+                    search: false,
+                    display: true,
                 },
                 {
                     text: 'Number',
                     align: 'left',
                     sortable: true,
-                    fixed: false,
                     value: 'number',
+                    display: false,
+                    align: ' d-none',
                 },
                 {
                     text: 'Name',
                     align: 'left',
                     sortable: true,
-                    fixed: false,
                     value: 'name',
+                    display: true,
                 },
                 {
                     text: 'Good',
                     align: 'left',
                     sortable: true,
-                    fixed: false,
                     value: 'good',
+                    display: true,
                 },
                 {
                     text: 'Tag',
                     align: 'left',
                     sortable: true,
                     search: false,
-                    fixed: false,
                     value: 'tag',
+                    display: true,
                     combobox: ['A', 'B', 'C', 'D'],
                 },
                 {
                     text: 'Link',
                     align: 'left',
                     sortable: true,
-                    fixed: false,
                     value: 'url',
                     href: true,
+                    display: true,
                 },
                 {
                     text: 'Remark',
                     align: 'left',
                     sortable: true,
                     width: '200px',
-                    fixed: false,
                     value: 'remark',
-                    search: false,
-                    // show: false,
+                    search: true,
+                    display: true,
                 },
                 {
                     text: 'Actions',
@@ -288,9 +288,10 @@ export default {
                     sortable: false,
                     width: '100px',
                     value: 'actions',
-                    fixed: true,
+                    search: false,
                     edit: true,
                     delete: true,
+                    display: true,
                 },
             ],
             desserts: [],
@@ -446,6 +447,17 @@ export default {
         },
         checkMove(e) {
             window.console.log('Future index: ' + e.draggedContext.futureIndex)
+        },
+        switchField(header) {
+            // console.log(header)
+            header.display = !Boolean(header.display)
+            // header.display = !header.display
+
+            header.align = header.display ? 'left' : ' d-none'
+            // header.display = false
+
+            this.headers = [...this.headers]
+            console.log(header)
         },
     },
     mounted() {
