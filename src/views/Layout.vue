@@ -15,7 +15,7 @@
             v-btn(dark text @click="$store.dispatch('global/closeSnackbar')") CLOSE
         v-content
             router-view
-        v-footer(absolute :inset="inset" app color="primary")
+        v-footer(fixed :inset="inset" app color="primary")
             span.white--text COPYRIGHT © {{year}} Hiero7. ALL RIGHTS RESERVED.
             v-spacer
             span.white--text v {{version}}
