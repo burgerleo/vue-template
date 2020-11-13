@@ -5,6 +5,7 @@ import Layout from "./views/Layout.vue";
 import Helper from "./views/admin/Helper.vue";
 import TableExample from "./views/TableExample.vue";
 import Table2Example from "./views/Table2Example.vue";
+import Table4Example from "./views/Table4Example.vue";
 import NxnExample from "./views/NxnExample.vue";
 import TextBoxExample from "./views/TextBoxExample.vue";
 import TwoList from "./views/TwoList.vue";
@@ -13,8 +14,6 @@ import Component1 from "./views/Component1.vue";
 import AlexDay12 from "./views/AlexDay12.vue";
 import SortbyTable from "./views/table/SortbyTable.vue";
 import ShowTable from "./views/table/ShowTable.vue";
-
-
 
 Vue.use(Router);
 
@@ -66,6 +65,14 @@ const router = new Router({
                     component: Table2Example,
                     meta: {
                         title: 'Table2 Example'
+                    }
+                },
+                {
+                    name: "Table4Example",
+                    path: "table4-example",
+                    component: Table4Example,
+                    meta: {
+                        title: 'Table4 Example'
                     }
                 },
                 {

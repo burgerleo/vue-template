@@ -17,6 +17,9 @@ import lottie from 'vue-lottie'; // lottie
 import helper from './utils/helper.js'; // helper
 
 import VueColumnsResizableVuetify from 'vue-columns-resizable-vuetify';
+import VueClipboard from 'vue-clipboard2'
+ 
+Vue.use(VueClipboard)
 Vue.use(VueColumnsResizableVuetify);
 Vue.mixin(helper);
 

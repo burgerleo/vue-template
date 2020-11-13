@@ -109,6 +109,14 @@ export default {
                 {
                     tabId: 0,
                     icon: 'mdi-magnify',
+                    title: 'Table4 Example',
+                    display: true,
+                    active: false,
+                    router: '/table4-example',
+                },
+                {
+                    tabId: 0,
+                    icon: 'mdi-magnify',
                     title: 'NXN Example',
                     display: true,
                     active: false,
